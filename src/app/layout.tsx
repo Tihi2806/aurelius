@@ -16,10 +16,43 @@ const dmSans = DM_Sans({
   weight: ["300", "400", "500", "600"],
 });
 
+const SITE_URL = "https://aurelius-sigma.vercel.app";
+
 export const metadata: Metadata = {
-  title: "Aurelius — Strategic Brand & Digital Agency",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "Aurelius — Strategic Brand & Digital Agency",
+    template: "%s | Aurelius",
+  },
   description:
     "We craft distinctive brands and digital experiences for ambitious companies.",
+  keywords: [
+    "brand strategy",
+    "digital agency",
+    "brand identity",
+    "web design",
+    "product design",
+    "Aurelius",
+  ],
+  openGraph: {
+    type: "website",
+    url: SITE_URL,
+    siteName: "Aurelius",
+    title: "Aurelius — Strategic Brand & Digital Agency",
+    description:
+      "We craft distinctive brands and digital experiences for ambitious companies.",
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: "Aurelius" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Aurelius — Strategic Brand & Digital Agency",
+    description:
+      "We craft distinctive brands and digital experiences for ambitious companies.",
+    images: ["/og.png"],
+  },
+  alternates: {
+    canonical: SITE_URL,
+  },
 };
 
 export default function RootLayout({

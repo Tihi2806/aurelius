@@ -1,57 +1,54 @@
+"use client";
+
+import { motion, useReducedMotion } from "framer-motion";
 import Container from "@/components/ui/Container";
+import { FadeInUp } from "@/components/ui/FadeInUp";
+import { services } from "@/lib/content";
 
-interface Service {
-  title: string;
-  description: string;
-}
+const container = {
+  hidden: { opacity: 0 },
+  visible: (reduce: boolean) => ({
+    opacity: 1,
+    transition: reduce ? { duration: 0 } : { staggerChildren: 0.05, delayChildren: 0.1 },
+  }),
+};
 
-const SERVICES: Service[] = [
-  {
-    title: "Brand Strategy & Identity",
-    description:
-      "Positioning, naming, visual identity, and brand systems that differentiate and resonate.",
-  },
-  {
-    title: "Digital Product Design",
-    description:
-      "Web and app experiences built on clarity, usability, and lasting aesthetic quality.",
-  },
-  {
-    title: "Content & Storytelling",
-    description:
-      "Narratives and content strategies that connect your brand to the right audiences.",
-  },
-  {
-    title: "Experience Design",
-    description:
-      "End-to-end journey design from first touch to long-term engagement.",
-  },
-  {
-    title: "Motion & Film",
-    description:
-      "Motion design and film that bring your brand to life with intention.",
-  },
-  {
-    title: "Guidance & Workshops",
-    description:
-      "Workshops and ongoing guidance to align teams and elevate brand execution.",
-  },
-];
+const item = {
+  hidden: { opacity: 0, y: 10 },
+  visible: (reduce: boolean) => ({
+    opacity: 1,
+    y: 0,
+    transition: reduce ? { duration: 0 } : { duration: 0.3, ease: "easeOut" },
+  }),
+};
 
 export default function Services() {
+  const reduceMotion = useReducedMotion();
+
   return (
     <section id="services" className="scroll-mt-24 border-t border-[var(--border)] py-28">
       <Container>
-        <p className="mb-4 font-[family-name:var(--font-cormorant)] text-sm uppercase tracking-[0.3em] text-[var(--accent)]">
-          What we do
-        </p>
-        <h2 className="mb-20 font-[family-name:var(--font-cormorant)] text-4xl font-light tracking-tight text-[var(--foreground)] sm:text-5xl">
-          Services
-        </h2>
-        <div className="grid gap-px border border-[var(--border)] sm:grid-cols-2 lg:grid-cols-3">
-          {SERVICES.map((service, i) => (
-            <div
+        <FadeInUp useViewport className="mb-20">
+          <p className="mb-4 font-[family-name:var(--font-cormorant)] text-sm uppercase tracking-[0.3em] text-[var(--accent)]">
+            What we do
+          </p>
+          <h2 className="font-[family-name:var(--font-cormorant)] text-4xl font-light tracking-tight text-[var(--foreground)] sm:text-5xl">
+            Services
+          </h2>
+        </FadeInUp>
+        <motion.div
+          className="grid gap-px border border-[var(--border)] sm:grid-cols-2 lg:grid-cols-3"
+          variants={container}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-30px" }}
+          custom={!!reduceMotion}
+        >
+          {services.map((service, i) => (
+            <motion.div
               key={i}
+              variants={item}
+              custom={!!reduceMotion}
               className="group bg-[var(--background)] p-10 transition-colors hover:bg-[#141414]"
             >
               <span className="text-xs font-medium text-[var(--muted)]">
@@ -63,9 +60,9 @@ export default function Services() {
               <p className="mt-3 text-sm leading-relaxed text-[var(--muted)]">
                 {service.description}
               </p>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </Container>
     </section>
   );

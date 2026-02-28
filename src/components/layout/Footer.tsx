@@ -8,10 +8,10 @@ export function Footer() {
           Aurelius
         </span>
         <div className="flex gap-8 text-xs text-[var(--muted)]">
-          <Link href="#" className="transition-colors hover:text-[var(--foreground)]">
+          <Link href="#" className="cursor-pointer transition-colors hover:text-[var(--foreground)]">
             Privacy
           </Link>
-          <Link href="#" className="transition-colors hover:text-[var(--foreground)]">
+          <Link href="#" className="cursor-pointer transition-colors hover:text-[var(--foreground)]">
             Terms
           </Link>
         </div>
