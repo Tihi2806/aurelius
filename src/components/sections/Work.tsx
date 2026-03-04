@@ -19,7 +19,7 @@ const item = {
   visible: (reduce: boolean) => ({
     opacity: 1,
     y: 0,
-    transition: reduce ? { duration: 0 } : { duration: 0.3, ease: "easeOut" },
+    transition: reduce ? { duration: 0 } : { duration: 0.3, ease: "easeOut" as const },
   }),
 };
 
