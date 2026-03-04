@@ -29,7 +29,7 @@ const item = {
     y: 0,
     transition: {
       duration: reduce ? 0 : 0.3,
-      ease: [0.25, 0.1, 0.25, 1],
+      ease: [0.25, 0.1, 0.25, 1] as const,
     },
   }),
 } as Variants;
