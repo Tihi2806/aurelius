@@ -1,16 +1,25 @@
 "use client";
 
+import type { Variants } from "framer-motion";
 import { motion, useReducedMotion } from "framer-motion";
 import Container from "@/components/ui/Container";
 import { FadeInUp } from "@/components/ui/FadeInUp";
 import { services } from "@/lib/content";
 
-const container = {
+const container: Variants = {
   hidden: { opacity: 0 },
-  visible: (reduce: boolean) => ({
+  visible: {
     opacity: 1,
-    transition: reduce ? { duration: 0 } : { staggerChildren: 0.05, delayChildren: 0.1 },
-  }),
+    transition: { staggerChildren: 0.05, delayChildren: 0.1 },
+  },
+};
+
+const containerReduced: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { duration: 0 },
+  },
 };
 
 const item = {
@@ -18,8 +27,20 @@ const item = {
   visible: (reduce: boolean) => ({
     opacity: 1,
     y: 0,
-    transition: reduce ? { duration: 0 } : { duration: 0.3, ease: "easeOut" },
+    transition: {
+      duration: reduce ? 0 : 0.3,
+      ease: [0.25, 0.1, 0.25, 1],
+    },
   }),
+} as Variants;
+
+const itemReduced: Variants = {
+  hidden: { opacity: 0, y: 10 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0 },
+  },
 };
 
 export default function Services() {
@@ -38,7 +59,7 @@ export default function Services() {
         </FadeInUp>
         <motion.div
           className="grid gap-px border border-[var(--border)] sm:grid-cols-2 lg:grid-cols-3"
-          variants={container}
+          variants={reduceMotion ? containerReduced : container}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-30px" }}
@@ -47,7 +68,7 @@ export default function Services() {
           {services.map((service, i) => (
             <motion.div
               key={i}
-              variants={item}
+              variants={reduceMotion ? itemReduced : item}
               custom={!!reduceMotion}
               className="group bg-[var(--background)] p-10 transition-colors hover:bg-[#141414]"
             >
