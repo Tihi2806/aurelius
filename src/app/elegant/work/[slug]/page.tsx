@@ -3,10 +3,6 @@ import { notFound } from "next/navigation";
 import Container from "@/components/ui/Container";
 import { work } from "@/lib/content";
 
-interface PageProps {
-  params: Promise<{ slug: string }>;
-}
-
 export async function generateStaticParams() {
   return work.map((project) => ({ slug: project.slug }));
 }
@@ -15,8 +11,8 @@ function getProject(slug: string) {
   return work.find((p) => p.slug === slug) ?? null;
 }
 
-export async function generateMetadata({ params }: PageProps) {
-  const { slug } = await params;
+export async function generateMetadata(props: PageProps<"/elegant/work/[slug]">) {
+  const { slug } = await props.params;
   const project = getProject(slug);
   if (!project) return { title: "Project | Aurelius" };
   return {
@@ -25,8 +21,8 @@ export async function generateMetadata({ params }: PageProps) {
   };
 }
 
-export default async function WorkCaseStudyPage({ params }: PageProps) {
-  const { slug } = await params;
+export default async function WorkCaseStudyPage(props: PageProps<"/elegant/work/[slug]">) {
+  const { slug } = await props.params;
   const project = getProject(slug);
   if (!project) notFound();
 

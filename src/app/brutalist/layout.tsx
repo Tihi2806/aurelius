@@ -32,13 +32,7 @@ export default function BrutalistLayout({
   return (
     <div
       className={`${bebasNeue.variable} ${courierPrime.variable} ${oswald.variable} brutalist-theme`}
-      style={{
-        backgroundColor: "#f0ece4",
-        color: "#111111",
-        fontFamily: "var(--font-courier), monospace",
-      }}
     >
-      {/* Fixed Navbar */}
       <header className="brutalist-nav">
         <div className="brutalist-nav-inner">
           <Link href="/brutalist" className="brutalist-nav-left">
@@ -48,28 +42,25 @@ export default function BrutalistLayout({
             </span>
             <span className="brutalist-logo">Aurelius</span>
           </Link>
-
           <nav className="brutalist-nav-center">
             <Link href="/brutalist#work">Work</Link>
             <Link href="/brutalist#services">Services</Link>
             <Link href="/brutalist#process">Process</Link>
             <Link href="/brutalist#contact">Contact</Link>
           </nav>
-
           <Link href="/brutalist#contact" className="brutalist-nav-cta">
             Brief Us →
           </Link>
         </div>
       </header>
 
-      <div style={{ paddingTop: 52 }}>{children}</div>
+      {children}
 
-      {/* Footer */}
       <footer className="brutalist-footer">
         <div className="brutalist-footer-inner">
           <span className="brutalist-footer-logo">Aurelius</span>
           <div className="brutalist-footer-center">
-            <span className="brutalist-footer-copy">© {new Date().getFullYear()} Aurelius</span>
+            <span>© {new Date().getFullYear()} Aurelius Agency</span>
             <Link href="/brutalist/privacy">Privacy</Link>
             <Link href="/brutalist/terms">Terms</Link>
           </div>
