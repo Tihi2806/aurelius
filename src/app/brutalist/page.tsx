@@ -25,22 +25,28 @@ export default function BrutalistPage() {
       {/* HERO */}
       <section className="brutalist-hero">
         <div className="brutalist-hero-left">
+          <motion.p
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, delay: 0.1 }}
+            className="brutalist-hero-eyebrow"
+          >
+            Vol. 03 / Issue 12 — {hero.eyebrow}
+          </motion.p>
           <div>
-            <motion.p
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.35, delay: 0.1 }}
-              className="brutalist-hero-eyebrow"
-            >
-              Vol. 03 / Issue 12 — {hero.eyebrow}
-            </motion.p>
             <motion.h1
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35, delay: 0.25 }}
               className="brutalist-hero-headline"
             >
-              {hero.headline}
+              WE CRAFT
+              <br />
+              BRANDS &amp;
+              <br />
+              EXPERIENCES
+              <br />
+              THAT ENDURE.
             </motion.h1>
             <motion.p
               initial={{ opacity: 0, y: 24 }}
