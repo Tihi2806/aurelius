@@ -1,0 +1,161 @@
+/* Brutalist theme — no border-radius anywhere */
+
+.brutalist-theme {
+  --bg: #f0ece4;
+  --primary: #111111;
+  --accent: #ff3300;
+  --accent-hover: #cc2900;
+  --muted: #888888;
+  --mid: #444444;
+  --cream: #f0ece4;
+}
+
+/* Navbar */
+.brutalist-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 52px;
+  background: #111111;
+  border-bottom: 3px solid #111111;
+  z-index: 100;
+}
+
+.brutalist-nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  max-width: 100%;
+  padding: 0 24px;
+}
+
+.brutalist-nav-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-decoration: none;
+  color: var(--cream);
+}
+
+.brutalist-hamburger {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.brutalist-hamburger span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: var(--cream);
+}
+
+.brutalist-logo {
+  font-family: var(--font-bebas), sans-serif;
+  font-size: 22px;
+  letter-spacing: 3px;
+  color: var(--cream);
+}
+
+.brutalist-nav-center {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.brutalist-nav-center a {
+  font-family: var(--font-courier), monospace;
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--cream);
+  opacity: 0.7;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.brutalist-nav-center a:hover {
+  opacity: 1;
+}
+
+.brutalist-nav-cta {
+  display: inline-block;
+  padding: 10px 20px;
+  background: #ff3300;
+  color: var(--cream);
+  font-family: var(--font-courier), monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: none;
+  transition: background 0.2s;
+}
+
+.brutalist-nav-cta:hover {
+  background: #cc2900;
+}
+
+/* Footer */
+.brutalist-footer {
+  background: #111111;
+  border-top: 3px solid rgba(240, 236, 228, 0.12);
+  padding: 28px 40px;
+}
+
+.brutalist-footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 100%;
+}
+
+.brutalist-footer-logo {
+  font-family: var(--font-bebas), sans-serif;
+  font-size: 18px;
+  letter-spacing: 3px;
+  color: var(--cream);
+  opacity: 0.6;
+}
+
+.brutalist-footer-center {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.brutalist-footer-copy,
+.brutalist-footer-center a {
+  font-family: var(--font-courier), monospace;
+  font-size: 8px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--cream);
+  opacity: 0.3;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.brutalist-footer-center a:hover {
+  color: #ff3300;
+}
+
+.brutalist-footer-switch {
+  font-family: var(--font-courier), monospace;
+  font-size: 8px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--cream);
+  opacity: 0.3;
+  text-decoration: none;
+  text-underline-offset: 3px;
+  text-decoration: underline;
+  transition: color 0.2s;
+}
+
+.brutalist-footer-switch:hover {
+  color: #ff3300;
+}
