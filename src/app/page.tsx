@@ -7,33 +7,97 @@ import "./hero.css";
 export default function GatewayPage() {
   useEffect(() => {
     const hero = document.getElementById('hero');
-    if (hero) {
-      const heroBg = hero.querySelector('.hero-bg') as HTMLElement | null;
-      const marqueeWrap = hero.querySelector('.hero-marquee-wrap') as HTMLElement | null;
+    const cardsSection = document.querySelector('.cards-section') as HTMLElement;
+    if (!hero || !cardsSection) return;
 
-      const handleScroll = () => {
-        const scrollY = window.scrollY;
-        const heroHeight = hero.offsetHeight;
-        // Use 2x heroHeight as the full scroll distance (matches the 200vh spacer)
-        const progress = Math.min(scrollY / (heroHeight * 2), 1);
+    const heroBg = hero.querySelector('.hero-bg') as HTMLElement | null;
+    const marqueeWrap = hero.querySelector('.hero-marquee-wrap') as HTMLElement | null;
 
-        // Fade out hero gradually over the full scroll distance
-        hero.style.opacity = String(Math.max(0, 1 - progress * 1.8));
+    let isSnapping = false;
 
-        // Parallax on bust image — drifts upward as you scroll
-        if (heroBg) {
-          heroBg.style.transform = `translateY(${scrollY * 0.2}px)`;
-        }
+    // --- Parallax + fade (runs during programmatic scroll) ---
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      const heroHeight = hero.offsetHeight;
+      const progress = Math.min(scrollY / (heroHeight * 2), 1);
 
-        // Slightly slower parallax on text
-        if (marqueeWrap) {
-          marqueeWrap.style.transform = `translateY(calc(-50% + ${scrollY * 0.08}px))`;
-        }
-      };
+      hero.style.opacity = String(Math.max(0, 1 - progress * 1.8));
 
-      window.addEventListener('scroll', handleScroll, { passive: true });
-      return () => window.removeEventListener('scroll', handleScroll);
+      if (heroBg) {
+        heroBg.style.transform = `translateY(${scrollY * 0.2}px)`;
+      }
+      if (marqueeWrap) {
+        marqueeWrap.style.transform = `translateY(calc(-50% + ${scrollY * 0.08}px))`;
+      }
+    };
+
+    // --- Snap function ---
+    function snapTo(target: Element) {
+      if (isSnapping) return;
+      isSnapping = true;
+      target.scrollIntoView({ behavior: 'smooth' });
+      setTimeout(() => { isSnapping = false; }, 1200);
     }
+
+    // --- Wheel handler ---
+    const handleWheel = (e: WheelEvent) => {
+      if (isSnapping) {
+        e.preventDefault();
+        return;
+      }
+
+      const scrollY = window.scrollY;
+      const cardsSectionTop = cardsSection.offsetTop;
+      const threshold = 80; // px tolerance
+
+      const onHero = scrollY < cardsSectionTop - threshold;
+      const onCards = scrollY >= cardsSectionTop - threshold;
+
+      if (onHero && e.deltaY > 0) {
+        // On hero, scrolling down → snap to cards
+        e.preventDefault();
+        snapTo(cardsSection);
+      } else if (onCards && e.deltaY < 0) {
+        // On cards, scrolling up → snap to hero
+        e.preventDefault();
+        snapTo(hero);
+      }
+      // On cards scrolling down = free scroll, no preventDefault
+    };
+
+    // --- Touch swipe ---
+    let touchStartY = 0;
+
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStartY = e.touches[0].clientY;
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      if (isSnapping) return;
+      const delta = touchStartY - e.changedTouches[0].clientY;
+      const scrollY = window.scrollY;
+      const cardsSectionTop = cardsSection.offsetTop;
+      const onHero = scrollY < cardsSectionTop - 80;
+      const onCards = scrollY >= cardsSectionTop - 80;
+
+      if (onHero && delta > 30) {
+        snapTo(cardsSection);
+      } else if (onCards && delta < -30) {
+        snapTo(hero);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('wheel', handleWheel, { passive: false });
+    window.addEventListener('touchstart', handleTouchStart, { passive: true });
+    window.addEventListener('touchend', handleTouchEnd, { passive: true });
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('wheel', handleWheel);
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchend', handleTouchEnd);
+    };
   }, []);
 
   return (
