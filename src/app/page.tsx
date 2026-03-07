@@ -15,8 +15,9 @@ export default function GatewayPage() {
 
     let isSnapping = false;
 
-    // --- Parallax + fade (runs during programmatic scroll) ---
+    // --- Parallax + fade based on scroll position ---
     const handleScroll = () => {
+      if (isSnapping) return; // don't fight the manual animation during snap
       const scrollY = window.scrollY;
       const heroHeight = hero.offsetHeight;
       const progress = Math.min(scrollY / (heroHeight * 2), 1);
@@ -31,43 +32,85 @@ export default function GatewayPage() {
       }
     };
 
-    // --- Snap function ---
-    function snapTo(target: Element) {
+    // --- Snap to cards (fade OUT hero) ---
+    function snapToCards() {
       if (isSnapping) return;
       isSnapping = true;
-      target.scrollIntoView({ behavior: 'smooth' });
+      cardsSection.scrollIntoView({ behavior: 'smooth' });
       setTimeout(() => { isSnapping = false; }, 1200);
     }
 
-    // --- Wheel handler ---
+    // --- Snap to hero (fade IN hero explicitly) ---
+    function snapToHero() {
+      if (isSnapping) return;
+      isSnapping = true;
+
+      // Step 1: scroll back to top
+      hero!.scrollIntoView({ behavior: 'smooth' });
+
+      // Step 2: manually animate hero opacity from 0 → 1 over 800ms
+      // This runs in parallel with the smooth scroll
+      const duration = 800;
+      const start = performance.now();
+      const startOpacity = parseFloat(hero!.style.opacity) || 0;
+
+      function animateOpacity(now: number) {
+        const elapsed = now - start;
+        const progress = Math.min(elapsed / duration, 1);
+        // Ease out cubic
+        const eased = 1 - Math.pow(1 - progress, 3);
+        hero!.style.opacity = String(startOpacity + (1 - startOpacity) * eased);
+
+        // Also reset parallax transforms
+        if (heroBg) {
+          const currentY = parseFloat(heroBg.style.transform.replace('translateY(', '')) || 0;
+          heroBg.style.transform = `translateY(${currentY * (1 - eased)}px)`;
+        }
+        if (marqueeWrap) {
+          marqueeWrap.style.transform = `translateY(calc(-50% + ${0}px))`;
+        }
+
+        if (progress < 1) {
+          requestAnimationFrame(animateOpacity);
+        } else {
+          // Fully reset
+          hero!.style.opacity = '1';
+          if (heroBg) heroBg.style.transform = 'translateY(0px)';
+          if (marqueeWrap) marqueeWrap.style.transform = 'translateY(-50%)';
+          isSnapping = false;
+        }
+      }
+
+      requestAnimationFrame(animateOpacity);
+    }
+
+    // --- Section detection ---
+    function isOnCards() {
+      return cardsSection.getBoundingClientRect().top <= 100;
+    }
+
+    // --- Shared wheel handler ---
     const handleWheel = (e: WheelEvent) => {
       if (isSnapping) {
         e.preventDefault();
         return;
       }
-
-      const scrollY = window.scrollY;
-      const cardsSectionTop = cardsSection.offsetTop;
-      const threshold = 80; // px tolerance
-
-      const onHero = scrollY < cardsSectionTop - threshold;
-      const onCards = scrollY >= cardsSectionTop - threshold;
-
-      if (onHero && e.deltaY > 0) {
-        // On hero, scrolling down → snap to cards
+      const onCards = isOnCards();
+      if (!onCards && e.deltaY > 0) {
         e.preventDefault();
-        snapTo(cardsSection);
+        snapToCards();
       } else if (onCards && e.deltaY < 0) {
-        // On cards, scrolling up → snap to hero
         e.preventDefault();
-        snapTo(hero);
+        snapToHero();
       }
-      // On cards scrolling down = free scroll, no preventDefault
     };
 
-    // --- Touch swipe ---
-    let touchStartY = 0;
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('wheel', handleWheel, { passive: false });
+    cardsSection.addEventListener('wheel', handleWheel, { passive: false });
 
+    // --- Touch ---
+    let touchStartY = 0;
     const handleTouchStart = (e: TouchEvent) => {
       touchStartY = e.touches[0].clientY;
     };
@@ -75,26 +118,18 @@ export default function GatewayPage() {
     const handleTouchEnd = (e: TouchEvent) => {
       if (isSnapping) return;
       const delta = touchStartY - e.changedTouches[0].clientY;
-      const scrollY = window.scrollY;
-      const cardsSectionTop = cardsSection.offsetTop;
-      const onHero = scrollY < cardsSectionTop - 80;
-      const onCards = scrollY >= cardsSectionTop - 80;
-
-      if (onHero && delta > 30) {
-        snapTo(cardsSection);
-      } else if (onCards && delta < -30) {
-        snapTo(hero);
-      }
+      const onCards = isOnCards();
+      if (!onCards && delta > 30) snapToCards();
+      else if (onCards && delta < -30) snapToHero();
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('wheel', handleWheel, { passive: false });
     window.addEventListener('touchstart', handleTouchStart, { passive: true });
     window.addEventListener('touchend', handleTouchEnd, { passive: true });
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('wheel', handleWheel);
+      cardsSection.removeEventListener('wheel', handleWheel);
       window.removeEventListener('touchstart', handleTouchStart);
       window.removeEventListener('touchend', handleTouchEnd);
     };
