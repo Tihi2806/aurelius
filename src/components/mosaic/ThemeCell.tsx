@@ -75,57 +75,19 @@ const CARD_PREVIEWS: Record<string, React.ReactNode> = {
       </div>
     </div>
   ),
-  organic: (
-    <div className="card-preview">
-      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(160deg,#f7f0e8,#e8ddd0)" }} />
-      <div style={{ position: "absolute", top: 0, left: 0, right: 0, padding: "14px 20px", display: "flex", justifyContent: "space-between", alignItems: "center", zIndex: 1 }}>
-        <span style={{ fontFamily: "Georgia,serif", fontSize: 11, fontStyle: "italic", letterSpacing: 1, color: "#3d2e1e" }}>Aurelius</span>
-        <div style={{ display: "flex", gap: 14 }}>
-          <span style={{ fontFamily: "serif", fontSize: 7, letterSpacing: 2, color: "rgba(61,46,30,0.5)", textTransform: "uppercase" }}>Work</span>
-          <span style={{ fontFamily: "serif", fontSize: 7, letterSpacing: 2, color: "rgba(61,46,30,0.5)", textTransform: "uppercase" }}>Services</span>
-        </div>
-      </div>
-      <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: 20, zIndex: 1 }}>
-        <div style={{ fontFamily: "serif", fontSize: 7, letterSpacing: 3, color: "#b8956a", textTransform: "uppercase", marginBottom: 8 }}>Creative Studio</div>
-        <div style={{ fontFamily: "Georgia,serif", fontSize: 20, fontStyle: "italic", color: "#3d2e1e", lineHeight: 1.2 }}>Crafted with<br /><em>intention.</em></div>
-        <div style={{ marginTop: 10, borderBottom: "1px solid #b8956a", display: "inline-block", paddingBottom: 2 }}>
-          <span style={{ fontFamily: "serif", fontSize: 8, letterSpacing: 2, color: "#b8956a", textTransform: "uppercase" }}>View our work →</span>
-        </div>
-      </div>
-    </div>
-  ),
   scandi: (
     <div className="card-preview">
-      <div style={{ position: "absolute", inset: 0, background: "#f2ede6" }} />
-      <div style={{ position: "absolute", top: 0, left: 0, right: 0, padding: "14px 24px", display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid rgba(42,37,32,0.1)", zIndex: 1 }}>
-        <span style={{ fontFamily: "sans-serif", fontWeight: 200, fontSize: 8, letterSpacing: 3, color: "rgba(42,37,32,0.4)", textTransform: "uppercase" }}>☰</span>
-        <span style={{ fontFamily: "sans-serif", fontWeight: 300, fontSize: 12, letterSpacing: 4, color: "#2a2520", textTransform: "uppercase" }}>Forma</span>
-        <span style={{ fontFamily: "sans-serif", fontWeight: 200, fontSize: 8, letterSpacing: 2, color: "rgba(42,37,32,0.4)", textTransform: "uppercase" }}>Cart (0)</span>
+      <div style={{ position: "absolute", inset: 0, background: "#eef1f5" }} />
+      <div style={{ position: "absolute", top: 0, left: 0, right: 0, padding: "14px 24px", display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid rgba(30,44,58,0.08)", zIndex: 1 }}>
+        <span style={{ fontFamily: "'Jost',sans-serif", fontWeight: 200, fontSize: 8, letterSpacing: 3, color: "rgba(30,44,58,0.35)", textTransform: "uppercase" }}>☰</span>
+        <span style={{ fontFamily: "'Jost',sans-serif", fontWeight: 300, fontSize: 12, letterSpacing: 4, color: "#1e2c3a", textTransform: "uppercase" }}>Forma</span>
+        <span style={{ fontFamily: "'Jost',sans-serif", fontWeight: 200, fontSize: 8, letterSpacing: 2, color: "rgba(30,44,58,0.35)", textTransform: "uppercase" }}>Cart (0)</span>
       </div>
       <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: 20, zIndex: 1 }}>
-        <div style={{ fontFamily: "sans-serif", fontWeight: 200, fontSize: 7, letterSpacing: 4, color: "#a09888", textTransform: "uppercase", marginBottom: 8 }}>— New Collection</div>
-        <div style={{ fontFamily: "sans-serif", fontWeight: 100, fontSize: 28, color: "#2a2520", letterSpacing: -1, textTransform: "uppercase", lineHeight: 1 }}>FORMA<br />STUDIO</div>
+        <div style={{ fontFamily: "'Jost',sans-serif", fontWeight: 200, fontSize: 7, letterSpacing: 4, color: "#5e7994", textTransform: "uppercase", marginBottom: 8 }}>— New Collection</div>
+        <div style={{ fontFamily: "'Jost',sans-serif", fontWeight: 100, fontSize: 28, color: "#1e2c3a", letterSpacing: -1, textTransform: "uppercase", lineHeight: 1 }}>FORMA<br />STUDIO</div>
         <div style={{ marginTop: 10 }}>
-          <span style={{ fontFamily: "sans-serif", fontWeight: 200, fontSize: 7, letterSpacing: 3, color: "#a09888", textTransform: "uppercase", borderBottom: "1px solid #a09888", paddingBottom: 2 }}>Shop now →</span>
-        </div>
-      </div>
-    </div>
-  ),
-  elegant: (
-    <div className="card-preview">
-      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(160deg,#0a0a0a,#141414)" }} />
-      <div style={{ position: "absolute", top: 0, left: 0, right: 0, padding: "14px 20px", display: "flex", justifyContent: "space-between", alignItems: "center", zIndex: 1 }}>
-        <span style={{ fontFamily: "serif", fontSize: 11, letterSpacing: 4, color: "rgba(255,255,255,0.6)", textTransform: "uppercase" }}>Aurelius</span>
-        <div style={{ display: "flex", gap: 14 }}>
-          <span style={{ fontFamily: "serif", fontSize: 7, letterSpacing: 2, color: "rgba(255,255,255,0.3)", textTransform: "uppercase" }}>Work</span>
-          <span style={{ fontFamily: "serif", fontSize: 7, letterSpacing: 2, color: "rgba(255,255,255,0.3)", textTransform: "uppercase" }}>Services</span>
-        </div>
-      </div>
-      <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: 20, background: "linear-gradient(to top,rgba(0,0,0,0.7),transparent)", zIndex: 1 }}>
-        <div style={{ fontFamily: "serif", fontSize: 7, letterSpacing: 4, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", marginBottom: 8 }}>Timeless · Refined</div>
-        <div style={{ fontFamily: "Georgia,serif", fontSize: 18, color: "#f5f0e8", lineHeight: 1.2, fontStyle: "italic" }}>Brands that stand<br />the test of time.</div>
-        <div style={{ marginTop: 10, border: "1px solid rgba(255,255,255,0.15)", display: "inline-block", padding: "4px 10px" }}>
-          <span style={{ fontFamily: "serif", fontSize: 7, letterSpacing: 2, color: "rgba(255,255,255,0.5)", textTransform: "uppercase" }}>Start a project</span>
+          <span style={{ fontFamily: "'Jost',sans-serif", fontWeight: 200, fontSize: 7, letterSpacing: 3, color: "#5e7994", textTransform: "uppercase", borderBottom: "1px solid #5e7994", paddingBottom: 2 }}>Shop now →</span>
         </div>
       </div>
     </div>
@@ -188,10 +150,8 @@ export function ThemeCell({
         <span className="mosaic-cell-label">{theme.label}</span>
         <p className="mosaic-cell-tagline">{theme.tagline}</p>
         {/* Theme-specific decoration */}
-        {theme.id === "elegant" && <div className="mosaic-deco elegant-breathe" />}
         {theme.id === "flashy" && <div className="mosaic-deco flashy-pulse" />}
         {theme.id === "brutalist" && <div className="mosaic-deco brutalist-glitch" />}
-        {theme.id === "organic" && <div className="mosaic-deco organic-sway" />}
         {theme.id === "classy" && <div className="mosaic-deco classy-shimmer" />}
       </motion.div>
     </motion.div>

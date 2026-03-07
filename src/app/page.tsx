@@ -6,6 +6,26 @@ import "./hero.css";
 
 export default function GatewayPage() {
   useEffect(() => {
+    const initMarquee = () => {
+      document.querySelectorAll<HTMLElement>('.hero-marquee-track').forEach(track => {
+        const span = track.querySelector('span');
+        if (!span) return;
+        // Clone until track content fills 3× viewport so the loop never shows a gap
+        while (track.scrollWidth < window.innerWidth * 3) {
+          track.appendChild(span.cloneNode(true));
+        }
+        const spanW = span.getBoundingClientRect().width;
+        if (spanW <= 0) return;
+        // Pixel-accurate offset: animate exactly one span width, then loop invisibly
+        track.style.setProperty('--marquee-offset', `-${spanW}px`);
+        // 100px/s → slow, readable luxury pace
+        track.style.animationDuration = `${spanW / 100}s`;
+      });
+    };
+    document.fonts.ready.then(initMarquee);
+  }, []);
+
+  useEffect(() => {
     const hero = document.getElementById('hero');
     const cards = document.querySelector('.cards-section') as HTMLElement | null;
     if (!hero || !cards) return;
@@ -160,18 +180,16 @@ export default function GatewayPage() {
         {/* Layer 1: full opacity outside the head zone */}
         <div className="hero-marquee-wrap hero-marquee-outer">
           <div className="hero-marquee-track">
-            <span>Aurelius · We Craft Brands That Endure · Strategic Brand &amp; Digital ·</span>
-            <span>Aurelius · We Craft Brands That Endure · Strategic Brand &amp; Digital ·</span>
-            <span>Aurelius · We Craft Brands That Endure · Strategic Brand &amp; Digital ·</span>
+            <span>· Aurelius · Brand &amp; Digital ·</span>
+            <span>· Aurelius · Brand &amp; Digital ·</span>
           </div>
         </div>
 
         {/* Layer 2: semi-transparent inside the head zone */}
         <div className="hero-marquee-wrap hero-marquee-inner">
           <div className="hero-marquee-track">
-            <span>Aurelius · We Craft Brands That Endure · Strategic Brand &amp; Digital ·</span>
-            <span>Aurelius · We Craft Brands That Endure · Strategic Brand &amp; Digital ·</span>
-            <span>Aurelius · We Craft Brands That Endure · Strategic Brand &amp; Digital ·</span>
+            <span>· Aurelius · Brand &amp; Digital ·</span>
+            <span>· Aurelius · Brand &amp; Digital ·</span>
           </div>
         </div>
 

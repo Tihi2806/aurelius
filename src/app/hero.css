@@ -132,7 +132,7 @@
   white-space: nowrap;
   transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
-  animation: marquee 20s linear infinite;
+  animation: marquee 10s linear infinite;
   will-change: transform;
 }
 
@@ -157,7 +157,7 @@
   }
 
   100% {
-    transform: translate3d(-33.333333%, 0, 0);
+    transform: translate3d(var(--marquee-offset, -50%), 0, 0);
   }
 }
 
