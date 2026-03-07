@@ -78,7 +78,7 @@
   z-index: 2;
 }
 
-.mosaic-cell-inner > * {
+.mosaic-cell-inner>* {
   pointer-events: auto;
 }
 
@@ -117,8 +117,15 @@
 }
 
 @keyframes flashy-pulse {
-  0%, 100% { filter: brightness(1); }
-  50% { filter: brightness(1.08); }
+
+  0%,
+  100% {
+    filter: brightness(1);
+  }
+
+  50% {
+    filter: brightness(1.08);
+  }
 }
 
 /* Brutalist: subtle CRT flicker; hover = shake + RGB split */
@@ -132,17 +139,49 @@
 }
 
 @keyframes brutalist-flicker {
-  0%, 95%, 100% { opacity: 1; }
-  97% { opacity: 0.98; }
-  98% { opacity: 1; }
+
+  0%,
+  95%,
+  100% {
+    opacity: 1;
+  }
+
+  97% {
+    opacity: 0.98;
+  }
+
+  98% {
+    opacity: 1;
+  }
 }
 
 @keyframes brutalist-glitch-hover {
-  0%, 100% { transform: translate(0, 0); text-shadow: 0 0 transparent; }
-  20% { transform: translate(-2px, 0); text-shadow: 2px 0 #ff0000, -2px 0 #00ffff; }
-  40% { transform: translate(2px, 0); text-shadow: -2px 0 #00ff00, 2px 0 #ff00ff; }
-  60% { transform: translate(-1px, 1px); text-shadow: 1px -1px #ff0000; }
-  80% { transform: translate(1px, -1px); text-shadow: -1px 1px #00ffff; }
+
+  0%,
+  100% {
+    transform: translate(0, 0);
+    text-shadow: 0 0 transparent;
+  }
+
+  20% {
+    transform: translate(-2px, 0);
+    text-shadow: 2px 0 #ff0000, -2px 0 #00ffff;
+  }
+
+  40% {
+    transform: translate(2px, 0);
+    text-shadow: -2px 0 #00ff00, 2px 0 #ff00ff;
+  }
+
+  60% {
+    transform: translate(-1px, 1px);
+    text-shadow: 1px -1px #ff0000;
+  }
+
+  80% {
+    transform: translate(1px, -1px);
+    text-shadow: -1px 1px #00ffff;
+  }
 }
 
 /* Organic: gentle breathe (handled by inner) */
@@ -151,8 +190,15 @@
 }
 
 @keyframes organic-breathe {
-  0%, 100% { transform: scale(0.997); }
-  50% { transform: scale(1.003); }
+
+  0%,
+  100% {
+    transform: scale(0.997);
+  }
+
+  50% {
+    transform: scale(1.003);
+  }
 }
 
 /* Classy: subtle metallic shimmer (gradient sweep on hover via class) */
@@ -166,8 +212,13 @@
 }
 
 @keyframes classy-shimmer {
-  0% { background-position: 100% 0; }
-  100% { background-position: 0 0; }
+  0% {
+    background-position: 100% 0;
+  }
+
+  100% {
+    background-position: 0 0;
+  }
 }
 
 /* ─── Fullscreen overlay ─── */
@@ -281,7 +332,7 @@
 /* ─── Fixed header (used by page) ─── */
 
 .mosaic-header {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   right: 0;

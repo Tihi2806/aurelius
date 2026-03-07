@@ -1,9 +1,41 @@
 "use client";
 
+import { useEffect } from "react";
 import { MosaicGrid } from "@/components/mosaic/MosaicGrid";
 import "./hero.css";
 
 export default function GatewayPage() {
+  useEffect(() => {
+    const hero = document.getElementById('hero');
+    if (hero) {
+      const heroBg = hero.querySelector('.hero-bg') as HTMLElement | null;
+      const marqueeWrap = hero.querySelector('.hero-marquee-wrap') as HTMLElement | null;
+
+      const handleScroll = () => {
+        const scrollY = window.scrollY;
+        const heroHeight = hero.offsetHeight;
+        // Use 2x heroHeight as the full scroll distance (matches the 200vh spacer)
+        const progress = Math.min(scrollY / (heroHeight * 2), 1);
+
+        // Fade out hero gradually over the full scroll distance
+        hero.style.opacity = String(Math.max(0, 1 - progress * 1.8));
+
+        // Parallax on bust image — drifts upward as you scroll
+        if (heroBg) {
+          heroBg.style.transform = `translateY(${scrollY * 0.2}px)`;
+        }
+
+        // Slightly slower parallax on text
+        if (marqueeWrap) {
+          marqueeWrap.style.transform = `translateY(calc(-50% + ${scrollY * 0.08}px))`;
+        }
+      };
+
+      window.addEventListener('scroll', handleScroll, { passive: true });
+      return () => window.removeEventListener('scroll', handleScroll);
+    }
+  }, []);
+
   return (
     <div className="w-full bg-[#0a0a0a]">
 
@@ -45,8 +77,10 @@ export default function GatewayPage() {
         </div>
       </section>
 
+      <div className="hero-scroll-spacer"></div>
+
       {/* ── Cards selector ── */}
-      <div className="min-h-screen overflow-hidden relative">
+      <div className="cards-section min-h-screen overflow-hidden relative" style={{ zIndex: 1, position: 'relative' }}>
         <header className="mosaic-header">
           <h1>Choose your experience</h1>
         </header>

@@ -99,7 +99,7 @@ export const THEMES: ThemeConfig[] = [
     id: "elegant",
     label: "Elegant",
     tagline: "Refined & timeless",
-    href: "/elegant",
+    href: "/classy",
     parallax: 0.04,
     vars: {
       bg: "#fdfaf5",
