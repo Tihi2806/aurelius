@@ -156,7 +156,6 @@ export function ThemeCell({
       className="mosaic-cell"
       data-theme={theme.id}
       style={{
-        gridArea: theme.gridArea,
         transform: `translate(${tx}px, ${ty}px)`,
         opacity: isSiblingHovered ? 0.85 : 1,
         filter: isSiblingHovered ? "blur(2px)" : "none",

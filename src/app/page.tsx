@@ -10,6 +10,18 @@ export default function GatewayPage() {
     const cards = document.querySelector('.cards-section') as HTMLElement | null;
     if (!hero || !cards) return;
 
+    // Lock document scroll only on landing (so it doesn't persist when navigating away)
+    const html = document.documentElement;
+    const body = document.body;
+    const prevHtmlOverflow = html.style.overflow;
+    const prevHtmlHeight = html.style.height;
+    const prevBodyOverflow = body.style.overflow;
+    const prevBodyHeight = body.style.height;
+    html.style.overflow = "hidden";
+    html.style.height = "100vh";
+    body.style.overflow = "hidden";
+    body.style.height = "100vh";
+
     const heroBg = hero.querySelector('.hero-bg') as HTMLElement | null;
     const marqueeWrap = hero.querySelector('.hero-marquee-wrap') as HTMLElement | null;
 
@@ -126,6 +138,11 @@ export default function GatewayPage() {
       cards!.removeEventListener('wheel', onCardsWheel);
       window.removeEventListener('touchstart', onTouchStart);
       window.removeEventListener('touchend', onTouchEnd);
+      // Restore document scroll so subpages are scrollable after navigation
+      html.style.overflow = prevHtmlOverflow;
+      html.style.height = prevHtmlHeight;
+      body.style.overflow = prevBodyOverflow;
+      body.style.height = prevBodyHeight;
     };
   }, []);
 

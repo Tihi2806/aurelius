@@ -22,15 +22,18 @@
   position: absolute;
   inset: 0;
   display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  grid-template-rows: 1.4fr 1.2fr 0.6fr;
-  grid-template-areas:
-    "classy   flashy"
-    "brutalist organic"
-    "scandi   elegant";
+  grid-template-columns: 1fr;
+  grid-auto-rows: 1fr;
+  align-items: stretch;
   gap: 16px;
   padding: 80px 20px 20px;
   z-index: 1;
+}
+
+@media (min-width: 640px) {
+  .mosaic-grid {
+    grid-template-columns: repeat(2, minmax(300px, 1fr));
+  }
 }
 
 .mosaic-cell {
@@ -42,6 +45,10 @@
   color: var(--cell-fg, #fff);
   font-family: var(--cell-font), system-ui, sans-serif;
   transition: transform 0.15s ease-out, box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  min-height: 0;
 }
 
 .mosaic-cell:hover {
@@ -66,19 +73,25 @@
   padding: 24px 28px;
 }
 
+.card-preview img {
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  width: 100%;
+}
+
 .mosaic-cell-inner {
-  position: absolute;
-  inset: 0;
+  position: relative;
+  flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
   align-items: flex-start;
   padding: 24px 28px;
   pointer-events: none;
   z-index: 2;
+  min-height: 0;
 }
 
-.mosaic-cell-inner>* {
+.mosaic-cell-inner > * {
   pointer-events: auto;
 }
 
@@ -89,6 +102,10 @@
   text-transform: uppercase;
   color: var(--cell-muted, rgba(255, 255, 255, 0.5));
   margin-bottom: 8px;
+}
+
+.mosaic-cell-inner .mosaic-cell-label {
+  margin-top: auto;
 }
 
 .mosaic-cell-tagline {
