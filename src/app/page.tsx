@@ -7,131 +7,125 @@ import "./hero.css";
 export default function GatewayPage() {
   useEffect(() => {
     const hero = document.getElementById('hero');
-    const cardsSection = document.querySelector('.cards-section') as HTMLElement;
-    if (!hero || !cardsSection) return;
+    const cards = document.querySelector('.cards-section') as HTMLElement | null;
+    if (!hero || !cards) return;
 
     const heroBg = hero.querySelector('.hero-bg') as HTMLElement | null;
     const marqueeWrap = hero.querySelector('.hero-marquee-wrap') as HTMLElement | null;
 
-    let isSnapping = false;
+    let view: 'hero' | 'cards' = 'hero';
+    let animating = false;
+    const DURATION = 750;
 
-    // --- Parallax + fade based on scroll position ---
-    const handleScroll = () => {
-      if (isSnapping) return; // don't fight the manual animation during snap
-      const scrollY = window.scrollY;
-      const heroHeight = hero.offsetHeight;
-      const progress = Math.min(scrollY / (heroHeight * 2), 1);
-
-      hero.style.opacity = String(Math.max(0, 1 - progress * 1.8));
-
-      if (heroBg) {
-        heroBg.style.transform = `translateY(${scrollY * 0.2}px)`;
-      }
-      if (marqueeWrap) {
-        marqueeWrap.style.transform = `translateY(calc(-50% + ${scrollY * 0.08}px))`;
-      }
-    };
-
-    // --- Snap to cards (fade OUT hero) ---
-    function snapToCards() {
-      if (isSnapping) return;
-      isSnapping = true;
-      cardsSection.scrollIntoView({ behavior: 'smooth' });
-      setTimeout(() => { isSnapping = false; }, 1200);
+    function ease(p: number) {
+      return p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
     }
 
-    // --- Snap to hero (fade IN hero explicitly) ---
-    function snapToHero() {
-      if (isSnapping) return;
-      isSnapping = true;
-
-      // Step 1: scroll back to top
-      hero!.scrollIntoView({ behavior: 'smooth' });
-
-      // Step 2: manually animate hero opacity from 0 → 1 over 800ms
-      // This runs in parallel with the smooth scroll
-      const duration = 800;
+    // --- Scroll DOWN: hero fades out, cards slides up ---
+    function showCards() {
+      if (animating || view === 'cards') return;
+      animating = true;
+      view = 'cards';
       const start = performance.now();
-      const startOpacity = parseFloat(hero!.style.opacity) || 0;
 
-      function animateOpacity(now: number) {
-        const elapsed = now - start;
-        const progress = Math.min(elapsed / duration, 1);
-        // Ease out cubic
-        const eased = 1 - Math.pow(1 - progress, 3);
-        hero!.style.opacity = String(startOpacity + (1 - startOpacity) * eased);
+      function tick(now: number) {
+        const p = ease(Math.min((now - start) / DURATION, 1));
 
-        // Also reset parallax transforms
-        if (heroBg) {
-          const currentY = parseFloat(heroBg.style.transform.replace('translateY(', '')) || 0;
-          heroBg.style.transform = `translateY(${currentY * (1 - eased)}px)`;
-        }
-        if (marqueeWrap) {
-          marqueeWrap.style.transform = `translateY(calc(-50% + ${0}px))`;
-        }
+        hero!.style.opacity = String(1 - p);
+        if (heroBg) heroBg.style.transform = `translateY(${-p * 50}px)`;
+        if (marqueeWrap) marqueeWrap.style.transform = `translateY(calc(-50% + ${-p * 25}px))`;
 
-        if (progress < 1) {
-          requestAnimationFrame(animateOpacity);
+        cards!.style.transform = `translateY(${(1 - p) * 100}%)`;
+
+        if (p < 1) {
+          requestAnimationFrame(tick);
         } else {
-          // Fully reset
+          hero!.style.opacity = '0';
+          if (heroBg) heroBg.style.transform = 'translateY(-50px)';
+          cards!.style.transform = 'translateY(0%)';
+          animating = false;
+        }
+      }
+      requestAnimationFrame(tick);
+    }
+
+    // --- Scroll UP: cards slides down, hero fades back in ---
+    function showHero() {
+      if (animating || view === 'hero') return;
+      animating = true;
+      view = 'hero';
+      const start = performance.now();
+
+      hero!.style.opacity = '0';
+      if (heroBg) heroBg.style.transform = 'translateY(-50px)';
+      if (marqueeWrap) marqueeWrap.style.transform = 'translateY(calc(-50% + -25px))';
+
+      function tick(now: number) {
+        const p = ease(Math.min((now - start) / DURATION, 1));
+
+        hero!.style.opacity = String(p);
+        if (heroBg) heroBg.style.transform = `translateY(${-50 * (1 - p)}px)`;
+        if (marqueeWrap) marqueeWrap.style.transform = `translateY(calc(-50% + ${-25 * (1 - p)}px))`;
+
+        cards!.style.transform = `translateY(${p * 100}%)`;
+
+        if (p < 1) {
+          requestAnimationFrame(tick);
+        } else {
           hero!.style.opacity = '1';
           if (heroBg) heroBg.style.transform = 'translateY(0px)';
           if (marqueeWrap) marqueeWrap.style.transform = 'translateY(-50%)';
-          isSnapping = false;
+          cards!.style.transform = 'translateY(100%)';
+          animating = false;
         }
       }
-
-      requestAnimationFrame(animateOpacity);
+      requestAnimationFrame(tick);
     }
 
-    // --- Section detection ---
-    function isOnCards() {
-      return cardsSection.getBoundingClientRect().top <= 100;
+    function onHeroWheel(e: WheelEvent) {
+      if (animating) { e.preventDefault(); return; }
+      if (view === 'hero' && e.deltaY > 0) {
+        e.preventDefault();
+        showCards();
+      }
     }
 
-    // --- Shared wheel handler ---
-    const handleWheel = (e: WheelEvent) => {
-      if (isSnapping) {
+    function onCardsWheel(e: WheelEvent) {
+      if (animating) { e.preventDefault(); return; }
+      if (view === 'cards' && e.deltaY < 0 && cards!.scrollTop <= 0) {
         e.preventDefault();
-        return;
+        showHero();
       }
-      const onCards = isOnCards();
-      if (!onCards && e.deltaY > 0) {
-        e.preventDefault();
-        snapToCards();
-      } else if (onCards && e.deltaY < 0) {
-        e.preventDefault();
-        snapToHero();
-      }
-    };
+    }
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('wheel', handleWheel, { passive: false });
-    cardsSection.addEventListener('wheel', handleWheel, { passive: false });
+    window.addEventListener('wheel', onHeroWheel, { passive: false });
+    cards.addEventListener('wheel', onCardsWheel, { passive: false });
 
-    // --- Touch ---
     let touchStartY = 0;
-    const handleTouchStart = (e: TouchEvent) => {
+    const onTouchStart = (e: TouchEvent) => {
       touchStartY = e.touches[0].clientY;
     };
-
-    const handleTouchEnd = (e: TouchEvent) => {
-      if (isSnapping) return;
+    const onTouchEnd = (e: TouchEvent) => {
+      if (animating) return;
       const delta = touchStartY - e.changedTouches[0].clientY;
-      const onCards = isOnCards();
-      if (!onCards && delta > 30) snapToCards();
-      else if (onCards && delta < -30) snapToHero();
+      if (view === 'hero' && delta > 40) showCards();
+      else if (view === 'cards' && delta < -40 && cards!.scrollTop <= 0) showHero();
     };
 
-    window.addEventListener('touchstart', handleTouchStart, { passive: true });
-    window.addEventListener('touchend', handleTouchEnd, { passive: true });
+    window.addEventListener('touchstart', onTouchStart, { passive: true });
+    window.addEventListener('touchend', onTouchEnd, { passive: true });
+
+    // Init
+    hero.style.opacity = '1';
+    cards.style.transform = 'translateY(100%)';
+    if (heroBg) heroBg.style.transform = 'translateY(0px)';
+    if (marqueeWrap) marqueeWrap.style.transform = 'translateY(-50%)';
 
     return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('wheel', handleWheel);
-      cardsSection.removeEventListener('wheel', handleWheel);
-      window.removeEventListener('touchstart', handleTouchStart);
-      window.removeEventListener('touchend', handleTouchEnd);
+      window.removeEventListener('wheel', onHeroWheel);
+      cards!.removeEventListener('wheel', onCardsWheel);
+      window.removeEventListener('touchstart', onTouchStart);
+      window.removeEventListener('touchend', onTouchEnd);
     };
   }, []);
 
@@ -176,10 +170,8 @@ export default function GatewayPage() {
         </div>
       </section>
 
-      <div className="hero-scroll-spacer"></div>
-
       {/* ── Cards selector ── */}
-      <div className="cards-section min-h-screen overflow-hidden relative" style={{ zIndex: 1, position: 'relative' }}>
+      <div className="cards-section">
         <header className="mosaic-header">
           <h1>Choose your experience</h1>
         </header>
