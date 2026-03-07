@@ -1,0 +1,290 @@
+/* Mosaic theme selector — full-viewport grid + theme cells */
+
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Orbitron:wght@500;700&family=Space+Mono:wght@400;700&family=DM+Serif+Display:ital@0;1&family=Cinzel:wght@400;600&display=swap");
+
+.mosaic-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #0d0d0d;
+}
+
+.mosaic-noise {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+
+.mosaic-grid {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  grid-template-rows: 1.4fr 1.2fr 0.6fr;
+  grid-template-areas:
+    "classy   flashy"
+    "brutalist organic"
+    "scandi   elegant";
+  gap: 16px;
+  padding: 80px 20px 20px;
+  z-index: 1;
+}
+
+.mosaic-cell {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  border-radius: 0;
+  background: var(--cell-bg, #111);
+  color: var(--cell-fg, #fff);
+  font-family: var(--cell-font), system-ui, sans-serif;
+  transition: transform 0.15s ease-out, box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mosaic-cell:hover {
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+}
+
+.mosaic-cell-inner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  padding: 24px 28px;
+  pointer-events: none;
+}
+
+.mosaic-cell-inner > * {
+  pointer-events: auto;
+}
+
+.mosaic-cell-label {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--cell-muted, rgba(255, 255, 255, 0.5));
+  margin-bottom: 8px;
+}
+
+.mosaic-cell-tagline {
+  font-size: 19px;
+  line-height: 1.35;
+  color: var(--cell-fg);
+  opacity: 0.95;
+  max-width: 220px;
+}
+
+/* ─── Theme-specific micro-animations (deco elements) ─── */
+
+.mosaic-deco {
+  position: absolute;
+  pointer-events: none;
+}
+
+/* Flashy: pulsing neon glow */
+.mosaic-cell[data-theme="flashy"] {
+  box-shadow: inset 0 0 60px rgba(195, 0, 255, 0.15);
+  animation: flashy-pulse 2.5s ease-in-out infinite;
+}
+
+.mosaic-cell[data-theme="flashy"]:hover {
+  box-shadow: inset 0 0 80px rgba(195, 0, 255, 0.25), 0 0 40px rgba(0, 240, 255, 0.1);
+}
+
+@keyframes flashy-pulse {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.08); }
+}
+
+/* Brutalist: subtle CRT flicker; hover = shake + RGB split */
+.mosaic-cell[data-theme="brutalist"] {
+  animation: brutalist-flicker 4s steps(1) infinite;
+}
+
+.mosaic-cell[data-theme="brutalist"]:hover .mosaic-cell-label,
+.mosaic-cell[data-theme="brutalist"]:hover .mosaic-cell-tagline {
+  animation: brutalist-glitch-hover 0.4s ease-out;
+}
+
+@keyframes brutalist-flicker {
+  0%, 95%, 100% { opacity: 1; }
+  97% { opacity: 0.98; }
+  98% { opacity: 1; }
+}
+
+@keyframes brutalist-glitch-hover {
+  0%, 100% { transform: translate(0, 0); text-shadow: 0 0 transparent; }
+  20% { transform: translate(-2px, 0); text-shadow: 2px 0 #ff0000, -2px 0 #00ffff; }
+  40% { transform: translate(2px, 0); text-shadow: -2px 0 #00ff00, 2px 0 #ff00ff; }
+  60% { transform: translate(-1px, 1px); text-shadow: 1px -1px #ff0000; }
+  80% { transform: translate(1px, -1px); text-shadow: -1px 1px #00ffff; }
+}
+
+/* Organic: gentle breathe (handled by inner) */
+.mosaic-cell[data-theme="organic"] .mosaic-cell-inner {
+  animation: organic-breathe 5s ease-in-out infinite;
+}
+
+@keyframes organic-breathe {
+  0%, 100% { transform: scale(0.997); }
+  50% { transform: scale(1.003); }
+}
+
+/* Classy: subtle metallic shimmer (gradient sweep on hover via class) */
+.mosaic-cell[data-theme="classy"] {
+  background: linear-gradient(105deg, #1a1a1a 0%, #252015 50%, #1a1a1a 100%);
+  background-size: 200% 100%;
+}
+
+.mosaic-cell[data-theme="classy"]:hover {
+  animation: classy-shimmer 1.2s ease-out;
+}
+
+@keyframes classy-shimmer {
+  0% { background-position: 100% 0; }
+  100% { background-position: 0 0; }
+}
+
+/* ─── Fullscreen overlay ─── */
+
+.mosaic-fullscreen {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: var(--preview-bg, #0d0d0d);
+  color: var(--preview-fg, #fff);
+  font-family: var(--preview-font), system-ui, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mosaic-fullscreen-inner {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 24px;
+}
+
+.mosaic-preview-mock {
+  background: var(--preview-bg);
+  color: var(--preview-fg);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0;
+  overflow: hidden;
+}
+
+.mosaic-preview-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  opacity: 0.9;
+}
+
+.mosaic-preview-hero {
+  padding: 40px 24px 32px;
+}
+
+.mosaic-preview-hero p {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  opacity: 0.6;
+  margin-bottom: 12px;
+}
+
+.mosaic-preview-hero h2 {
+  font-size: 28px;
+  font-weight: 400;
+  line-height: 1.2;
+  margin-bottom: 12px;
+}
+
+.mosaic-preview-sub {
+  font-size: 13px !important;
+  letter-spacing: 0.02em !important;
+  text-transform: none !important;
+  opacity: 0.75 !important;
+}
+
+.mosaic-preview-cta {
+  padding: 20px 24px 28px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.mosaic-preview-enter {
+  display: inline-block;
+  padding: 12px 24px;
+  background: var(--preview-accent, #fff);
+  color: var(--preview-bg, #000);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.mosaic-preview-enter:hover {
+  opacity: 0.9;
+  transform: scale(1.02);
+}
+
+.mosaic-fullscreen-back {
+  position: absolute;
+  top: -52px;
+  left: 0;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--preview-fg);
+  padding: 10px 20px;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.mosaic-fullscreen-back:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* ─── Fixed header (used by page) ─── */
+
+.mosaic-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  padding: 20px 24px 16px;
+  background: linear-gradient(to bottom, #0d0d0d 0%, transparent 100%);
+  pointer-events: none;
+  text-align: center;
+}
+
+.mosaic-header h1 {
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+  font-family: system-ui, sans-serif;
+}
+
+.mosaic-fullscreen-wrapper {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+}
