@@ -33,11 +33,8 @@ export default function GatewayPage() {
     document.fonts.ready.then(initMarquee);
   }, []);
 
-  /* ── Full-page scroll system — 6 sections ── */
+  /* ── Full-page scroll system — 6 sections (desktop + mobile, touch + wheel) ── */
   useEffect(() => {
-    // Mobile: skip JS scroll lock — sections revert to normal flow via CSS
-    if (window.innerWidth < 768) return;
-
     const hero      = document.getElementById('hero')                as HTMLElement | null;
     const cards     = document.querySelector('.cards-section')        as HTMLElement | null;
     const work      = document.querySelector('.work-section')         as HTMLElement | null;
