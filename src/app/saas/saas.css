@@ -1,0 +1,8 @@
+@keyframes saas-marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.saas-marquee {
+  animation: saas-marquee 30s linear infinite;
+}

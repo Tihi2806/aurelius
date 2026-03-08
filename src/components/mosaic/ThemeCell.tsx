@@ -92,6 +92,51 @@ const CARD_PREVIEWS: Record<string, React.ReactNode> = {
       </div>
     </div>
   ),
+  saas: (
+    <div className="card-preview">
+      <div style={{ position: "absolute", inset: 0, background: "#F6F9FC" }} />
+      <div style={{ position: "absolute", top: 0, left: 0, right: 0, padding: "14px 20px", display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid rgba(26,31,54,0.08)", zIndex: 1 }}>
+        <span style={{ fontFamily: "'Inter',sans-serif", fontSize: 11, fontWeight: 600, color: "#1A1F36" }}>Product</span>
+        <div style={{ display: "flex", gap: 12 }}>
+          <span style={{ fontFamily: "'Inter',sans-serif", fontSize: 10, color: "rgba(26,31,54,0.5)" }}>Pricing</span>
+          <span style={{ fontFamily: "'Inter',sans-serif", fontSize: 10, color: "#635BFF", fontWeight: 600 }}>Sign in</span>
+        </div>
+      </div>
+      <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: 20, zIndex: 1 }}>
+        <div style={{ fontFamily: "'Inter',sans-serif", fontSize: 8, letterSpacing: 2, color: "#635BFF", textTransform: "uppercase", marginBottom: 6 }}>Trusted by teams everywhere</div>
+        <div style={{ fontFamily: "'Inter',sans-serif", fontSize: 18, fontWeight: 700, color: "#1A1F36", lineHeight: 1.2 }}>Scale your product.<br />Ship faster.</div>
+        <div style={{ marginTop: 10, display: "inline-block", background: "#635BFF", color: "#fff", padding: "6px 14px", borderRadius: 6, fontWeight: 600, fontSize: 10 }}>Get started</div>
+      </div>
+    </div>
+  ),
+  editorial: (
+    <div className="card-preview">
+      <div style={{ position: "absolute", inset: 0, background: "#FBFBFB" }} />
+      <div style={{ position: "absolute", top: 0, left: 0, right: 0, padding: "14px 24px", display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid rgba(26,26,26,0.06)", zIndex: 1 }}>
+        <span style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 8, letterSpacing: "0.2em", color: "rgba(26,26,26,0.5)", textTransform: "uppercase" }}>Issue 12</span>
+        <span style={{ fontFamily: "'Playfair Display',serif", fontSize: 14, color: "#1A1A1A", fontWeight: 600 }}>Editorial</span>
+      </div>
+      <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: 20, zIndex: 1 }}>
+        <div style={{ fontFamily: "'Montserrat',sans-serif", fontSize: 7, letterSpacing: "0.2em", color: "rgba(26,26,26,0.6)", textTransform: "uppercase", marginBottom: 8 }}>Culture</div>
+        <div style={{ fontFamily: "'Playfair Display',serif", fontSize: 22, color: "#1A1A1A", lineHeight: 1.15, fontStyle: "italic" }}>The art of<br />the possible.</div>
+        <div style={{ marginTop: 10, width: 24, height: 1, background: "#1A1A1A" }} />
+      </div>
+    </div>
+  ),
+  midnight: (
+    <div className="card-preview">
+      <div style={{ position: "absolute", inset: 0, background: "#08090A" }} />
+      <div style={{ position: "absolute", top: 0, left: 0, right: 0, padding: "14px 20px", display: "flex", justifyContent: "space-between", alignItems: "center", zIndex: 1 }}>
+        <span style={{ fontFamily: "'Inter Tight',sans-serif", fontSize: 10, fontWeight: 700, color: "#00FF41", letterSpacing: 2, textTransform: "uppercase" }}>Studio</span>
+        <span style={{ fontFamily: "'Inter Tight',sans-serif", fontSize: 9, color: "rgba(230,230,230,0.5)", letterSpacing: 1 }}>Menu</span>
+      </div>
+      <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: 20, zIndex: 1 }}>
+        <div style={{ fontFamily: "'Inter Tight',sans-serif", fontSize: 8, letterSpacing: 3, color: "#BC13FE", textTransform: "uppercase", marginBottom: 8 }}>Creative studio</div>
+        <div style={{ fontFamily: "'Inter Tight',sans-serif", fontSize: 20, fontWeight: 700, color: "#E6E6E6", lineHeight: 1.1, letterSpacing: -1 }}>Midnight.<br /><span style={{ color: "#00FF41" }}>Unlimited.</span></div>
+        <div style={{ marginTop: 10, display: "inline-block", border: "1px solid #00FF41", color: "#00FF41", padding: "5px 12px", fontSize: 9, fontWeight: 600, letterSpacing: 1, boxShadow: "0 0 15px rgba(0,255,65,0.3)" }}>Enter →</div>
+      </div>
+    </div>
+  ),
 };
 
 export function ThemeCell({
