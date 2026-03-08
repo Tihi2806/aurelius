@@ -328,4 +328,11 @@
   .hero-cta {
     display: none;
   }
+
+  /* Cards section: scroll snapping for Choose Your Experience on mobile */
+  .cards-section {
+    scroll-snap-type: y mandatory;
+    scroll-padding-top: 56px;
+    -webkit-overflow-scrolling: touch;
+  }
 }

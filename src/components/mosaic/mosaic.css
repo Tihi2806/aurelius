@@ -58,7 +58,7 @@
   .mosaic-cell[data-theme="scandi"]    { grid-area: scandi; }
 }
 
-/* Mobile: single column, vertical scroll */
+/* Mobile: single-column vertical stack, scroll snap, larger cards, preview always visible */
 @media (max-width: 767px) {
   .mosaic-container {
     overflow-y: visible;
@@ -77,13 +77,68 @@
     height: auto;
     grid-template-columns: 1fr;
     grid-auto-rows: auto;
-    padding: 70px 12px 12px;
+    gap: 0;
+    padding: 60px 0 0;
     box-sizing: border-box;
   }
 
   .mosaic-cell {
-    height: 65vh;
-    min-height: 300px;
+    width: 100%;
+    min-height: 65vh;
+    height: auto;
+    scroll-snap-align: start;
+    scroll-snap-stop: normal;
+    display: flex;
+    flex-direction: column;
+    flex: none;
+  }
+
+  /* Preview always visible on mobile (no hover); takes most of the card */
+  .mosaic-cell .card-preview-wrap {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    opacity: 1 !important;
+    pointer-events: auto;
+  }
+
+  .mosaic-cell .card-preview-wrap .card-preview {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 24px 20px;
+    min-height: 50vh;
+  }
+
+  /* Label + tagline in a bottom bar, larger and centered; always visible (no hover) */
+  .mosaic-cell .mosaic-cell-inner {
+    flex-shrink: 0;
+    padding: 20px 24px 28px;
+    margin-top: 0;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    min-height: 0;
+    opacity: 1 !important;
+  }
+
+  .mosaic-cell .mosaic-cell-label {
+    font-size: clamp(18px, 5vw, 24px);
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    margin-bottom: 6px;
+    margin-top: 0;
+  }
+
+  .mosaic-cell .mosaic-cell-tagline {
+    font-size: clamp(14px, 3.5vw, 18px);
+    max-width: none;
+    opacity: 0.95;
   }
 }
 
