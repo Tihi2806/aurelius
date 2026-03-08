@@ -171,7 +171,17 @@ export default function GatewayPage() {
 
       {/* ── Hero ── */}
       <section id="hero">
+        <nav className="hero-nav">
+          <a href="#" className="hero-nav-wordmark">Aurelius</a>
+          <div className="hero-nav-links">
+            <a href="#">Work</a>
+            <a href="#">Studio</a>
+            <a href="#">Contact</a>
+          </div>
+        </nav>
+
         <div className="hero-bg">
+          <div className="hero-glow" />
           <img src="/aurelius%20center%20look.png" alt="Aurelius" />
         </div>
 
@@ -192,6 +202,8 @@ export default function GatewayPage() {
             <span>· Aurelius · Brand &amp; Digital ·</span>
           </div>
         </div>
+
+        <div className="hero-bottom-rule" />
 
         <div className="hero-bottom-left">Est. 2024 · Global</div>
 

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
-  hero,
+  heroBrutalist as hero,
   services,
   work,
   processSteps,
@@ -40,13 +40,11 @@ export default function BrutalistPage() {
               transition={{ duration: 0.35, delay: 0.25 }}
               className="brutalist-hero-headline"
             >
-              WE CRAFT
+              RAW.
               <br />
-              BRANDS &amp;
+              <span className="brutalist-accent">HONEST.</span>
               <br />
-              EXPERIENCES
-              <br />
-              THAT ENDURE.
+              RADICAL.
             </motion.h1>
             <motion.p
               initial={{ opacity: 0, y: 24 }}

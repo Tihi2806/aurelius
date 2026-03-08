@@ -4,7 +4,7 @@ import Link from "next/link";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useState } from "react";
 import {
-  hero,
+  heroFlashy as hero,
   services,
   work,
   processSteps,
@@ -13,7 +13,8 @@ import {
 } from "@/lib/content";
 
 // Words in the headline that get accent color
-const PURPLE_WORDS = new Set(["brands", "experiences"]);
+// "immersive" and "motion" (punctuation stripped + lowercased) match the new headline
+const PURPLE_WORDS = new Set(["immersive", "motion"]);
 
 // Colored overlays per work item
 const WORK_OVERLAYS = [

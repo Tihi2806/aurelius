@@ -7,6 +7,32 @@ export const hero = {
   ctaSecondary: "View our work",
 } as const;
 
+export const heroFlashy = {
+  eyebrow: "The Digital Experience",
+  headline: "Immersive storytelling through motion.",
+  subtext:
+    "We build digital worlds that move. Kinetic interfaces, fluid transitions, and narratives that pull your audience in and never let go.",
+  ctaPrimary: "Start a project",
+  ctaSecondary: "View our work",
+} as const;
+
+export const heroClassy = {
+  eyebrow: "The Gold Standard",
+  headline: "Elegance that speaks in a whisper.",
+  subtext:
+    "For brands that don't need to shout. We craft high-fashion identities rooted in restraint, prestige, and the details that only the discerning will notice.",
+  ctaPrimary: "Start a project",
+  ctaSecondary: "View our work",
+} as const;
+
+export const heroBrutalist = {
+  eyebrow: "The Rule Breaker",
+  subtext:
+    "Design that refuses to follow the rules. High-contrast, oversized type, and layouts that demand attention — for brands that mean business and aren't afraid to show it.",
+  ctaPrimary: "Start a project",
+  ctaSecondary: "View our work",
+} as const;
+
 export interface Service {
   title: string;
   description: string;

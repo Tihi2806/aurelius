@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import Container from "@/components/ui/Container";
-import { hero } from "@/lib/content";
+import { heroClassy as hero } from "@/lib/content";
 
 const fadeInUp = {
   initial: { opacity: 0, y: 12 },

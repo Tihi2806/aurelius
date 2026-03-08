@@ -22,7 +22,7 @@ export const THEMES: ThemeConfig[] = [
   {
     id: "flashy",
     label: "Flashy",
-    tagline: "Neon & bold",
+    tagline: "Immersive & bold",
     href: "/flashy",
     parallax: 0.10,
     vars: {
@@ -38,7 +38,7 @@ export const THEMES: ThemeConfig[] = [
   {
     id: "classy",
     label: "Classy",
-    tagline: "Luxury & craft",
+    tagline: "Luxury & whisper",
     href: "/classy",
     parallax: 0.04,
     vars: {
@@ -53,7 +53,7 @@ export const THEMES: ThemeConfig[] = [
   {
     id: "brutalist",
     label: "Brutalist",
-    tagline: "Raw & direct",
+    tagline: "Raw. Honest. Radical.",
     href: "/brutalist",
     parallax: 0.08,
     vars: {
@@ -68,7 +68,7 @@ export const THEMES: ThemeConfig[] = [
   {
     id: "scandi",
     label: "Scandi Shop",
-    tagline: "Minimal. Considered. Timeless.",
+    tagline: "Minimal. Considered.",
     href: "/scandi",
     parallax: 0.06,
     vars: {

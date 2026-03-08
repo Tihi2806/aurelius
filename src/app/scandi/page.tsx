@@ -33,7 +33,7 @@ export default function ScandiPage() {
             <a href="#">Insta</a>
             <a href="#">Pinterest</a>
           </div>
-          <div className="hero-eyebrow">New Collection</div>
+          <div className="hero-eyebrow">The Mindful Storefront</div>
           <div className="hero-title">
             Forma<br />Studio
           </div>
@@ -119,7 +119,7 @@ export default function ScandiPage() {
             Perfect<br />Bath<br />Room
           </div>
           <div className="featured-desc">
-            Objects designed for quiet rituals. Each piece chosen for its simplicity, texture, and enduring calm.
+            Calm, considered, and beautifully restrained. We design minimal storefronts in beige tones and soft shadows that let your product breathe and your customers trust.
           </div>
           <div className="featured-cta">
             <button type="button" className="btn-primary">Shop now</button>
