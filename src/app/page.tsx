@@ -2,16 +2,11 @@
 
 import { useEffect } from "react";
 import { MosaicGrid } from "@/components/mosaic/MosaicGrid";
+import { SelectedWorkSection } from "@/components/SelectedWorkSection";
+import { ManifestoSection } from "@/components/ManifestoSection";
+import { ServicesSection } from "@/components/ServicesSection";
 import "./hero.css";
 import "./sections.css";
-
-const PROJECTS = [
-  { name: "Meridian",       category: "Brand & Digital",  year: "2024" },
-  { name: "Atlas Ventures", category: "Identity & Web",   year: "2024" },
-  { name: "Lumina",         category: "Product & Motion", year: "2023" },
-  { name: "Northgate",      category: "Brand Strategy",   year: "2023" },
-  { name: "Echo Studio",    category: "Identity & Film",  year: "2023" },
-] as const;
 
 const HEADLINE_WORDS = ["Let's", "build", "something", "that", "lasts."];
 
@@ -38,20 +33,21 @@ export default function GatewayPage() {
     document.fonts.ready.then(initMarquee);
   }, []);
 
-  /* ── Full-page scroll system — extended to 5 sections ── */
+  /* ── Full-page scroll system — 6 sections ── */
   useEffect(() => {
-    // Mobile: skip JS scroll lock — new sections revert to normal flow via CSS
+    // Mobile: skip JS scroll lock — sections revert to normal flow via CSS
     if (window.innerWidth < 768) return;
 
-    const hero    = document.getElementById('hero')              as HTMLElement | null;
-    const cards   = document.querySelector('.cards-section')     as HTMLElement | null;
-    const work    = document.querySelector('.work-section')      as HTMLElement | null;
-    const stats   = document.querySelector('.stats-section')     as HTMLElement | null;
-    const contact = document.querySelector('.contact-section')   as HTMLElement | null;
+    const hero      = document.getElementById('hero')                as HTMLElement | null;
+    const cards     = document.querySelector('.cards-section')        as HTMLElement | null;
+    const work      = document.querySelector('.work-section')         as HTMLElement | null;
+    const manifesto = document.querySelector('.manifesto-section')    as HTMLElement | null;
+    const services  = document.querySelector('.services-section')    as HTMLElement | null;
+    const contact   = document.querySelector('.contact-section')      as HTMLElement | null;
 
-    if (!hero || !cards || !work || !stats || !contact) return;
+    if (!hero || !cards || !work || !manifesto || !services || !contact) return;
 
-    const allSections = [hero, cards, work, stats, contact];
+    const allSections = [hero, cards, work, manifesto, services, contact];
 
     // Lock document scroll (same pattern as original)
     const html = document.documentElement;
@@ -68,7 +64,7 @@ export default function GatewayPage() {
     const heroBg      = hero.querySelector('.hero-bg')           as HTMLElement | null;
     const marqueeWrap = hero.querySelector('.hero-marquee-wrap') as HTMLElement | null;
 
-    let current   = 0;          // 0=hero 1=cards 2=work 3=stats 4=contact
+    let current   = 0;          // 0=hero 1=cards 2=work 3=manifesto 4=services 5=contact
     let animating = false;
     const DURATION = 750;
 
@@ -86,45 +82,45 @@ export default function GatewayPage() {
     /* ── Section enter animations (fire once per visit) ── */
     function triggerEnterAnimation(index: number) {
       if (index === 2) animateWork();
-      if (index === 3) animateStats();
-      if (index === 4) animateContact();
+      if (index === 3) animateManifesto();
+      if (index === 4) animateServices();
+      if (index === 5) animateContact();
     }
 
     function animateWork() {
       if (work!.dataset.animated === 'true') return;
       work!.dataset.animated = 'true';
       work!.querySelectorAll<HTMLElement>('.work-row').forEach((row, i) => {
-        setTimeout(() => row.classList.add('visible'), i * 110);
+        setTimeout(() => row.classList.add('visible'), i * 100);
       });
+      const previewWrap = work!.querySelector<HTMLElement>('.work-preview-wrap');
+      if (previewWrap) setTimeout(() => previewWrap.classList.add('visible'), 100);
     }
 
-    function animateStats() {
-      if (stats!.dataset.animated === 'true') return;
-      stats!.dataset.animated = 'true';
-
-      // Count up numeric stats with easeOutCubic over 1.5 s
-      stats!.querySelectorAll<HTMLElement>('[data-count]').forEach(el => {
-        const target = parseInt(el.dataset.count!, 10);
-        const dur    = 1500;
-        const t0     = performance.now();
-        function tick(now: number) {
-          const p     = Math.min((now - t0) / dur, 1);
-          const eased = 1 - Math.pow(1 - p, 3);
-          el.textContent = String(Math.round(eased * target));
-          if (p < 1) requestAnimationFrame(tick);
-        }
-        requestAnimationFrame(tick);
+    function animateManifesto() {
+      if (manifesto!.dataset.animated === 'true') return;
+      manifesto!.dataset.animated = 'true';
+      manifesto!.querySelectorAll<HTMLElement>('.manifesto-word').forEach((word, i) => {
+        setTimeout(() => word.classList.add('visible'), i * 60);
       });
+      const wordCount = manifesto!.querySelectorAll('.manifesto-word').length;
+      const link = manifesto!.querySelector<HTMLElement>('.manifesto-link');
+      if (link) setTimeout(() => link.classList.add('visible'), wordCount * 60 + 200);
+    }
 
-      // "Global" fades in
-      const globalEl = stats!.querySelector<HTMLElement>('.stat-global');
-      if (globalEl) globalEl.classList.add('visible');
-
-      // Manifesto fades in last
-      setTimeout(() => {
-        const manifesto = stats!.querySelector<HTMLElement>('.stats-manifesto');
-        if (manifesto) manifesto.classList.add('visible');
-      }, 1700);
+    function animateServices() {
+      if (services!.dataset.animated === 'true') return;
+      services!.dataset.animated = 'true';
+      const circle = services!.querySelector<HTMLElement>('.services-circle');
+      const connectors = services!.querySelectorAll<HTMLElement>('.services-connector');
+      const blocks = services!.querySelectorAll<HTMLElement>('.services-block');
+      if (circle) circle.classList.add('visible');
+      connectors.forEach((line, i) => {
+        setTimeout(() => line.classList.add('visible'), 600 + i * 150);
+      });
+      blocks.forEach((block, i) => {
+        setTimeout(() => block.classList.add('visible'), 600 + i * 150);
+      });
     }
 
     function animateContact() {
@@ -133,14 +129,13 @@ export default function GatewayPage() {
 
       const words = contact!.querySelectorAll<HTMLElement>('.headline-word');
       words.forEach((word, i) => {
-        setTimeout(() => word.classList.add('visible'), i * 110);
+        setTimeout(() => word.classList.add('visible'), i * 80);
       });
 
-      // Contact body fades up after headline finishes
       setTimeout(() => {
         const cb = contact!.querySelector<HTMLElement>('.contact-body');
         if (cb) cb.classList.add('visible');
-      }, words.length * 110 + 150);
+      }, words.length * 80 + 150);
     }
 
     /* ════════════════════════════════════════════
@@ -267,8 +262,8 @@ export default function GatewayPage() {
           ? 'translateY(-50%)'
           : 'translateY(calc(-50% + -25px))';
 
-      // Sections 1–4: above target = -100%, at target = 0%, below = +100%
-      [cards, work, stats, contact].forEach((el, i) => {
+      // Sections 1–5: above target = -100%, at target = 0%, below = +100%
+      [cards, work, manifesto, services, contact].forEach((el, i) => {
         const idx = i + 1;
         el!.style.transform =
           idx < target  ? 'translateY(-100%)' :
@@ -315,7 +310,11 @@ export default function GatewayPage() {
 
       } else if (current === 4) {
         e.preventDefault();
-        if (dy < 0) slideTo(4, 3);
+        if (dy > 0) slideTo(4, 5);
+        else if (dy < 0) slideTo(4, 3);
+      } else if (current === 5) {
+        e.preventDefault();
+        if (dy < 0) slideTo(5, 4);
       }
     }
 
@@ -333,15 +332,18 @@ export default function GatewayPage() {
       else if (current === 2 && dy < 0)                          slideTo(2, 1);
       else if (current === 3 && dy > 0)                          slideTo(3, 4);
       else if (current === 3 && dy < 0)                          slideTo(3, 2);
+      else if (current === 4 && dy > 0)                          slideTo(4, 5);
       else if (current === 4 && dy < 0)                          slideTo(4, 3);
+      else if (current === 5 && dy < 0)                         slideTo(5, 4);
     };
 
     /* ── Init ── */
-    hero!.style.opacity     = '1';
-    cards!.style.transform  = 'translateY(100%)';
-    work!.style.transform   = 'translateY(100%)';
-    stats!.style.transform  = 'translateY(100%)';
-    contact!.style.transform = 'translateY(100%)';
+    hero!.style.opacity       = '1';
+    cards!.style.transform    = 'translateY(100%)';
+    work!.style.transform     = 'translateY(100%)';
+    manifesto!.style.transform = 'translateY(100%)';
+    services!.style.transform = 'translateY(100%)';
+    contact!.style.transform  = 'translateY(100%)';
     if (heroBg)      heroBg.style.transform     = 'translateY(0px)';
     if (marqueeWrap) marqueeWrap.style.transform = 'translateY(-50%)';
     updateDots(0);
@@ -381,11 +383,11 @@ export default function GatewayPage() {
      JSX
      ════════════════════════════════════════════ */
   return (
-    <div className="w-full bg-[#0a0a0a]">
+    <div className="w-full min-w-0 overflow-x-hidden bg-[#0a0a0a]">
 
       {/* ── Section navigation dots (fixed, right edge) ── */}
       <nav className="section-dots" aria-label="Section navigation">
-        {[0, 1, 2, 3, 4].map((i) => (
+        {[0, 1, 2, 3, 4, 5].map((i) => (
           <button
             key={i}
             className="section-dot"
@@ -457,76 +459,25 @@ export default function GatewayPage() {
       {/* ══════════════════════════════════════
           Section 2 — Selected Work
           ══════════════════════════════════════ */}
-      <section className="work-section">
-        {/* Decorative vertical "002" label */}
-        <span className="work-section-number" aria-hidden="true">002</span>
-
-        <div className="work-inner">
-          <div className="work-list">
-            {PROJECTS.map((project, i) => (
-              <div key={project.name} className="work-row">
-                <span className="work-row-num">
-                  {String(i + 1).padStart(2, '0')}
-                </span>
-                <h2 className="work-row-name">{project.name}</h2>
-                <span className="work-row-cat">{project.category}</span>
-                <span className="work-row-year">{project.year}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <SelectedWorkSection />
 
       {/* ══════════════════════════════════════
-          Section 3 — The Numbers
+          Section 3 — Manifesto
           ══════════════════════════════════════ */}
-      <section className="stats-section">
-        <div className="stats-inner">
-          <div className="stats-grid">
-
-            <div className="stat-item">
-              {/* Numeric counter + static "+" suffix */}
-              <div className="stat-number">
-                <span data-count="47">0</span>+
-              </div>
-              <div className="stat-label">Awards</div>
-            </div>
-
-            <div className="stat-item">
-              <div className="stat-number">
-                <span data-count="12">0</span>
-              </div>
-              <div className="stat-label">Years Active</div>
-            </div>
-
-            <div className="stat-item">
-              <div className="stat-number">
-                <span data-count="248">0</span>
-              </div>
-              <div className="stat-label">Projects</div>
-            </div>
-
-            <div className="stat-item">
-              {/* "Global" fades in — no numeric counter */}
-              <div className="stat-number stat-global">Global</div>
-              <div className="stat-label">Clients</div>
-            </div>
-
-          </div>
-
-          <p className="stats-manifesto">
-            We don&apos;t follow briefs. We interrogate them.
-          </p>
-        </div>
-      </section>
+      <ManifestoSection />
 
       {/* ══════════════════════════════════════
-          Section 4 — Start a Project
+          Section 4 — Services
+          ══════════════════════════════════════ */}
+      <ServicesSection />
+
+      {/* ══════════════════════════════════════
+          Section 5 — Contact / CTA
           ══════════════════════════════════════ */}
       <section className="contact-section">
         <div className="contact-inner">
 
-          {/* Staggered word-reveal headline */}
+          {/* Clip-path word-reveal headline */}
           <h2
             className="contact-headline"
             aria-label="Let's build something that lasts."
@@ -541,11 +492,11 @@ export default function GatewayPage() {
           {/* Two-column: left copy · right CTA */}
           <div className="contact-body">
             <p className="contact-text">
-              We take on a small number of projects each year. If you&apos;re
+              We take on a limited number of projects each year. If you&apos;re
               building something worth making, we&apos;d like to hear from you.
             </p>
             <div className="contact-action">
-              <a href="mailto:hello@aurelius.co" className="contact-btn">
+              <a href="mailto:hello@aurelius.co" className="contact-btn contact-btn-outline">
                 → Start a Project
               </a>
             </div>

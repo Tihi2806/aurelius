@@ -314,9 +314,25 @@
   pointer-events: none;
 }
 
-/* ── Mobile ── */
+/* ── Mobile: stack hero + cards with normal scroll ── */
 
 @media (max-width: 767px) {
+  #hero {
+    position: relative !important;
+    height: auto;
+    min-height: 100vh;
+    width: 100%;
+  }
+
+  .cards-section {
+    position: relative !important;
+    transform: none !important;
+    height: auto;
+    min-height: 100vh;
+    width: 100%;
+    overflow-y: visible;
+  }
+
   .hero-nav {
     padding: 0 24px;
   }
