@@ -1,0 +1,464 @@
+/* ═══════════════════════════════════════════════════
+   sections.css — Work · Stats · Contact full-page sections
+   Uses the same position:fixed / translateY system as hero + cards
+   ═══════════════════════════════════════════════════ */
+
+/* ── Shared base for all three new sections ── */
+.work-section,
+.stats-section,
+.contact-section {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: #0a0a0a;
+  z-index: 2;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* JS sets the real transform on init; CSS keeps them off-screen as fallback */
+  transform: translateY(100%);
+}
+
+/* ══════════════════════════════════════════
+   Section navigation dots — right edge
+   ══════════════════════════════════════════ */
+.section-dots {
+  position: fixed;
+  right: 26px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 300;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  padding: 8px 0;
+  border: none;
+  background: none;
+}
+
+.section-dot {
+  display: block;
+  width: 4px;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.18);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: background 0.3s ease, height 0.3s ease;
+}
+
+.section-dot.active {
+  height: 22px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+/* ══════════════════════════════════════════
+   Section 2 — Selected Work
+   ══════════════════════════════════════════ */
+.work-section {
+  padding: 0 80px;
+}
+
+/* Decorative "002" — vertical, anchored to the left of the viewport */
+.work-section-number {
+  position: absolute;
+  left: 28px;
+  top: 50%;
+  transform: translateY(-50%) rotate(180deg);
+  writing-mode: vertical-lr;
+  font-size: 8vw;
+  color: rgba(255, 255, 255, 0.04);
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  user-select: none;
+  pointer-events: none;
+}
+
+.work-inner {
+  width: 100%;
+  max-width: 1100px;
+}
+
+/* ── Project rows ── */
+.work-row {
+  display: grid;
+  grid-template-columns: 44px 1fr auto auto;
+  align-items: center;
+  gap: 0 28px;
+  padding: 22px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  cursor: default;
+  /* Section-enter animation */
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.55s ease, transform 0.55s ease;
+}
+
+.work-row:first-child {
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.work-row.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.work-row-num {
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.22);
+  letter-spacing: 0.1em;
+  font-family: var(--font-dm-sans), system-ui, sans-serif;
+  font-weight: 400;
+}
+
+.work-row-name {
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-size: clamp(28px, 4vw, 60px);
+  font-weight: 400;
+  color: #ffffff;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  /* Hover: slide right */
+  transition: transform 0.3s ease;
+}
+
+.work-row:hover .work-row-name {
+  transform: translateX(8px);
+}
+
+.work-row-cat {
+  font-size: 0.66rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.28);
+  font-family: var(--font-dm-sans), system-ui, sans-serif;
+  font-weight: 400;
+  justify-self: end;
+}
+
+/* Year fades in on row hover */
+.work-row-year {
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.22);
+  font-family: var(--font-dm-sans), system-ui, sans-serif;
+  font-weight: 400;
+  min-width: 38px;
+  text-align: right;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.work-row:hover .work-row-year {
+  opacity: 1;
+}
+
+/* ══════════════════════════════════════════
+   Section 3 — The Numbers
+   ══════════════════════════════════════════ */
+.stats-section {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0 80px;
+}
+
+.stats-inner {
+  width: 100%;
+  max-width: 1100px;
+}
+
+/* 2×2 grid with hairline dividers */
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+/* Horizontal divider (between rows) */
+.stat-item:nth-child(1),
+.stat-item:nth-child(2) {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+/* Vertical divider (between columns) */
+.stat-item:nth-child(1),
+.stat-item:nth-child(3) {
+  border-right: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.stat-item {
+  padding: 52px 48px;
+}
+
+.stat-number {
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-size: clamp(64px, 8.5vw, 118px);
+  font-weight: 300;
+  color: #ffffff;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  margin-bottom: 16px;
+}
+
+.stat-label {
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.28);
+  font-family: var(--font-dm-sans), system-ui, sans-serif;
+  font-weight: 400;
+}
+
+/* "Global" fades in separately (no counter) */
+.stat-global {
+  opacity: 0;
+  transition: opacity 0.9s ease;
+}
+
+.stat-global.visible {
+  opacity: 1;
+}
+
+/* Manifesto — fades in last */
+.stats-manifesto {
+  margin-top: 60px;
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-size: clamp(18px, 1.9vw, 28px);
+  font-weight: 400;
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.38);
+  text-align: center;
+  letter-spacing: 0.01em;
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.stats-manifesto.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ══════════════════════════════════════════
+   Section 4 — Start a Project (Contact CTA)
+   ══════════════════════════════════════════ */
+.contact-section {
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: stretch;
+  padding: 0;
+}
+
+.contact-inner {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 80px 40px;
+  text-align: center;
+}
+
+/* ── Headline: each word reveals upward ── */
+.contact-headline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 0.28em;
+  justify-content: center;
+  margin-bottom: 64px;
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-size: clamp(48px, 7vw, 100px);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+}
+
+/* Overflow-hidden mask per word */
+.headline-word {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+
+/* Inner span slides up into the mask */
+.headline-word-inner {
+  display: inline-block;
+  transform: translateY(110%);
+  transition: transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.headline-word.visible .headline-word-inner {
+  transform: translateY(0);
+}
+
+/* ── Two-column content block ── */
+.contact-body {
+  display: flex;
+  align-items: flex-start;
+  gap: 80px;
+  max-width: 880px;
+  width: 100%;
+  text-align: left;
+  /* Fades up after the headline */
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.contact-body.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.contact-text {
+  flex: 1;
+  font-size: clamp(13px, 1.1vw, 16px);
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.38);
+  font-family: var(--font-dm-sans), system-ui, sans-serif;
+  font-weight: 300;
+}
+
+.contact-action {
+  flex-shrink: 0;
+}
+
+.contact-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: #ffffff;
+  color: #0a0a0a;
+  font-family: var(--font-dm-sans), system-ui, sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 18px 36px;
+  text-decoration: none;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.contact-btn:hover {
+  background: transparent;
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.28);
+}
+
+/* ── Muted footer bar ── */
+.contact-footer-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 80px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  flex-shrink: 0;
+}
+
+.contact-footer-left,
+.contact-footer-right {
+  font-size: 0.64rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.16);
+  font-family: var(--font-dm-sans), system-ui, sans-serif;
+  font-weight: 400;
+}
+
+.contact-footer-right a {
+  color: rgba(255, 255, 255, 0.16);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.contact-footer-right a:hover {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+/* ══════════════════════════════════════════
+   Mobile ≤ 767px — disable fixed full-page snap,
+   allow natural document scroll
+   ══════════════════════════════════════════ */
+@media (max-width: 767px) {
+  .work-section,
+  .stats-section,
+  .contact-section {
+    position: relative !important;
+    transform: none !important;
+    height: auto;
+    min-height: 100svh;
+    padding: 80px 24px;
+  }
+
+  /* Rows are instantly visible on mobile */
+  .work-row {
+    opacity: 1 !important;
+    transform: none !important;
+    grid-template-columns: 32px 1fr;
+    gap: 0 16px;
+  }
+
+  .work-row-cat,
+  .work-row-year {
+    display: none;
+  }
+
+  .work-section-number {
+    display: none;
+  }
+
+  .work-inner {
+    max-width: 100%;
+  }
+
+  .stat-item {
+    padding: 32px 20px;
+  }
+
+  .stat-global {
+    opacity: 1 !important;
+  }
+
+  .stats-manifesto {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .contact-inner {
+    padding: 60px 24px 32px;
+  }
+
+  /* Words are instantly visible on mobile */
+  .headline-word-inner {
+    transform: none !important;
+  }
+
+  .contact-body {
+    flex-direction: column;
+    gap: 32px;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .contact-footer-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 20px 24px;
+  }
+
+  /* Hide dots on mobile */
+  .section-dots {
+    display: none;
+  }
+}
