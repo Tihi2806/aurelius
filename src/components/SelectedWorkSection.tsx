@@ -43,31 +43,22 @@ export function SelectedWorkSection() {
 
   const listVariants = {
     hidden: {},
-    visible: {
-      transition: { staggerChildren: 0.1, delayChildren: 0 },
-    },
+    visible: {},
   };
 
   const numberVariants = {
     hidden: { opacity: 0, x: -20 },
-    visible: {
-      opacity: 1,
-      x: 0,
-      transition: { duration: 0.4, ease: "easeOut" },
-    },
+    visible: { opacity: 1, x: 0 },
   };
 
   const lineVariants = {
     hidden: { scaleX: 0 },
-    visible: {
-      scaleX: 1,
-      transition: { duration: 0.8, ease: "easeOut" },
-    },
+    visible: { scaleX: 1 },
   };
 
   const rowVariants = {
     hidden: {},
-    visible: { transition: { staggerChildren: 0, delayChildren: 0 } },
+    visible: {},
   };
 
   return (
@@ -91,12 +82,14 @@ export function SelectedWorkSection() {
           variants={listVariants}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
+          transition={{ staggerChildren: 0.1, delayChildren: 0 }}
         >
           {PROJECTS.map((project, i) => (
             <motion.div
               key={project.name}
               className="work-row"
               variants={rowVariants}
+              transition={{ staggerChildren: 0, delayChildren: 0 }}
               onMouseEnter={() => setActiveIndex(i)}
               role="button"
               tabIndex={0}
@@ -122,6 +115,7 @@ export function SelectedWorkSection() {
               <motion.span
                 className="work-row-num"
                 variants={numberVariants}
+                transition={{ duration: 0.4, ease: "easeOut" }}
               >
                 {String(i + 1).padStart(2, "0")}
               </motion.span>
