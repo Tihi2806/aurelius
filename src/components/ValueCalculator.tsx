@@ -54,7 +54,25 @@ export function ValueCalculator() {
       className="value-calculator-section flex min-h-screen w-full flex-col items-center justify-center bg-[#080808] px-4 py-12 md:py-16"
       aria-labelledby="calculator-heading"
     >
-      <div className="flex w-full max-w-4xl flex-col gap-8 md:gap-10">
+      <svg
+        className="calculator-grid-bg"
+        aria-hidden
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <defs>
+          <pattern
+            id="grid-pattern-calculator"
+            width="60"
+            height="60"
+            patternUnits="userSpaceOnUse"
+          >
+            <line x1="0" y1="0" x2="0" y2="60" stroke="rgba(255,255,255,0.05)" strokeWidth="1" />
+            <line x1="0" y1="0" x2="60" y2="0" stroke="rgba(255,255,255,0.05)" strokeWidth="1" />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#grid-pattern-calculator)" />
+      </svg>
+      <div className="relative z-10 flex w-full max-w-4xl flex-col gap-8 md:gap-10">
         <header className="text-center">
           <span className="mb-2 inline-block rounded-full border border-white/15 bg-white/5 px-3 py-0.5 text-xs text-gray-400">
             ROI Calculator
@@ -82,19 +100,26 @@ export function ValueCalculator() {
                   {formatTraffic(traffic)}
                 </span>
               </label>
-              <input
-                type="range"
-                min={5000}
-                max={200000}
-                step={5000}
-                value={traffic}
-                onChange={(e) => setTraffic(Number(e.target.value))}
-                className="h-2 w-full min-w-0 appearance-none rounded-full bg-white/10 accent-white [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white"
-                aria-valuemin={5000}
-                aria-valuemax={200000}
-                aria-valuenow={traffic}
-                aria-valuetext={`${formatTraffic(traffic)} visitors`}
-              />
+              <div className="relative w-full">
+                <div
+                  key={traffic}
+                  className="slider-shimmer pointer-events-none absolute inset-0 h-2 w-full rounded-full"
+                  aria-hidden
+                />
+                <input
+                  type="range"
+                  min={5000}
+                  max={200000}
+                  step={5000}
+                  value={traffic}
+                  onChange={(e) => setTraffic(Number(e.target.value))}
+                  className="relative z-10 h-2 w-full min-w-0 appearance-none rounded-full bg-white/10 accent-white [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white"
+                  aria-valuemin={5000}
+                  aria-valuemax={200000}
+                  aria-valuenow={traffic}
+                  aria-valuetext={`${formatTraffic(traffic)} visitors`}
+                />
+              </div>
             </div>
             <div className="flex flex-col gap-2">
               <label className="flex min-h-[44px] items-center justify-between gap-2">
@@ -105,19 +130,26 @@ export function ValueCalculator() {
                   {formatPct(conversion)}
                 </span>
               </label>
-              <input
-                type="range"
-                min={0.5}
-                max={8}
-                step={0.1}
-                value={conversion}
-                onChange={(e) => setConversion(Number(e.target.value))}
-                className="h-2 w-full min-w-0 appearance-none rounded-full bg-white/10 accent-white [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white"
-                aria-valuemin={0.5}
-                aria-valuemax={8}
-                aria-valuenow={conversion}
-                aria-valuetext={formatPct(conversion)}
-              />
+              <div className="relative w-full">
+                <div
+                  key={conversion}
+                  className="slider-shimmer pointer-events-none absolute inset-0 h-2 w-full rounded-full"
+                  aria-hidden
+                />
+                <input
+                  type="range"
+                  min={0.5}
+                  max={8}
+                  step={0.1}
+                  value={conversion}
+                  onChange={(e) => setConversion(Number(e.target.value))}
+                  className="relative z-10 h-2 w-full min-w-0 appearance-none rounded-full bg-white/10 accent-white [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white"
+                  aria-valuemin={0.5}
+                  aria-valuemax={8}
+                  aria-valuenow={conversion}
+                  aria-valuetext={formatPct(conversion)}
+                />
+              </div>
             </div>
             <div className="flex flex-col gap-2">
               <label className="flex min-h-[44px] items-center justify-between gap-2">
@@ -128,19 +160,26 @@ export function ValueCalculator() {
                   ${aov}
                 </span>
               </label>
-              <input
-                type="range"
-                min={20}
-                max={500}
-                step={10}
-                value={aov}
-                onChange={(e) => setAov(Number(e.target.value))}
-                className="h-2 w-full min-w-0 appearance-none rounded-full bg-white/10 accent-white [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white"
-                aria-valuemin={20}
-                aria-valuemax={500}
-                aria-valuenow={aov}
-                aria-valuetext={`$${aov}`}
-              />
+              <div className="relative w-full">
+                <div
+                  key={aov}
+                  className="slider-shimmer pointer-events-none absolute inset-0 h-2 w-full rounded-full"
+                  aria-hidden
+                />
+                <input
+                  type="range"
+                  min={20}
+                  max={500}
+                  step={10}
+                  value={aov}
+                  onChange={(e) => setAov(Number(e.target.value))}
+                  className="relative z-10 h-2 w-full min-w-0 appearance-none rounded-full bg-white/10 accent-white [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white"
+                  aria-valuemin={20}
+                  aria-valuemax={500}
+                  aria-valuenow={aov}
+                  aria-valuetext={`$${aov}`}
+                />
+              </div>
             </div>
           </div>
 

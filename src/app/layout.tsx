@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, DM_Sans } from "next/font/google";
 import { ScrollUnlock } from "@/components/ScrollUnlock";
 import { AIConcierge } from "@/components/AIConcierge";
+import { CustomCursor } from "@/components/CustomCursor";
 import "./globals.css";
 
 export const viewport: Viewport = {
@@ -72,6 +73,7 @@ export default function RootLayout({
         className={`${cormorant.variable} ${dmSans.variable} font-sans antialiased bg-[var(--background)] text-[var(--foreground)] min-h-screen`}
       >
         <ScrollUnlock />
+        <CustomCursor />
         <AIConcierge />
         {children}
       </body>

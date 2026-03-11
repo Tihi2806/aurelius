@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { motion, useInView } from "framer-motion";
 
 const PROJECTS = [
   {
@@ -37,9 +38,45 @@ const PROJECTS = [
 
 export function SelectedWorkSection() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const sectionRef = useRef<HTMLElement>(null);
+  const inView = useInView(sectionRef, { amount: 0.2, once: true });
+
+  const listVariants = {
+    hidden: {},
+    visible: {
+      transition: { staggerChildren: 0.1, delayChildren: 0 },
+    },
+  };
+
+  const numberVariants = {
+    hidden: { opacity: 0, x: -20 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: { duration: 0.4, ease: "easeOut" },
+    },
+  };
+
+  const lineVariants = {
+    hidden: { scaleX: 0 },
+    visible: {
+      scaleX: 1,
+      transition: {
+        duration: 0.8,
+        ease: "easeOut" as const,
+        delay: (_, __, opts: { custom?: number }) => (opts?.custom ?? 0) * 0.15,
+      },
+    },
+  };
+
+  const rowVariants = {
+    hidden: {},
+    visible: { transition: { staggerChildren: 0, delayChildren: 0 } },
+  };
 
   return (
     <section
+      ref={sectionRef}
       id="work"
       className="work-section"
       data-animated="false"
@@ -53,11 +90,17 @@ export function SelectedWorkSection() {
       </span>
 
       <div className="work-inner work-inner-two-col">
-        <div className="work-list">
+        <motion.div
+          className="work-list"
+          variants={listVariants}
+          initial="hidden"
+          animate={inView ? "visible" : "hidden"}
+        >
           {PROJECTS.map((project, i) => (
-            <div
+            <motion.div
               key={project.name}
               className="work-row"
+              variants={rowVariants}
               onMouseEnter={() => setActiveIndex(i)}
               role="button"
               tabIndex={0}
@@ -69,14 +112,24 @@ export function SelectedWorkSection() {
               }}
               aria-label={`View ${project.name} preview`}
             >
-              <span className="work-row-num">
+              <motion.div
+                className="work-row-line"
+                variants={lineVariants}
+                custom={i}
+                aria-hidden
+              />
+              <div className="work-row-overlay" aria-hidden />
+              <motion.span
+                className="work-row-num"
+                variants={numberVariants}
+              >
                 {String(i + 1).padStart(2, "0")}
-              </span>
+              </motion.span>
               <h2 className="work-row-name">{project.name}</h2>
               <span className="work-row-cat">{project.category}</span>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         <div className="work-preview-wrap">
           {PROJECTS.map((project, i) => (

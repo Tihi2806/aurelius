@@ -3,11 +3,15 @@
    Uses the same position:fixed / translateY system as hero + cards
    ═══════════════════════════════════════════════════ */
 
-/* ── Shared base for all full-page sections (work, manifesto, services, contact) ── */
+/* ── Shared base for all full-page sections (work, manifesto, services, contact, calculator, revenue-leak, speed-timeline, performance-grid) ── */
 .work-section,
 .manifesto-section,
 .services-section,
-.contact-section {
+.contact-section,
+.value-calculator-section,
+.revenue-leak-section,
+.speed-timeline-section,
+.performance-grid-section {
   position: fixed;
   top: 0;
   left: 0;
@@ -103,8 +107,10 @@
 }
 
 .work-row {
+  position: relative;
   display: grid;
   grid-template-columns: 36px 1fr auto;
+  grid-template-rows: auto auto;
   align-items: center;
   gap: 0 20px;
   padding: 20px 0;
@@ -112,7 +118,49 @@
   cursor: pointer;
   opacity: 0;
   transform: translateY(40px);
-  transition: opacity 0.4s ease, transform 0.4s ease;
+  transition: opacity 0.4s ease, transform 0.4s ease, scale 0.4s ease;
+}
+
+.work-row:hover {
+  scale: 1.02;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .work-row:hover {
+    scale: 1;
+  }
+}
+
+.work-row-line {
+  grid-column: 1 / -1;
+  grid-row: 1;
+  height: 1px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.1);
+  transform-origin: left;
+  pointer-events: none;
+}
+
+.work-row-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.4));
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.work-row:hover .work-row-overlay {
+  opacity: 1;
+}
+
+.work-row .work-row-num,
+.work-row .work-row-name,
+.work-row .work-row-cat {
+  position: relative;
+  z-index: 1;
+  grid-row: 2;
 }
 
 .work-list:hover .work-row.visible {
@@ -239,6 +287,35 @@
   padding: 0 80px;
 }
 
+.manifesto-bg-breath {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    rgba(255, 255, 255, 0.03) 0%,
+    transparent 70%
+  );
+  transform-origin: 50% 50%;
+  animation: manifesto-breathe 8s ease-in-out infinite alternate;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .manifesto-bg-breath {
+    animation: none;
+  }
+}
+
+@keyframes manifesto-breathe {
+  from {
+    transform: scale(0.8);
+  }
+  to {
+    transform: scale(1.2);
+  }
+}
+
 .manifesto-watermark {
   position: absolute;
   bottom: 48px;
@@ -249,9 +326,12 @@
   font-weight: 600;
   user-select: none;
   pointer-events: none;
+  z-index: 1;
 }
 
 .manifesto-inner {
+  position: relative;
+  z-index: 1;
   max-width: 900px;
   text-align: center;
 }
@@ -267,8 +347,9 @@
 }
 
 .manifesto-word {
-  opacity: 0.08;
-  transition: opacity 0.4s ease;
+  opacity: 0.1;
+  display: inline;
+  margin-right: 0.25em;
 }
 
 .manifesto-word.visible {
@@ -296,172 +377,8 @@
 }
 
 /* ══════════════════════════════════════════
-   Section 4 — Services (orbital layout)
+   Section 4 — Services (grid layout)
    ══════════════════════════════════════════ */
-.services-section {
-  padding: 0 80px;
-}
-
-.services-orbit {
-  position: relative;
-  width: 500px;
-  height: 500px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.services-svg {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.services-circle {
-  transform-origin: center;
-  transform: scale(0);
-  transition: transform 0.6s ease-out;
-}
-
-.services-circle.visible {
-  transform: scale(1);
-}
-
-.services-connector {
-  stroke-dasharray: 60;
-  stroke-dashoffset: 60;
-  transition: stroke-dashoffset 0.5s ease, stroke 0.3s ease;
-}
-
-.services-connector.visible {
-  stroke-dashoffset: 0;
-  stroke: rgba(255, 255, 255, 0.1);
-}
-
-.services-section[data-hover="top"] .services-connector[data-direction="top"],
-.services-section[data-hover="right"] .services-connector[data-direction="right"],
-.services-section[data-hover="bottom"] .services-connector[data-direction="bottom"],
-.services-section[data-hover="left"] .services-connector[data-direction="left"] {
-  stroke: rgba(255, 255, 255, 0.3);
-}
-
-.services-center-label {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-family: var(--font-dm-sans), system-ui, sans-serif;
-  font-size: 0.7rem;
-  font-weight: 500;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.15);
-  z-index: 1;
-  pointer-events: none;
-}
-
-.services-block {
-  position: absolute;
-  width: 200px;
-  text-align: center;
-  opacity: 0;
-  transition: opacity 0.4s ease, transform 0.4s ease;
-  z-index: 2;
-  cursor: default;
-}
-
-.services-block-top {
-  top: -20px;
-  left: 50%;
-  transform: translate(-50%, -120%);
-}
-
-.services-block-top.visible {
-  opacity: 1;
-  transform: translate(-50%, -100%);
-}
-
-.services-block-right {
-  right: -20px;
-  top: 50%;
-  transform: translate(40px, -50%);
-}
-
-.services-block-right.visible {
-  opacity: 1;
-  transform: translate(0, -50%);
-}
-
-.services-block-bottom {
-  bottom: -20px;
-  left: 50%;
-  transform: translate(-50%, 120%);
-}
-
-.services-block-bottom.visible {
-  opacity: 1;
-  transform: translate(-50%, 100%);
-}
-
-.services-block-left {
-  left: -20px;
-  top: 50%;
-  transform: translate(-120%, -50%);
-}
-
-.services-block-left.visible {
-  opacity: 1;
-  transform: translate(-100%, -50%);
-}
-
-.services-block-title {
-  font-family: var(--font-dm-sans), system-ui, sans-serif;
-  font-size: 18px;
-  font-weight: 700;
-  color: #ffffff;
-  margin: 0 0 8px;
-  line-height: 1.2;
-}
-
-.services-block-desc {
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.4);
-  margin: 0 0 8px;
-  line-height: 1.4;
-  font-family: var(--font-dm-sans), system-ui, sans-serif;
-  font-weight: 400;
-}
-
-.services-block-arrow {
-  opacity: 0;
-  transition: opacity 0.2s ease;
-  font-size: 18px;
-  color: #ffffff;
-}
-
-.services-block:hover .services-block-arrow {
-  opacity: 1;
-}
-
-.services-block-top.visible:hover { transform: translate(-50%, -100%) scale(1.05); }
-.services-block-right.visible:hover { transform: translate(0, -50%) scale(1.05); }
-.services-block-bottom.visible:hover { transform: translate(-50%, 100%) scale(1.05); }
-.services-block-left.visible:hover { transform: translate(-100%, -50%) scale(1.05); }
-
-.services-orbit:hover .services-block:not(:hover) {
-  opacity: 0.4;
-}
-
-.services-block.visible {
-  opacity: 1;
-}
-
-.services-orbit:hover .services-block.visible:not(:hover) {
-  opacity: 0.4;
-}
 
 /* ══════════════════════════════════════════
    Section 4 — Start a Project (Contact CTA)
@@ -607,6 +524,10 @@
    Mobile ≤ 767px — same fixed full-page sections, responsive content only
    ══════════════════════════════════════════ */
 @media (max-width: 767px) {
+  .section-dots {
+    display: none;
+  }
+
   .work-section,
   .manifesto-section,
   .services-section,
@@ -614,6 +535,10 @@
     padding: 48px 20px 60px;
     overflow-x: hidden;
     box-sizing: border-box;
+  }
+
+  .manifesto-section {
+    padding: 0px 32px;
   }
 
   .work-inner-two-col {
@@ -676,12 +601,35 @@
   }
 
   .manifesto-inner {
+    padding-right: 24px;
     max-width: 100%;
     width: 100%;
   }
 
   .manifesto-paragraph {
-    font-size: clamp(16px, 4vw, 22px);
+    font-size: clamp(22px, 6vw, 32px);
+    line-height: 1.65;
+  }
+
+  .manifesto-section {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .manifesto-inner {
+    width: 100%;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    padding-right: 0;
+  }
+
+  .manifesto-paragraph {
+    font-size: clamp(20px, 5.5vw, 28px);
+    line-height: 1.7;
+    text-align: center;
+    width: 100%;
   }
 
   .manifesto-word.visible {
@@ -694,36 +642,6 @@
 
   .manifesto-watermark {
     display: none;
-  }
-
-  .services-section {
-    justify-content: center;
-    align-items: center;
-  }
-
-  .services-orbit {
-    width: min(100%, 320px);
-    max-width: 100%;
-    height: min(280px, 80vw);
-    flex-shrink: 0;
-  }
-
-  .services-block-top.visible { transform: translate(-50%, -100%); }
-  .services-block-right.visible { transform: translate(0, -50%); }
-  .services-block-bottom.visible { transform: translate(-50%, 100%); }
-  .services-block-left.visible { transform: translate(-100%, -50%); }
-
-  .services-block {
-    width: min(200px, 85vw);
-    max-width: 100%;
-  }
-
-  .services-block-title {
-    font-size: 16px;
-  }
-
-  .services-block-desc {
-    font-size: 11px;
   }
 
   .contact-inner {

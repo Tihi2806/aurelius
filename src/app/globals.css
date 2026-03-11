@@ -29,3 +29,92 @@ body {
   overflow-x: hidden;
   min-width: 0;
 }
+
+/* Custom cursor (desktop only, applied by CustomCursor when pointer: fine) */
+body.cursor-none {
+  cursor: none;
+}
+
+.custom-cursor-dot,
+.custom-cursor-ring {
+  position: fixed;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+  z-index: 9999;
+  transition: opacity 0.15s ease-out;
+}
+
+.custom-cursor-dot {
+  width: 12px;
+  height: 12px;
+  background: white;
+  border-radius: 9999px;
+  transform-origin: center center;
+}
+
+.custom-cursor-ring {
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 9999px;
+  transform-origin: center center;
+  transition: width 0.2s ease-out, height 0.2s ease-out, border-color 0.2s ease-out, background 0.2s ease-out;
+}
+
+.custom-cursor-ring[data-variant="link"] {
+  border-color: rgba(255, 255, 255, 0.7);
+}
+
+.custom-cursor-ring[data-variant="card"] {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Calculator sections: grid background + slider shimmer */
+.calculator-grid-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.calculator-grid-bg rect {
+  width: 100%;
+  height: 100%;
+}
+
+.slider-shimmer {
+  overflow: hidden;
+}
+
+.slider-shimmer::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  animation: slider-shimmer 2s ease-in-out infinite;
+}
+
+@keyframes slider-shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(350%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slider-shimmer::after {
+    animation: none;
+  }
+}

@@ -1,17 +1,81 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
 import { MosaicGrid } from "@/components/mosaic/MosaicGrid";
 import { SelectedWorkSection } from "@/components/SelectedWorkSection";
 import { ManifestoSection } from "@/components/ManifestoSection";
 import { ServicesSection } from "@/components/ServicesSection";
 import { ValueCalculator } from "@/components/ValueCalculator";
+import { RevenueLeak } from "@/components/RevenueLeak";
+import SpeedTimeline from "@/components/SpeedTimeline";
+import { PerformanceGrid } from "@/components/PerformanceGrid";
 import "./hero.css";
 import "./sections.css";
 
 const HEADLINE_WORDS = ["Let's", "build", "something", "that", "lasts."];
 
+const HERO_BOTTOM_LINE1 = ["Strategic", "Brand", "Agency"];
+const HERO_BOTTOM_LINE2 = ["Identity", "&", "Digital"];
+
+const HERO_PARALLAX_LERP = 0.08;
+const HERO_PARALLAX_CAP_X = 20;
+const HERO_PARALLAX_CAP_Y = 12;
+
+function usePrefersReducedMotion(): boolean {
+  const [prefers, setPrefers] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setPrefers(mq.matches);
+    const h = () => setPrefers(mq.matches);
+    mq.addEventListener("change", h);
+    return () => mq.removeEventListener("change", h);
+  }, []);
+  return prefers;
+}
+
 export default function GatewayPage() {
+  const heroBgImgRef = useRef<HTMLImageElement>(null);
+  const parallaxTarget = useRef({ x: 0, y: 0 });
+  const parallaxCurrent = useRef({ x: 0, y: 0 });
+  const prefersReducedMotion = usePrefersReducedMotion();
+
+  /* ── Hero statue parallax (desktop, fine pointer, no reduced motion) ── */
+  useEffect(() => {
+    const img = heroBgImgRef.current;
+    if (!img) return;
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const isFinePointer = window.matchMedia("(pointer: fine)").matches;
+    if (prefersReducedMotion || !isFinePointer) return;
+
+    const hero = document.getElementById("hero");
+    if (!hero) return;
+
+    const onMove = (e: MouseEvent) => {
+      const targetX = Math.max(-HERO_PARALLAX_CAP_X, Math.min(HERO_PARALLAX_CAP_X, e.clientX * 0.015));
+      const targetY = Math.max(-HERO_PARALLAX_CAP_Y, Math.min(HERO_PARALLAX_CAP_Y, e.clientY * 0.01));
+      parallaxTarget.current = { x: targetX, y: targetY };
+    };
+
+    let rafId = 0;
+    const tick = () => {
+      const t = parallaxTarget.current;
+      const c = parallaxCurrent.current;
+      parallaxCurrent.current = {
+        x: c.x + (t.x - c.x) * HERO_PARALLAX_LERP,
+        y: c.y + (t.y - c.y) * HERO_PARALLAX_LERP,
+      };
+      const { x, y } = parallaxCurrent.current;
+      img.style.transform = `translate(${x}px, ${y}px)`;
+      rafId = requestAnimationFrame(tick);
+    };
+    rafId = requestAnimationFrame(tick);
+    hero.addEventListener("mousemove", onMove);
+    return () => {
+      hero.removeEventListener("mousemove", onMove);
+      cancelAnimationFrame(rafId);
+    };
+  }, []);
 
   /* ── Marquee init (unchanged from original) ── */
   useEffect(() => {
@@ -42,11 +106,14 @@ export default function GatewayPage() {
     const manifesto = document.querySelector('.manifesto-section')      as HTMLElement | null;
     const services  = document.querySelector('.services-section')        as HTMLElement | null;
     const calculator = document.querySelector('.value-calculator-section') as HTMLElement | null;
+    const revenueLeak = document.querySelector('.revenue-leak-section') as HTMLElement | null;
+    const speedTimeline = document.querySelector('.speed-timeline-section') as HTMLElement | null;
+    const performanceGrid = document.querySelector('.performance-grid-section') as HTMLElement | null;
     const contact   = document.querySelector('.contact-section')         as HTMLElement | null;
 
-    if (!hero || !cards || !work || !manifesto || !services || !calculator || !contact) return;
+    if (!hero || !cards || !work || !manifesto || !services || !calculator || !revenueLeak || !speedTimeline || !performanceGrid || !contact) return;
 
-    const allSections = [hero, cards, work, manifesto, services, calculator, contact];
+    const allSections = [hero, cards, work, manifesto, services, calculator, revenueLeak, speedTimeline, performanceGrid, contact];
 
     // Lock document scroll (same pattern as original)
     const html = document.documentElement;
@@ -63,7 +130,7 @@ export default function GatewayPage() {
     const heroBg      = hero.querySelector('.hero-bg')           as HTMLElement | null;
     const marqueeWrap = hero.querySelector('.hero-marquee-wrap') as HTMLElement | null;
 
-    let current   = 0;          // 0=hero 1=cards 2=work 3=manifesto 4=services 5=calculator 6=contact
+    let current   = 0;          // 0=hero ... 6=revenueLeak 7=speedTimeline 8=performanceGrid 9=contact
     let animating = false;
     const DURATION = 750;
 
@@ -83,7 +150,7 @@ export default function GatewayPage() {
       if (index === 2) animateWork();
       if (index === 3) animateManifesto();
       if (index === 4) animateServices();
-      if (index === 6) animateContact();
+      if (index === 9) animateContact();
     }
 
     function animateWork() {
@@ -261,8 +328,8 @@ export default function GatewayPage() {
           ? 'translateY(-50%)'
           : 'translateY(calc(-50% + -25px))';
 
-      // Sections 1–6: above target = -100%, at target = 0%, below = +100%
-      [cards, work, manifesto, services, calculator, contact].forEach((el, i) => {
+      // Sections 1–9: above target = -100%, at target = 0%, below = +100%
+      [cards, work, manifesto, services, calculator, revenueLeak, speedTimeline, performanceGrid, contact].forEach((el, i) => {
         const idx = i + 1;
         el!.style.transform =
           idx < target  ? 'translateY(-100%)' :
@@ -317,7 +384,19 @@ export default function GatewayPage() {
         else if (dy < 0) slideTo(5, 4);
       } else if (current === 6) {
         e.preventDefault();
-        if (dy < 0) slideTo(6, 5);
+        if (dy > 0) slideTo(6, 7);
+        else if (dy < 0) slideTo(6, 5);
+      } else if (current === 7) {
+        e.preventDefault();
+        if (dy > 0) slideTo(7, 8);
+        else if (dy < 0) slideTo(7, 6);
+      } else if (current === 8) {
+        e.preventDefault();
+        if (dy > 0) slideTo(8, 9);
+        else if (dy < 0) slideTo(8, 7);
+      } else if (current === 9) {
+        e.preventDefault();
+        if (dy < 0) slideTo(9, 8);
       }
     }
 
@@ -339,7 +418,13 @@ export default function GatewayPage() {
       else if (current === 4 && dy < 0)                          slideTo(4, 3);
       else if (current === 5 && dy > 0)                         slideTo(5, 6);
       else if (current === 5 && dy < 0)                         slideTo(5, 4);
+      else if (current === 6 && dy > 0)                         slideTo(6, 7);
       else if (current === 6 && dy < 0)                         slideTo(6, 5);
+      else if (current === 7 && dy > 0)                         slideTo(7, 8);
+      else if (current === 7 && dy < 0)                         slideTo(7, 6);
+      else if (current === 8 && dy > 0)                         slideTo(8, 9);
+      else if (current === 8 && dy < 0)                         slideTo(8, 7);
+      else if (current === 9 && dy < 0)                         slideTo(9, 8);
     };
 
     /* ── Init ── */
@@ -349,13 +434,16 @@ export default function GatewayPage() {
     manifesto!.style.transform = 'translateY(100%)';
     services!.style.transform = 'translateY(100%)';
     calculator!.style.transform = 'translateY(100%)';
+    revenueLeak!.style.transform = 'translateY(100%)';
+    speedTimeline!.style.transform = 'translateY(100%)';
+    performanceGrid!.style.transform = 'translateY(100%)';
     contact!.style.transform  = 'translateY(100%)';
     if (heroBg)      heroBg.style.transform     = 'translateY(0px)';
     if (marqueeWrap) marqueeWrap.style.transform = 'translateY(-50%)';
     updateDots(0);
 
     // Scroll hint click triggers hero → cards (preserves original UX)
-    const scrollHint = hero.querySelector<HTMLElement>('.hero-scroll-hint');
+    const scrollHint = hero.querySelector<HTMLElement>('[data-scroll-hint]');
     const onScrollHintClick = () => { if (!animating && current === 0) slideTo(0, 1); };
     if (scrollHint) scrollHint.addEventListener('click', onScrollHintClick);
 
@@ -393,7 +481,7 @@ export default function GatewayPage() {
 
       {/* ── Section navigation dots (fixed, right edge) ── */}
       <nav className="section-dots" aria-label="Section navigation">
-        {[0, 1, 2, 3, 4, 5, 6].map((i) => (
+        {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => (
           <button
             key={i}
             className="section-dot"
@@ -417,8 +505,19 @@ export default function GatewayPage() {
 
         <div className="hero-bg">
           <div className="hero-glow" />
-          <img src="/aurelius%20center%20look.png" alt="Aurelius" />
+          <img ref={heroBgImgRef} src="/aurelius%20center%20look.png" alt="Aurelius" />
         </div>
+
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            backgroundColor: 'black',
+            opacity: 0.25,
+            zIndex: 1,
+            pointerEvents: 'none',
+          }}
+        />
 
         <div className="hero-fade" />
 
@@ -443,13 +542,113 @@ export default function GatewayPage() {
           <div className="hero-bottom-rule" aria-hidden />
 
           <div className="hero-bottom-right">
-            <p>Strategic Brand Agency</p>
-            <p>Identity &amp; Digital</p>
+            <motion.p
+              className="hero-bottom-right-line"
+              initial="hidden"
+              animate="visible"
+              variants={{
+                hidden: {},
+                visible: {
+                  transition: {
+                    delayChildren: 0.3,
+                    staggerChildren: prefersReducedMotion ? 0 : 0.08,
+                  },
+                },
+              }}
+            >
+              {HERO_BOTTOM_LINE1.map((word, i) => (
+                <motion.span
+                  key={`l1-${i}`}
+                  variants={{
+                    hidden: prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 },
+                    visible: {
+                      opacity: 1,
+                      y: 0,
+                      transition: prefersReducedMotion ? { duration: 0 } : { duration: 0.5, ease: "easeOut" },
+                    },
+                  }}
+                >
+                  {word}{" "}
+                </motion.span>
+              ))}
+            </motion.p>
+            <motion.p
+              className="hero-bottom-right-line"
+              initial="hidden"
+              animate="visible"
+              variants={{
+                hidden: {},
+                visible: {
+                  transition: {
+                    delayChildren: 0.3 + (prefersReducedMotion ? 0 : HERO_BOTTOM_LINE1.length * 0.08),
+                    staggerChildren: prefersReducedMotion ? 0 : 0.08,
+                  },
+                },
+              }}
+            >
+              {HERO_BOTTOM_LINE2.map((word, i) => (
+                <motion.span
+                  key={`l2-${i}`}
+                  variants={{
+                    hidden: prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 },
+                    visible: {
+                      opacity: 1,
+                      y: 0,
+                      transition: prefersReducedMotion ? { duration: 0 } : { duration: 0.5, ease: "easeOut" },
+                    },
+                  }}
+                >
+                  {word}{" "}
+                </motion.span>
+              ))}
+            </motion.p>
           </div>
 
-          <div className="hero-scroll-hint">
-            <p>Scroll</p>
-          </div>
+          <motion.div
+            data-scroll-hint
+            style={{
+              position: 'absolute',
+              bottom: '2rem',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '6px',
+              color: 'white',
+              cursor: 'default',
+              userSelect: 'none',
+            }}
+            animate={{ opacity: prefersReducedMotion ? 1 : [0.4, 1] }}
+            transition={
+              prefersReducedMotion
+                ? { duration: 0 }
+                : { duration: 2, repeat: Infinity, ease: "easeInOut" }
+            }
+          >
+            <span
+              style={{
+                fontSize: '10px',
+                letterSpacing: '3px',
+                textTransform: 'uppercase',
+                fontWeight: 400,
+              }}
+            >
+              Scroll
+            </span>
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M12 5v14M5 12l7 7 7-7" />
+            </svg>
+          </motion.div>
         </div>
       </section>
 
@@ -484,7 +683,22 @@ export default function GatewayPage() {
       <ValueCalculator />
 
       {/* ══════════════════════════════════════
-          Section 6 — Contact / CTA
+          Section 6 — Revenue Leak
+          ══════════════════════════════════════ */}
+      <RevenueLeak />
+
+      {/* ══════════════════════════════════════
+          Section 7 — Speed Timeline
+          ══════════════════════════════════════ */}
+      <SpeedTimeline />
+
+      {/* ══════════════════════════════════════
+          Section 8 — Performance Grid
+          ══════════════════════════════════════ */}
+      <PerformanceGrid />
+
+      {/* ══════════════════════════════════════
+          Section 9 — Contact / CTA
           ══════════════════════════════════════ */}
       <section className="contact-section">
         <div className="contact-inner">
