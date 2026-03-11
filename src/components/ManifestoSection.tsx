@@ -73,10 +73,6 @@ export function ManifestoSection() {
     visible: {
       opacity: 1,
       y: 0,
-      transition: {
-        duration: WORD_DURATION,
-        ease: [0.25, 0.1, 0.25, 1],
-      },
     },
   };
 
@@ -123,6 +119,7 @@ export function ManifestoSection() {
               key={`${word}-${i}`}
               className="manifesto-word"
               variants={wordVariants}
+              transition={{ duration: WORD_DURATION, ease: [0.25, 0.1, 0.25, 1] }}
             >
               {word}{" "}
             </motion.span>
