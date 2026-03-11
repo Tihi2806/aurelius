@@ -167,7 +167,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: 5;
+  width: 100%;
 }
 
 .hero-bottom-right {
@@ -192,6 +192,8 @@
   bottom: 2rem;
   left: 50%;
   transform: translateX(-50%);
+  margin-left: 0;
+  margin-right: 0;
   display: flex;
   flex-direction: column;
   align-items: center;

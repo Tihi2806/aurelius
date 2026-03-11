@@ -447,7 +447,7 @@ export default function GatewayPage() {
             <p>Identity &amp; Digital</p>
           </div>
 
-          <div className="hero-scroll-hint mx-auto mt-10 text-center left-1/2 -translate-x-1/2">
+          <div className="hero-scroll-hint">
             <p>Scroll</p>
           </div>
         </div>
