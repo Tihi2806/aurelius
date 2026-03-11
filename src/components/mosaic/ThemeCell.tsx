@@ -1,7 +1,14 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import type { ThemeConfig } from "./themeConfig";
+
+const DEFAULT_TECH_STACK = ["Next.js", "Tailwind CSS", "AI Integration"];
+
+function easeOutCubic(t: number): number {
+  return 1 - Math.pow(1 - t, 3);
+}
 
 interface ThemeCellProps {
   theme: ThemeConfig;
@@ -154,13 +161,34 @@ export function ThemeCell({
   const tx = parallaxX * theme.parallax * factor;
   const ty = parallaxY * theme.parallax * factor;
 
+  const [lighthouseScore, setLighthouseScore] = useState(0);
+  const techStack = theme.techStack ?? DEFAULT_TECH_STACK;
+
+  useEffect(() => {
+    if (!isHovered) {
+      setLighthouseScore(0);
+      return;
+    }
+    const duration = 1200;
+    const start = performance.now();
+    let rafId: number;
+    const tick = (now: number) => {
+      const elapsed = now - start;
+      const t = Math.min(elapsed / duration, 1);
+      setLighthouseScore(Math.round(easeOutCubic(t) * 98));
+      if (t < 1) rafId = requestAnimationFrame(tick);
+    };
+    rafId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafId);
+  }, [isHovered]);
+
   return (
     <motion.div
       layout
       initial={{ opacity: 0, scale: 0.96 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5, delay: index * 0.08, ease: [0.25, 0.46, 0.45, 0.94] }}
-      className="mosaic-cell"
+      className="mosaic-cell relative"
       data-theme={theme.id}
       style={{
         transform: `translate(${tx}px, ${ty}px)`,
@@ -177,6 +205,20 @@ export function ThemeCell({
       onMouseLeave={onMouseLeave}
       onClick={onClick}
     >
+      {/* Lighthouse score badge — top-right, visible on hover */}
+      <motion.div
+        className="absolute right-2 top-2 z-10 flex flex-col items-center gap-0"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: isHovered ? 1 : 0 }}
+        transition={{ duration: 0.2 }}
+        aria-hidden
+      >
+        <div className="flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-white/10 text-sm font-bold text-white">
+          {lighthouseScore}
+        </div>
+        <span className="text-[9px] text-gray-500">LH</span>
+      </motion.div>
+
       {/* Card preview — fades in on hover, replaces default content */}
       {CARD_PREVIEWS[theme.id] && (
         <div
@@ -188,7 +230,7 @@ export function ThemeCell({
       )}
 
       <motion.div
-        className="mosaic-cell-inner"
+        className="mosaic-cell-inner flex flex-col gap-2"
         style={{ opacity: isHovered ? 0 : 1, transition: "opacity 0.35s ease" }}
         transition={{ type: "tween", duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
       >
@@ -198,6 +240,33 @@ export function ThemeCell({
         {theme.id === "flashy" && <div className="mosaic-deco flashy-pulse" />}
         {theme.id === "brutalist" && <div className="mosaic-deco brutalist-glitch" />}
         {theme.id === "classy" && <div className="mosaic-deco classy-shimmer" />}
+      </motion.div>
+
+      {/* Tech stack tags — card footer, stagger on hover, visible when preview is shown */}
+      <motion.div
+        className="absolute bottom-2 left-2 right-2 z-10 flex flex-wrap gap-1.5 overflow-visible px-1"
+        variants={{
+          hidden: { opacity: 0 },
+          visible: {
+            opacity: 1,
+            transition: { staggerChildren: 0.05, delayChildren: 0 },
+          },
+        }}
+        initial="hidden"
+        animate={isHovered ? "visible" : "hidden"}
+      >
+        {techStack.map((tech) => (
+          <motion.span
+            key={tech}
+            variants={{
+              hidden: { opacity: 0 },
+              visible: { opacity: 1 },
+            }}
+            className="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[10px] text-gray-400 transition-colors hover:border-white/25 hover:text-white"
+          >
+            {tech}
+          </motion.span>
+        ))}
       </motion.div>
     </motion.div>
   );

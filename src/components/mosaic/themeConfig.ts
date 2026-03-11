@@ -16,6 +16,8 @@ export interface ThemeConfig {
   fontFamily: string;
   /** For grid placement */
   gridArea: string;
+  /** Optional tech stack for card tags */
+  techStack?: string[];
 }
 
 export const THEMES: ThemeConfig[] = [

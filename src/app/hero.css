@@ -161,16 +161,13 @@
   }
 }
 
-.hero-bottom-left {
+/* Wrapper for bottom block — desktop: pass-through; mobile: flex stack */
+.hero-bottom-content {
   position: absolute;
-  bottom: 40px;
-  left: 48px;
+  bottom: 0;
+  left: 0;
+  right: 0;
   z-index: 5;
-  font-size: 10px;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.35);
-  font-weight: 400;
 }
 
 .hero-bottom-right {
@@ -192,16 +189,14 @@
 
 .hero-scroll-hint {
   position: absolute;
-  bottom: 42px;
+  bottom: 2rem;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 5;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 5px;
-  opacity: 0.7;
-  animation: hintFloat 2.5s ease-in-out infinite;
+  text-align: center;
+  width: max-content;
 }
 
 .hero-scroll-hint p {
@@ -327,6 +322,41 @@
 
   .hero-cta {
     display: none;
+  }
+
+  /* Bottom content: stack vertically above chat button (pb-24 reserved) */
+  .hero-bottom-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding-bottom: 6rem;
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .hero-bottom-content .hero-bottom-rule,
+  .hero-bottom-content .hero-bottom-right,
+  .hero-bottom-content .hero-scroll-hint {
+    position: static;
+    bottom: auto;
+    left: auto;
+    right: auto;
+  }
+
+  .hero-bottom-content .hero-bottom-rule {
+    width: 100%;
+    margin: 0;
+  }
+
+  .hero-bottom-content .hero-bottom-right {
+    text-align: center;
+  }
+
+  /* Main headline: scale down on mobile (text-3xl), original on md+ */
+  .hero-bottom-content .hero-bottom-right p {
+    font-size: 1.875rem;
+    line-height: 1.25;
   }
 
   /* Cards section: scroll snapping for Choose Your Experience on mobile */

@@ -5,6 +5,7 @@ import { MosaicGrid } from "@/components/mosaic/MosaicGrid";
 import { SelectedWorkSection } from "@/components/SelectedWorkSection";
 import { ManifestoSection } from "@/components/ManifestoSection";
 import { ServicesSection } from "@/components/ServicesSection";
+import { ValueCalculator } from "@/components/ValueCalculator";
 import "./hero.css";
 import "./sections.css";
 
@@ -33,18 +34,19 @@ export default function GatewayPage() {
     document.fonts.ready.then(initMarquee);
   }, []);
 
-  /* ── Full-page scroll system — 6 sections (desktop + mobile, touch + wheel) ── */
+  /* ── Full-page scroll system — 7 sections (desktop + mobile, touch + wheel) ── */
   useEffect(() => {
-    const hero      = document.getElementById('hero')                as HTMLElement | null;
-    const cards     = document.querySelector('.cards-section')        as HTMLElement | null;
-    const work      = document.querySelector('.work-section')         as HTMLElement | null;
-    const manifesto = document.querySelector('.manifesto-section')    as HTMLElement | null;
-    const services  = document.querySelector('.services-section')    as HTMLElement | null;
-    const contact   = document.querySelector('.contact-section')      as HTMLElement | null;
+    const hero      = document.getElementById('hero')                    as HTMLElement | null;
+    const cards     = document.querySelector('.cards-section')            as HTMLElement | null;
+    const work      = document.querySelector('.work-section')            as HTMLElement | null;
+    const manifesto = document.querySelector('.manifesto-section')      as HTMLElement | null;
+    const services  = document.querySelector('.services-section')        as HTMLElement | null;
+    const calculator = document.querySelector('.value-calculator-section') as HTMLElement | null;
+    const contact   = document.querySelector('.contact-section')         as HTMLElement | null;
 
-    if (!hero || !cards || !work || !manifesto || !services || !contact) return;
+    if (!hero || !cards || !work || !manifesto || !services || !calculator || !contact) return;
 
-    const allSections = [hero, cards, work, manifesto, services, contact];
+    const allSections = [hero, cards, work, manifesto, services, calculator, contact];
 
     // Lock document scroll (same pattern as original)
     const html = document.documentElement;
@@ -61,7 +63,7 @@ export default function GatewayPage() {
     const heroBg      = hero.querySelector('.hero-bg')           as HTMLElement | null;
     const marqueeWrap = hero.querySelector('.hero-marquee-wrap') as HTMLElement | null;
 
-    let current   = 0;          // 0=hero 1=cards 2=work 3=manifesto 4=services 5=contact
+    let current   = 0;          // 0=hero 1=cards 2=work 3=manifesto 4=services 5=calculator 6=contact
     let animating = false;
     const DURATION = 750;
 
@@ -81,7 +83,7 @@ export default function GatewayPage() {
       if (index === 2) animateWork();
       if (index === 3) animateManifesto();
       if (index === 4) animateServices();
-      if (index === 5) animateContact();
+      if (index === 6) animateContact();
     }
 
     function animateWork() {
@@ -259,8 +261,8 @@ export default function GatewayPage() {
           ? 'translateY(-50%)'
           : 'translateY(calc(-50% + -25px))';
 
-      // Sections 1–5: above target = -100%, at target = 0%, below = +100%
-      [cards, work, manifesto, services, contact].forEach((el, i) => {
+      // Sections 1–6: above target = -100%, at target = 0%, below = +100%
+      [cards, work, manifesto, services, calculator, contact].forEach((el, i) => {
         const idx = i + 1;
         el!.style.transform =
           idx < target  ? 'translateY(-100%)' :
@@ -311,7 +313,11 @@ export default function GatewayPage() {
         else if (dy < 0) slideTo(4, 3);
       } else if (current === 5) {
         e.preventDefault();
-        if (dy < 0) slideTo(5, 4);
+        if (dy > 0) slideTo(5, 6);
+        else if (dy < 0) slideTo(5, 4);
+      } else if (current === 6) {
+        e.preventDefault();
+        if (dy < 0) slideTo(6, 5);
       }
     }
 
@@ -331,7 +337,9 @@ export default function GatewayPage() {
       else if (current === 3 && dy < 0)                          slideTo(3, 2);
       else if (current === 4 && dy > 0)                          slideTo(4, 5);
       else if (current === 4 && dy < 0)                          slideTo(4, 3);
+      else if (current === 5 && dy > 0)                         slideTo(5, 6);
       else if (current === 5 && dy < 0)                         slideTo(5, 4);
+      else if (current === 6 && dy < 0)                         slideTo(6, 5);
     };
 
     /* ── Init ── */
@@ -340,6 +348,7 @@ export default function GatewayPage() {
     work!.style.transform     = 'translateY(100%)';
     manifesto!.style.transform = 'translateY(100%)';
     services!.style.transform = 'translateY(100%)';
+    calculator!.style.transform = 'translateY(100%)';
     contact!.style.transform  = 'translateY(100%)';
     if (heroBg)      heroBg.style.transform     = 'translateY(0px)';
     if (marqueeWrap) marqueeWrap.style.transform = 'translateY(-50%)';
@@ -384,7 +393,7 @@ export default function GatewayPage() {
 
       {/* ── Section navigation dots (fixed, right edge) ── */}
       <nav className="section-dots" aria-label="Section navigation">
-        {[0, 1, 2, 3, 4, 5].map((i) => (
+        {[0, 1, 2, 3, 4, 5, 6].map((i) => (
           <button
             key={i}
             className="section-dot"
@@ -394,9 +403,9 @@ export default function GatewayPage() {
       </nav>
 
       {/* ══════════════════════════════════════
-          Hero  (section 0 — unchanged)
+          Hero  (section 0 — unchanged on desktop)
           ══════════════════════════════════════ */}
-      <section id="hero">
+      <section id="hero" className="pb-24 md:pb-0">
         <nav className="hero-nav">
           <a href="#" className="hero-nav-wordmark">Aurelius</a>
           <div className="hero-nav-links">
@@ -429,17 +438,18 @@ export default function GatewayPage() {
           </div>
         </div>
 
-        <div className="hero-bottom-rule" />
+        {/* Bottom content: stacked on mobile (flex-col gap-4), absolute on desktop */}
+        <div className="hero-bottom-content">
+          <div className="hero-bottom-rule" aria-hidden />
 
-        <div className="hero-bottom-left">Est. 2024 · Global</div>
+          <div className="hero-bottom-right">
+            <p>Strategic Brand Agency</p>
+            <p>Identity &amp; Digital</p>
+          </div>
 
-        <div className="hero-bottom-right">
-          <p>Strategic Brand Agency</p>
-          <p>Identity &amp; Digital</p>
-        </div>
-
-        <div className="hero-scroll-hint">
-          <p>Scroll</p>
+          <div className="hero-scroll-hint mx-auto mt-10 text-center left-1/2 -translate-x-1/2">
+            <p>Scroll</p>
+          </div>
         </div>
       </section>
 
@@ -469,7 +479,12 @@ export default function GatewayPage() {
       <ServicesSection />
 
       {/* ══════════════════════════════════════
-          Section 5 — Contact / CTA
+          Section 5 — Value Calculator
+          ══════════════════════════════════════ */}
+      <ValueCalculator />
+
+      {/* ══════════════════════════════════════
+          Section 6 — Contact / CTA
           ══════════════════════════════════════ */}
       <section className="contact-section">
         <div className="contact-inner">
