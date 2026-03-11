@@ -86,10 +86,7 @@ export function RevenueLeak() {
 
   const container = {
     hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.1, delayChildren: 0.1 },
-    },
+    visible: { opacity: 1 },
   };
 
   const item = {
@@ -126,6 +123,7 @@ export function RevenueLeak() {
         variants={container}
         initial="hidden"
         animate={inView ? "visible" : "hidden"}
+        transition={{ staggerChildren: 0.1, delayChildren: 0.1 }}
       >
         <header className="mb-16">
           <motion.p

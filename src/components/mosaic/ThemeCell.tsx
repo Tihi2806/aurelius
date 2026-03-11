@@ -247,13 +247,11 @@ export function ThemeCell({
         className="absolute bottom-2 left-2 right-2 z-10 flex flex-wrap gap-1.5 overflow-visible px-1"
         variants={{
           hidden: { opacity: 0 },
-          visible: {
-            opacity: 1,
-            transition: { staggerChildren: 0.05, delayChildren: 0 },
-          },
+          visible: { opacity: 1 },
         }}
         initial="hidden"
         animate={isHovered ? "visible" : "hidden"}
+        transition={{ staggerChildren: 0.05, delayChildren: 0 }}
       >
         {techStack.map((tech) => (
           <motion.span

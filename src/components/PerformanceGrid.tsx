@@ -33,10 +33,7 @@ export function PerformanceGrid() {
 
   const container = {
     hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.08, delayChildren: 0.1 },
-    },
+    visible: { opacity: 1 },
   };
 
   const item = {
@@ -79,6 +76,7 @@ export function PerformanceGrid() {
           variants={container}
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
+          transition={{ staggerChildren: 0.08, delayChildren: 0.1 }}
         >
           {CARDS.map((card) => {
             const Icon = card.icon;

@@ -29,27 +29,17 @@ const SERVICES = [
 
 const containerVariants = {
   hidden: {},
-  visible: {
-    transition: { staggerChildren: 0.1, delayChildren: 0 },
-  },
+  visible: {},
 };
 
 const headerVariants = {
   hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, ease: "easeOut" },
-  },
+  visible: { opacity: 1, y: 0 },
 };
 
 const cardVariants = {
   hidden: { opacity: 0, y: 30 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.5, ease: "easeOut" },
-  },
+  visible: { opacity: 1, y: 0 },
 };
 
 export function ServicesSection() {
@@ -70,6 +60,7 @@ export function ServicesSection() {
           variants={headerVariants}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
+          transition={{ duration: 0.6, ease: "easeOut" }}
         >
           <p
             className="text-[11px] font-medium uppercase tracking-[0.2em] text-[#737373]"
@@ -95,6 +86,7 @@ export function ServicesSection() {
           variants={containerVariants}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
+          transition={{ staggerChildren: 0.1, delayChildren: 0 }}
         >
           {SERVICES.map((service, i) => (
             <motion.div
@@ -106,7 +98,7 @@ export function ServicesSection() {
               animate={{
                 backgroundColor: hoveredCard === i ? "#111111" : "#0c0c0c",
               }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
             >
               {/* Top line on hover */}
               <motion.div

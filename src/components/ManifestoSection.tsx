@@ -58,12 +58,7 @@ export function ManifestoSection() {
 
   const containerVariants = {
     hidden: {},
-    visible: {
-      transition: {
-        staggerChildren: STAGGER_DELAY,
-        delayChildren: 0,
-      },
-    },
+    visible: {},
   };
 
   const wordVariants = {
@@ -78,13 +73,7 @@ export function ManifestoSection() {
 
   const linkVariants = {
     hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        delay: WORDS.length * STAGGER_DELAY + WORD_DURATION * 0.5,
-        duration: 0.4,
-      },
-    },
+    visible: { opacity: 1 },
   };
 
   return (
@@ -113,6 +102,7 @@ export function ManifestoSection() {
           variants={containerVariants}
           initial="hidden"
           animate={isVisible ? "visible" : "hidden"}
+          transition={{ staggerChildren: STAGGER_DELAY, delayChildren: 0 }}
         >
           {WORDS.map((word, i) => (
             <motion.span
@@ -131,6 +121,10 @@ export function ManifestoSection() {
           variants={linkVariants}
           initial="hidden"
           animate={isVisible ? "visible" : "hidden"}
+          transition={{
+            delay: WORDS.length * STAGGER_DELAY + WORD_DURATION * 0.5,
+            duration: 0.4,
+          }}
         >
           → See our work
         </motion.a>
