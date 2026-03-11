@@ -61,11 +61,7 @@ export function SelectedWorkSection() {
     hidden: { scaleX: 0 },
     visible: {
       scaleX: 1,
-      transition: {
-        duration: 0.8,
-        ease: "easeOut" as const,
-        delay: (_, __, opts: { custom?: number }) => (opts?.custom ?? 0) * 0.15,
-      },
+      transition: { duration: 0.8, ease: "easeOut" },
     },
   };
 
@@ -115,7 +111,11 @@ export function SelectedWorkSection() {
               <motion.div
                 className="work-row-line"
                 variants={lineVariants}
-                custom={i}
+                transition={{
+                  duration: 0.8,
+                  ease: "easeOut",
+                  delay: i * 0.15,
+                }}
                 aria-hidden
               />
               <div className="work-row-overlay" aria-hidden />
