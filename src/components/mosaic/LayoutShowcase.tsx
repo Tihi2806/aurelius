@@ -131,7 +131,7 @@ export function LayoutShowcase() {
             height: "100%",
             display: "flex",
             flexDirection: "column",
-            alignItems: "center",
+            alignItems: "stretch",
             justifyContent: "center",
             padding: 0,
             paddingTop: "40px",
@@ -149,7 +149,7 @@ export function LayoutShowcase() {
             {/* pills–preview gap 20px; preview–label gap 16px via inner wrapper */}
             {/* Pill nav */}
             <div
-              className="layout-showcase-pills flex flex-row gap-1.5 overflow-x-auto px-6 md:gap-2"
+              className="layout-showcase-pills flex flex-row gap-2 overflow-x-auto px-4 md:gap-3"
               style={{
                 scrollbarWidth: "none",
                 msOverflowStyle: "none",
@@ -169,7 +169,7 @@ export function LayoutShowcase() {
                   }}
                   type="button"
                   onClick={() => handlePillClick(index)}
-                  className={`rounded-full font-sans transition-all duration-[250ms] ease-out md:px-4 md:py-1.5 md:text-xs px-3 py-1 text-[10px] md:gap-2 gap-1.5 ${
+                  className={`rounded-full font-sans transition-all duration-[250ms] ease-out px-5 py-2 text-[11px] md:px-7 md:py-2.5 md:text-sm ${
                     isActive
                       ? "bg-white font-medium text-black"
                       : "border border-white/15 bg-transparent text-gray-500"
@@ -194,8 +194,7 @@ export function LayoutShowcase() {
             <div
               className="layout-showcase-preview"
               style={{
-                width: "80%",
-                maxWidth: "900px",
+                width: "min(92%, 1300px)",
                 position: "relative",
                 marginLeft: "auto",
                 marginRight: "auto",
@@ -246,18 +245,21 @@ export function LayoutShowcase() {
                 className="flex flex-col items-center"
               >
                 <p
-                  className="font-normal text-2xl"
+                  className="font-normal"
                   style={{
                     fontFamily: "'Cormorant Garamond', serif",
-                    fontSize: "24px",
+                    fontSize: "clamp(2rem, 3.5vw, 3em)",
                     color: layouts[activeIndex].textColor,
                   }}
                 >
                   {layouts[activeIndex].name}
                 </p>
                 <p
-                  className="mt-1 text-[11px] uppercase tracking-widest text-[#737373]"
-                  style={{ fontFamily: "'DM Sans', sans-serif" }}
+                  className="mt-2 uppercase tracking-widest text-[#737373]"
+                  style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: "clamp(0.75rem, 1.2vw, 1.2em)",
+                  }}
                 >
                   {tags[activeIndex]}
                 </p>
