@@ -1,0 +1,211 @@
+/* Browser mockup — sav1n-style dark chrome window */
+
+.browser-mockup {
+  position: relative;
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  cursor: pointer;
+  outline: none;
+}
+
+.browser-mockup:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.4);
+  outline-offset: 4px;
+}
+
+.browser-mockup-glow {
+  position: absolute;
+  inset: -40px;
+  background: radial-gradient(
+    ellipse 80% 60% at 50% 50%,
+    rgba(255, 255, 255, 0.04) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: -1;
+}
+
+.browser-mockup-window {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow:
+    0 40px 100px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+  background: #1c1c1c;
+}
+
+.browser-mockup-chrome {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  height: 38px;
+  padding: 0 14px;
+  background: #1c1c1c;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.browser-mockup-dots {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.browser-mockup-dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+}
+
+.browser-mockup-dot-red {
+  background: #ff5f56;
+}
+
+.browser-mockup-dot-yellow {
+  background: #ffbd2e;
+}
+
+.browser-mockup-dot-green {
+  background: #27c93f;
+}
+
+.browser-mockup-url-bar {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 0;
+  max-width: 360px;
+  height: 26px;
+  margin: 0 auto;
+  padding: 4px 10px;
+  background: #111;
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.browser-mockup-lock {
+  flex-shrink: 0;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.browser-mockup-url {
+  font-family: ui-monospace, "Cascadia Code", "SF Mono", Monaco, monospace;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.7);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.browser-mockup-open-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  color: rgba(255, 255, 255, 0.5);
+  opacity: 0.5;
+  transition: opacity 0.2s ease;
+}
+
+.browser-mockup:hover .browser-mockup-open-icon {
+  opacity: 0.9;
+}
+
+.browser-mockup-media-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: #0a0a0a;
+}
+
+.browser-mockup-media-inner {
+  position: absolute;
+  inset: 0;
+  transition: transform 0.6s ease;
+}
+
+.browser-mockup:hover .browser-mockup-media-inner {
+  transform: scale(1.02);
+}
+
+.browser-mockup-video,
+.browser-mockup-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.browser-mockup-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+}
+
+.browser-mockup-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.45);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.browser-mockup:hover .browser-mockup-overlay {
+  opacity: 1;
+}
+
+.browser-mockup-cta {
+  display: inline-block;
+  padding: 10px 24px;
+  font-family: var(--font-dm-sans, system-ui, sans-serif);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: #fff;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 100px;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.browser-mockup:hover .browser-mockup-cta {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.browser-mockup-meta {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+}
+
+.browser-mockup-label {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+  line-height: 1.2;
+}
+
+.browser-mockup-tag {
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #737373;
+}

@@ -537,3 +537,57 @@
 .layout-showcase-pills::-webkit-scrollbar {
   display: none;
 }
+
+/* Styles section slide transition (scroll-triggered) */
+.styles-slide-viewport {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.styles-slide-pane {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  transition: transform 600ms cubic-bezier(0.76, 0, 0.24, 1);
+  will-change: transform;
+}
+
+/* First pane in a transition stays in flow so viewport has height */
+.styles-slide-viewport .styles-slide-pane:first-of-type {
+  position: relative;
+}
+
+.styles-slide-viewport .styles-slide-pane:first-of-type + .styles-slide-pane {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.styles-slide-pane.single {
+  position: relative;
+}
+
+/* Theme-aware pill and label (light background = dark text/border) */
+.layout-showcase-pill {
+  transition: color 300ms ease, border-color 300ms ease, background-color 300ms ease;
+}
+
+.cards-section[data-theme="light"] .layout-showcase-pill-inactive {
+  color: #111;
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+.cards-section .browser-mockup-label,
+.cards-section .browser-mockup-tag {
+  transition: color 300ms ease;
+}
+
+.cards-section[data-theme="light"] .browser-mockup-label {
+  color: #111;
+}
+
+.cards-section[data-theme="light"] .browser-mockup-tag {
+  color: #111;
+}

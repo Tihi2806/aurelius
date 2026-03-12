@@ -51,13 +51,31 @@ body.cursor-none {
   background: white;
   border-radius: 9999px;
   transform-origin: center center;
+  transition: background 0.3s ease;
+}
+
+.custom-cursor-dot[data-theme="light"] {
+  background: #111;
 }
 
 .custom-cursor-ring {
   border: 1px solid rgba(255, 255, 255, 0.4);
   border-radius: 9999px;
   transform-origin: center center;
-  transition: width 0.2s ease-out, height 0.2s ease-out, border-color 0.2s ease-out, background 0.2s ease-out;
+  transition: width 0.2s ease-out, height 0.2s ease-out, border-color 0.3s ease, background 0.2s ease-out;
+}
+
+.custom-cursor-ring[data-theme="light"] {
+  border-color: rgba(0, 0, 0, 0.35);
+}
+
+.custom-cursor-ring[data-theme="light"][data-variant="link"] {
+  border-color: rgba(0, 0, 0, 0.5);
+}
+
+.custom-cursor-ring[data-theme="light"][data-variant="card"] {
+  background: rgba(0, 0, 0, 0.08);
+  border-color: rgba(0, 0, 0, 0.25);
 }
 
 .custom-cursor-ring[data-variant="link"] {

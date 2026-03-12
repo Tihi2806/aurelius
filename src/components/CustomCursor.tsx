@@ -45,6 +45,12 @@ function getVariant(element: Element | null): CursorVariant {
   return "default";
 }
 
+function getCursorTheme(element: Element | null): "dark" | "light" {
+  const section = element?.closest(".cards-section");
+  const theme = section?.getAttribute("data-theme");
+  return theme === "light" ? "light" : "dark";
+}
+
 export function CustomCursor() {
   const isFine = useFinePointer();
   const prefersReducedMotion = usePrefersReducedMotion();
@@ -52,6 +58,7 @@ export function CustomCursor() {
   const [dot, setDot] = useState({ x: 0, y: 0 });
   const [ring, setRing] = useState({ x: 0, y: 0 });
   const [variant, setVariant] = useState<CursorVariant>("default");
+  const [cursorTheme, setCursorTheme] = useState<"dark" | "light">("dark");
   const ringRef = useRef({ x: 0, y: 0 });
   const mouseRef = useRef({ x: 0, y: 0 });
   const rafRef = useRef<number>(0);
@@ -67,6 +74,7 @@ export function CustomCursor() {
       setVisible(true);
       const el = document.elementFromPoint(e.clientX, e.clientY);
       setVariant(getVariant(el));
+      setCursorTheme(getCursorTheme(el));
     };
 
     const onMouseLeave = () => setVisible(false);
@@ -107,6 +115,7 @@ export function CustomCursor() {
     <>
       <div
         className="custom-cursor-dot"
+        data-theme={cursorTheme}
         style={{
           transform: `translate(${dot.x}px, ${dot.y}px) translate(-50%, -50%)`,
           opacity: visible ? 1 : 0,
@@ -116,6 +125,7 @@ export function CustomCursor() {
       <div
         className="custom-cursor-ring"
         data-variant={variant}
+        data-theme={cursorTheme}
         style={{
           width: ringSize,
           height: ringSize,

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { LayoutShowcase } from "@/components/mosaic/LayoutShowcase";
+import { LayoutShowcase, type LayoutShowcaseHandle } from "@/components/mosaic/LayoutShowcase";
 import { SelectedWorkSection } from "@/components/SelectedWorkSection";
 import { ManifestoSection } from "@/components/ManifestoSection";
 import { ServicesSection } from "@/components/ServicesSection";
@@ -39,6 +39,7 @@ export default function GatewayPage() {
   const parallaxTarget = useRef({ x: 0, y: 0 });
   const parallaxCurrent = useRef({ x: 0, y: 0 });
   const prefersReducedMotion = usePrefersReducedMotion();
+  const cardsScrollRef = useRef<LayoutShowcaseHandle>(null);
 
   /* ── Hero statue parallax (desktop, fine pointer, no reduced motion) ── */
   useEffect(() => {
@@ -231,6 +232,7 @@ export default function GatewayPage() {
           cards!.style.transform = 'translateY(0%)';
           animating = false;
           updateDots(1);
+          cardsScrollRef.current?.startArrivalCooldown?.();
         }
       }
       requestAnimationFrame(tick);
@@ -307,6 +309,7 @@ export default function GatewayPage() {
           animating = false;
           updateDots(to);
           triggerEnterAnimation(to);
+          if (to === 1) cardsScrollRef.current?.startArrivalCooldown?.();
         }
       }
       requestAnimationFrame(tick);
@@ -340,6 +343,7 @@ export default function GatewayPage() {
       current = target;
       updateDots(target);
       triggerEnterAnimation(target);
+      if (target === 1) cardsScrollRef.current?.startArrivalCooldown?.();
     }
 
     /* ════════════════════════════════════════════
@@ -359,10 +363,13 @@ export default function GatewayPage() {
         if (dy > 0) { e.preventDefault(); slideTo(0, 1); }
 
       } else if (current === 1) {
-        // Cards: only intercept at scroll boundaries;
-        // the cards div scrolls freely inside when not at an edge.
-        if (dy < 0 && cards!.scrollTop <= 0)   { e.preventDefault(); slideTo(1, 0); }
-        else if (dy > 0 && isAtBottom(cards!)) { e.preventDefault(); slideTo(1, 2); }
+        // Cards (styles section): scroll advances style or hands off to prev/next section
+        e.preventDefault();
+        const handled = cardsScrollRef.current?.onScrollDelta(dy);
+        if (!handled) {
+          if (dy < 0) slideTo(1, 0);
+          else slideTo(1, 2);
+        }
 
       } else if (current === 2) {
         e.preventDefault();
@@ -408,8 +415,13 @@ export default function GatewayPage() {
       if (Math.abs(dy) < 40) return;
 
       if      (current === 0 && dy > 0)                          slideTo(0, 1);
-      else if (current === 1 && dy < 0 && cards!.scrollTop <= 0) slideTo(1, 0);
-      else if (current === 1 && dy > 0 && isAtBottom(cards!))    slideTo(1, 2);
+      else if (current === 1) {
+        const handled = cardsScrollRef.current?.onScrollDelta(dy);
+        if (!handled) {
+          if (dy < 0) slideTo(1, 0);
+          else slideTo(1, 2);
+        }
+      }
       else if (current === 2 && dy > 0)                          slideTo(2, 3);
       else if (current === 2 && dy < 0)                          slideTo(2, 1);
       else if (current === 3 && dy > 0)                          slideTo(3, 4);
@@ -655,7 +667,7 @@ export default function GatewayPage() {
       {/* ══════════════════════════════════════
           Cards selector  (section 1 — unchanged)
           ══════════════════════════════════════ */}
-      <LayoutShowcase />
+      <LayoutShowcase ref={cardsScrollRef} />
 
       {/* ══════════════════════════════════════
           Section 2 — Selected Work
