@@ -22,7 +22,7 @@ interface ThemeCellProps {
   index: number;
 }
 
-const CARD_PREVIEWS: Record<string, React.ReactNode> = {
+export const CARD_PREVIEWS: Record<string, React.ReactNode> = {
   classy: (
     <div className="card-preview">
       <div style={{ position: "absolute", top: 0, left: 0, right: 0, padding: "14px 20px", display: "flex", justifyContent: "space-between", alignItems: "center", background: "linear-gradient(to bottom,rgba(0,0,0,0.6),transparent)", zIndex: 1 }}>

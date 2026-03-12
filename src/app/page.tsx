@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { MosaicGrid } from "@/components/mosaic/MosaicGrid";
+import { LayoutShowcase } from "@/components/mosaic/LayoutShowcase";
 import { SelectedWorkSection } from "@/components/SelectedWorkSection";
 import { ManifestoSection } from "@/components/ManifestoSection";
 import { ServicesSection } from "@/components/ServicesSection";
@@ -655,12 +655,7 @@ export default function GatewayPage() {
       {/* ══════════════════════════════════════
           Cards selector  (section 1 — unchanged)
           ══════════════════════════════════════ */}
-      <div className="cards-section">
-        <header className="mosaic-header">
-          <h1>Choose your experience</h1>
-        </header>
-        <MosaicGrid />
-      </div>
+      <LayoutShowcase />
 
       {/* ══════════════════════════════════════
           Section 2 — Selected Work

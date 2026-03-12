@@ -525,3 +525,15 @@
   inset: 0;
   z-index: 100;
 }
+
+/* LayoutShowcase: scrollable preview + pill nav scrollbar hide */
+.layout-showcase-preview .card-preview-wrap {
+  position: absolute;
+  inset: 0;
+}
+.layout-showcase-preview .card-preview {
+  overflow-y: hidden;
+}
+.layout-showcase-pills::-webkit-scrollbar {
+  display: none;
+}
