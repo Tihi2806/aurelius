@@ -7,6 +7,7 @@ export interface BrowserMockupProps {
   url: string;
   label: string;
   tag: string;
+  description: string;
   mediaType: "image" | "video";
   mediaSrc: string;
 }
@@ -15,6 +16,7 @@ export function BrowserMockup({
   url,
   label,
   tag,
+  description,
   mediaType,
   mediaSrc,
 }: BrowserMockupProps) {
@@ -107,8 +109,12 @@ export function BrowserMockup({
         </div>
       </div>
       <div className="browser-mockup-meta">
-        <h3 className="browser-mockup-label">{label}</h3>
-        <span className="browser-mockup-tag">{tag}</span>
+        <div className="browser-mockup-meta-left">
+          <h3 className="browser-mockup-label">{label}</h3>
+          <span className="browser-mockup-tag">{tag}</span>
+        </div>
+        <div className="browser-mockup-meta-divider" aria-hidden />
+        <p className="browser-mockup-description">{description}</p>
       </div>
     </div>
   );

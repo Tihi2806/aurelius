@@ -15,15 +15,15 @@ const layouts = [
   { id: 6, name: "Midnight Dark", bg: "#08090a", textColor: "#e6e6e6" },
 ];
 
-// index 0–6: label, theme, mediaSrc and url must match tab order (Flashy → Midnight Dark)
+// index 0–6: label, theme (section background light/dark), bg, tag, description, mediaSrc and url must match tab order
 const STYLES = [
-  { label: "Flashy", theme: "dark" as const, tag: "Immersive & Bold", url: "https://aurelius-sigma.vercel.app/flashy", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/flashy.png" },
-  { label: "Classy", theme: "dark" as const, tag: "Luxury & Refined", url: "https://aurelius-sigma.vercel.app/classy", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/classy.png" },
-  { label: "Brutalist", theme: "light" as const, tag: "Raw & Radical", url: "https://aurelius-sigma.vercel.app/brutalist", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/brutalist.png" },
-  { label: "Scandi Shop", theme: "light" as const, tag: "Clean & Minimal", url: "https://aurelius-sigma.vercel.app/scandi", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/scandi.png" },
-  { label: "Silicon Valley", theme: "light" as const, tag: "SaaS & Product", url: "https://aurelius-sigma.vercel.app/saas", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/saas.png" },
-  { label: "Editorial", theme: "dark" as const, tag: "Culture & Design", url: "https://aurelius-sigma.vercel.app/editorial", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/editorial.png" },
-  { label: "Midnight Dark", theme: "dark" as const, tag: "Moody & Electric", url: "https://aurelius-sigma.vercel.app/midnight", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/midnight.png" },
+  { label: "Flashy", theme: "dark" as const, bg: "#0a001f", tag: "Immersive & Bold", description: "High-energy layouts built for brands that want to captivate and convert. Bold motion, vivid color, zero compromise.", url: "https://aurelius-sigma.vercel.app/flashy", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/flashy.png" },
+  { label: "Classy", theme: "dark" as const, bg: "#1a1208", tag: "Luxury & Refined", description: "Understated elegance for premium brands. Every detail considered, nothing wasted — made for clients who don't need to shout.", url: "https://aurelius-sigma.vercel.app/classy", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/classy.png" },
+  { label: "Brutalist", theme: "light" as const, bg: "#f5f0e8", tag: "Raw & Radical", description: "Grids broken, rules ignored. For brands that want to be remembered for the right — and wrong — reasons.", url: "https://aurelius-sigma.vercel.app/brutalist", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/brutalist.png" },
+  { label: "Scandi Shop", theme: "light" as const, bg: "#eeece8", tag: "Clean & Minimal", description: "Warm minimalism meets mindful commerce. Clean layouts that let the product breathe and the story speak.", url: "https://aurelius-sigma.vercel.app/scandi", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/scandi.png" },
+  { label: "Silicon Valley", theme: "light" as const, bg: "#f0f0f0", tag: "SaaS & Product", description: "Conversion-focused, trust-building, and built to scale. The language of modern product teams, fluent in growth.", url: "https://aurelius-sigma.vercel.app/saas", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/saas.png" },
+  { label: "Editorial", theme: "dark" as const, bg: "#111111", tag: "Culture & Design", description: "Type-forward, image-led, and full of intention. For studios, agencies, and brands with something to say.", url: "https://aurelius-sigma.vercel.app/editorial", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/editorial.png" },
+  { label: "Midnight Dark", theme: "dark" as const, bg: "#050510", tag: "Moody & Electric", description: "Deep blacks, electric accents, and an atmosphere you can feel. For brands that own the night.", url: "https://aurelius-sigma.vercel.app/midnight", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/midnight.png" },
 ];
 
 const COOLDOWN_MS = 700;
@@ -48,6 +48,11 @@ export const LayoutShowcase = forwardRef<LayoutShowcaseHandle>(function LayoutSh
   const viewportRef = useRef<HTMLDivElement>(null);
   const transitionEndHandled = useRef(false);
   const arrivalCooldownUntilRef = useRef(0);
+
+  // Active pill and theme/bg update immediately at transition start; slide content still uses two panes until transitionend
+  const displayIndex = transitionState ? transitionState.toIndex : activeIndex;
+  const sectionBg = transitionState ? STYLES[transitionState.toIndex].bg : STYLES[activeIndex].bg;
+  const currentTheme = transitionState ? STYLES[transitionState.toIndex].theme : STYLES[activeIndex].theme;
 
   useImperativeHandle(ref, () => ({
     onScrollDelta(dy: number): boolean {
@@ -78,8 +83,8 @@ export const LayoutShowcase = forwardRef<LayoutShowcaseHandle>(function LayoutSh
   }, []);
 
   useEffect(() => {
-    pillRefs.current[activeIndex]?.scrollIntoView({ behavior: "smooth", inline: "center" });
-  }, [activeIndex]);
+    pillRefs.current[displayIndex]?.scrollIntoView({ behavior: "smooth", inline: "center" });
+  }, [displayIndex]);
 
   function goToIndex(index: number) {
     if (index < 0 || index >= STYLES.length || index === activeIndex) return;
@@ -134,11 +139,6 @@ export const LayoutShowcase = forwardRef<LayoutShowcaseHandle>(function LayoutSh
     goToIndex(index);
   };
 
-  // Pill shows outgoing index during transition so it matches visible content; only after transitionend we show activeIndex (BUG 2)
-  const displayIndex = transitionState ? transitionState.fromIndex : activeIndex;
-  const bgColor = transitionState ? layouts[transitionState.toIndex].bg : layouts[activeIndex].bg;
-  const currentTheme = STYLES[displayIndex].theme;
-
   return (
     <div className="cards-section" data-theme={currentTheme}>
       <motion.div
@@ -148,23 +148,27 @@ export const LayoutShowcase = forwardRef<LayoutShowcaseHandle>(function LayoutSh
         style={{
           height: "100%",
           position: "relative",
-          backgroundColor: bgColor,
-          transition: `background-color ${SLIDE_DURATION_MS}ms cubic-bezier(0.76, 0, 0.24, 1)`,
+          display: "flex",
+          flexDirection: "column",
+          backgroundColor: sectionBg,
+          transition: "background-color 350ms cubic-bezier(0.4, 0, 0.2, 1)",
         }}
       >
-        {/* Content wrapper */}
+        {/* Content wrapper: fills section, vertically centered */}
         <div
           style={{
             position: "relative",
             zIndex: 1,
-            height: "100%",
+            minHeight: 0,
+            flex: 1,
             display: "flex",
             flexDirection: "column",
             alignItems: "stretch",
             justifyContent: "center",
-            padding: 0,
-            paddingTop: "40px",
-            paddingBottom: "40px",
+            paddingTop: 0,
+            paddingRight: 0,
+            paddingBottom: 0,
+            paddingLeft: 0,
           }}
         >
           <div
@@ -177,13 +181,9 @@ export const LayoutShowcase = forwardRef<LayoutShowcaseHandle>(function LayoutSh
           >
             {/* Pill nav */}
             <div
-              className="layout-showcase-pills flex flex-row gap-2 overflow-x-auto px-4 md:gap-3"
+              className="layout-showcase-pills flex flex-row flex-wrap justify-center gap-2 px-4 md:gap-3"
               style={{
-                scrollbarWidth: "none",
-                msOverflowStyle: "none",
                 width: "100%",
-                justifyContent: "center",
-                flexShrink: 0,
                 alignSelf: "center",
               }}
             >
@@ -197,10 +197,10 @@ export const LayoutShowcase = forwardRef<LayoutShowcaseHandle>(function LayoutSh
                     }}
                     type="button"
                     onClick={() => handlePillClick(index)}
-                    className={`layout-showcase-pill rounded-full font-sans transition-all duration-[250ms] ease-out px-5 py-2 text-[11px] md:px-7 md:py-2.5 md:text-sm ${
+                    className={`layout-showcase-pill rounded-full font-sans px-5 py-2 text-[11px] md:px-7 md:py-2.5 md:text-sm ${
                       isActive
-                        ? "layout-showcase-pill-active bg-white font-medium text-black"
-                        : "layout-showcase-pill-inactive border border-white/15 bg-transparent text-gray-500"
+                        ? "layout-showcase-pill-active font-medium"
+                        : "layout-showcase-pill-inactive border bg-transparent"
                     }`}
                     style={{ flexShrink: 0 }}
                   >
@@ -241,6 +241,7 @@ export const LayoutShowcase = forwardRef<LayoutShowcaseHandle>(function LayoutSh
                         url={STYLES[transitionState.fromIndex].url}
                         label={STYLES[transitionState.fromIndex].label}
                         tag={STYLES[transitionState.fromIndex].tag}
+                        description={STYLES[transitionState.fromIndex].description}
                         mediaType={STYLES[transitionState.fromIndex].mediaType}
                         mediaSrc={STYLES[transitionState.fromIndex].mediaSrc}
                       />
@@ -260,6 +261,7 @@ export const LayoutShowcase = forwardRef<LayoutShowcaseHandle>(function LayoutSh
                         url={STYLES[transitionState.toIndex].url}
                         label={STYLES[transitionState.toIndex].label}
                         tag={STYLES[transitionState.toIndex].tag}
+                        description={STYLES[transitionState.toIndex].description}
                         mediaType={STYLES[transitionState.toIndex].mediaType}
                         mediaSrc={STYLES[transitionState.toIndex].mediaSrc}
                       />
@@ -271,6 +273,7 @@ export const LayoutShowcase = forwardRef<LayoutShowcaseHandle>(function LayoutSh
                       url={STYLES[activeIndex].url}
                       label={STYLES[activeIndex].label}
                       tag={STYLES[activeIndex].tag}
+                      description={STYLES[activeIndex].description}
                       mediaType={STYLES[activeIndex].mediaType}
                       mediaSrc={STYLES[activeIndex].mediaSrc}
                     />

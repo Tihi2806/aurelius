@@ -3,7 +3,6 @@
 .browser-mockup {
   position: relative;
   width: 100%;
-  max-width: 720px;
   margin: 0 auto;
   cursor: pointer;
   outline: none;
@@ -185,27 +184,83 @@
   border-color: rgba(255, 255, 255, 0.5);
 }
 
+/* Meta: two-column (desktop) / stacked (mobile), full width of .browser-mockup. Theme color set by .cards-section[data-theme] */
 .browser-mockup-meta {
   margin-top: 20px;
+  padding-top: 20px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  text-align: center;
+  gap: 16px;
+  text-align: left;
+  width: 100%;
+  min-width: 0;
+  color: #fff;
+}
+
+.browser-mockup-meta-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  justify-content: center;
+}
+
+.browser-mockup-meta-divider {
+  display: none;
 }
 
 .browser-mockup-label {
   margin: 0;
-  font-size: 18px;
-  font-weight: 600;
+  font-size: clamp(1.25rem, 3.5vw, 28px);
+  font-weight: 700;
   color: #fff;
   line-height: 1.2;
+  transition: opacity 0.2s ease;
 }
 
 .browser-mockup-tag {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 400;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #737373;
+  opacity: 0.5;
+  color: inherit;
+  transition: opacity 0.2s ease;
+}
+
+.browser-mockup-description {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  opacity: 0.6;
+  color: inherit;
+  transition: opacity 0.2s ease;
+}
+
+@media (min-width: 768px) {
+  .browser-mockup-meta {
+    flex-direction: row;
+    align-items: flex-start;
+    padding-top: 24px;
+    gap: 0;
+  }
+
+  .browser-mockup-meta-left {
+    width: 35%;
+    min-width: 0;
+    padding-right: 24px;
+  }
+
+  .browser-mockup-meta-divider {
+    display: block;
+    width: 1px;
+    flex-shrink: 0;
+    background: currentColor;
+    opacity: 0.15;
+  }
+
+  .browser-mockup-description {
+    width: 65%;
+    min-width: 0;
+    padding-left: 24px;
+  }
 }

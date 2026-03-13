@@ -520,17 +520,6 @@ export default function GatewayPage() {
           <img ref={heroBgImgRef} src="/aurelius%20center%20look.png" alt="Aurelius" />
         </div>
 
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            backgroundColor: 'black',
-            opacity: 0.25,
-            zIndex: 1,
-            pointerEvents: 'none',
-          }}
-        />
-
         <div className="hero-fade" />
 
         {/* Layer 1: full opacity outside the head zone */}
