@@ -29,9 +29,7 @@
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 12px;
   overflow: hidden;
-  box-shadow:
-    0 40px 100px rgba(0, 0, 0, 0.6),
-    0 0 0 1px rgba(255, 255, 255, 0.05);
+  box-shadow: none;
   background: #1c1c1c;
 }
 
@@ -195,6 +193,7 @@
   width: 100%;
   min-width: 0;
   color: #fff;
+  transition: none;
 }
 
 .browser-mockup-meta-left {
@@ -222,7 +221,7 @@
   font-weight: 400;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  opacity: 0.5;
+  opacity: 1;
   color: inherit;
   transition: opacity 0.2s ease;
 }
@@ -231,7 +230,7 @@
   margin: 0;
   font-size: 14px;
   line-height: 1.6;
-  opacity: 0.6;
+  opacity: 1;
   color: inherit;
   transition: opacity 0.2s ease;
 }
@@ -239,19 +238,19 @@
 @media (min-width: 768px) {
   .browser-mockup-meta {
     flex-direction: row;
-    align-items: flex-start;
+    align-items: baseline;
     padding-top: 24px;
     gap: 0;
   }
 
   .browser-mockup-meta-left {
-    width: 35%;
-    min-width: 0;
+    flex: 0 0 auto;
+    width: 50%;
     padding-right: 24px;
   }
 
   .browser-mockup-meta-divider {
-    display: block;
+    display: none;
     width: 1px;
     flex-shrink: 0;
     background: currentColor;
@@ -259,7 +258,7 @@
   }
 
   .browser-mockup-description {
-    width: 65%;
+    flex: 1;
     min-width: 0;
     padding-left: 24px;
   }

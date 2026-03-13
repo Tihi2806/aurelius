@@ -46,6 +46,12 @@
   display: block;
 }
 
+@media (min-width: 1920px) {
+  .hero-bg img {
+    object-position: center 40%;
+  }
+}
+
 .hero-fade {
   position: absolute;
   bottom: 0;
@@ -156,15 +162,15 @@
 .hero-bottom-right {
   position: absolute;
   bottom: 36px;
-  right: 48px;
+  left: 48px;
   z-index: 5;
-  text-align: right;
+  text-align: left;
 }
 
 .hero-bottom-right p {
   font-size: clamp(16px, 2vw, 26px);
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.95);
   line-height: 1.25;
   letter-spacing: -0.3px;
   margin: 0;

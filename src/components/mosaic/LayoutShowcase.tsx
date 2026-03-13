@@ -1,29 +1,29 @@
 "use client";
 
-import { useState, useEffect, useRef, useImperativeHandle, forwardRef } from "react";
+import { useState, useEffect, useRef, useImperativeHandle, forwardRef, type ReactNode } from "react";
 import { motion } from "framer-motion";
 import { BrowserMockup } from "@/components/BrowserMockup";
 import "./mosaic.css";
 
 const layouts = [
-  { id: 0, name: "Flashy", bg: "rgb(10, 0, 31)", textColor: "#00f0ff" },
-  { id: 1, name: "Classy", bg: "#1a1208", textColor: "#f8f1e9" },
-  { id: 2, name: "Brutalist", bg: "#000000", textColor: "#ffffff" },
-  { id: 3, name: "Scandi Shop", bg: "#e8ecef", textColor: "#1e2c3a" },
-  { id: 4, name: "Silicon Valley", bg: "#f6f9fc", textColor: "#1a1f36" },
-  { id: 5, name: "Editorial", bg: "#fbfbfb", textColor: "#1a1a1a" },
-  { id: 6, name: "Midnight Dark", bg: "#08090a", textColor: "#e6e6e6" },
+  { id: 0, name: "Flashy", bg: "#0a0005", textColor: "#00f0ff" },
+  { id: 1, name: "Classy", bg: "#0f0d0a", textColor: "#f8f1e9" },
+  { id: 2, name: "Brutalist", bg: "#f0ede8", textColor: "#111" },
+  { id: 3, name: "Scandi Shop", bg: "#f0ede8", textColor: "#1e2c3a" },
+  { id: 4, name: "Silicon Valley", bg: "#f5f5f7", textColor: "#1a1f36" },
+  { id: 5, name: "Editorial", bg: "#0a0a0a", textColor: "#e6e6e6" },
+  { id: 6, name: "Midnight Dark", bg: "#070714", textColor: "#e6e6e6" },
 ];
 
-// index 0–6: label, theme (section background light/dark), bg, tag, description, mediaSrc and url must match tab order
+// index 0–6: label, theme, mediaSrc and url must match tab order (Flashy → Midnight Dark)
 const STYLES = [
-  { label: "Flashy", theme: "dark" as const, bg: "#0a001f", tag: "Immersive & Bold", description: "High-energy layouts built for brands that want to captivate and convert. Bold motion, vivid color, zero compromise.", url: "https://aurelius-sigma.vercel.app/flashy", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/flashy.png" },
-  { label: "Classy", theme: "dark" as const, bg: "#1a1208", tag: "Luxury & Refined", description: "Understated elegance for premium brands. Every detail considered, nothing wasted — made for clients who don't need to shout.", url: "https://aurelius-sigma.vercel.app/classy", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/classy.png" },
-  { label: "Brutalist", theme: "light" as const, bg: "#f5f0e8", tag: "Raw & Radical", description: "Grids broken, rules ignored. For brands that want to be remembered for the right — and wrong — reasons.", url: "https://aurelius-sigma.vercel.app/brutalist", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/brutalist.png" },
-  { label: "Scandi Shop", theme: "light" as const, bg: "#eeece8", tag: "Clean & Minimal", description: "Warm minimalism meets mindful commerce. Clean layouts that let the product breathe and the story speak.", url: "https://aurelius-sigma.vercel.app/scandi", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/scandi.png" },
-  { label: "Silicon Valley", theme: "light" as const, bg: "#f0f0f0", tag: "SaaS & Product", description: "Conversion-focused, trust-building, and built to scale. The language of modern product teams, fluent in growth.", url: "https://aurelius-sigma.vercel.app/saas", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/saas.png" },
-  { label: "Editorial", theme: "dark" as const, bg: "#111111", tag: "Culture & Design", description: "Type-forward, image-led, and full of intention. For studios, agencies, and brands with something to say.", url: "https://aurelius-sigma.vercel.app/editorial", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/editorial.png" },
-  { label: "Midnight Dark", theme: "dark" as const, bg: "#050510", tag: "Moody & Electric", description: "Deep blacks, electric accents, and an atmosphere you can feel. For brands that own the night.", url: "https://aurelius-sigma.vercel.app/midnight", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/midnight.png" },
+  { label: "Flashy", theme: "dark" as const, tag: "Immersive & Bold", description: "High-energy layouts built for brands that want to captivate and convert.", url: "https://aurelius-sigma.vercel.app/flashy", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/flashy.png" },
+  { label: "Classy", theme: "dark" as const, tag: "Luxury & Refined", description: "Understated elegance for premium brands.", url: "https://aurelius-sigma.vercel.app/classy", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/classy.png" },
+  { label: "Brutalist", theme: "light" as const, tag: "Raw & Radical", description: "Grids broken, rules ignored.", url: "https://aurelius-sigma.vercel.app/brutalist", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/brutalist.png" },
+  { label: "Scandi Shop", theme: "light" as const, tag: "Clean & Minimal", description: "Warm minimalism meets mindful commerce.", url: "https://aurelius-sigma.vercel.app/scandi", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/scandi.png" },
+  { label: "Silicon Valley", theme: "light" as const, tag: "SaaS & Product", description: "Conversion-focused, trust-building.", url: "https://aurelius-sigma.vercel.app/saas", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/saas.png" },
+  { label: "Editorial", theme: "dark" as const, tag: "Culture & Design", description: "Type-forward, image-led.", url: "https://aurelius-sigma.vercel.app/editorial", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/editorial.png" },
+  { label: "Midnight Dark", theme: "dark" as const, tag: "Moody & Electric", description: "Deep blacks, electric accents.", url: "https://aurelius-sigma.vercel.app/midnight", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/midnight.png" },
 ];
 
 const COOLDOWN_MS = 700;
@@ -44,15 +44,14 @@ export const LayoutShowcase = forwardRef<LayoutShowcaseHandle>(function LayoutSh
     direction: "left" | "right";
   } | null>(null);
   const pillRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const sliderRef = useRef<HTMLDivElement>(null);
+  const pillsContainerRef = useRef<HTMLDivElement>(null);
+  const tiltRef = useRef<HTMLDivElement>(null);
   const lastScrollTime = useRef(0);
   const viewportRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
   const transitionEndHandled = useRef(false);
   const arrivalCooldownUntilRef = useRef(0);
-
-  // Active pill and theme/bg update immediately at transition start; slide content still uses two panes until transitionend
-  const displayIndex = transitionState ? transitionState.toIndex : activeIndex;
-  const sectionBg = transitionState ? STYLES[transitionState.toIndex].bg : STYLES[activeIndex].bg;
-  const currentTheme = transitionState ? STYLES[transitionState.toIndex].theme : STYLES[activeIndex].theme;
 
   useImperativeHandle(ref, () => ({
     onScrollDelta(dy: number): boolean {
@@ -83,13 +82,80 @@ export const LayoutShowcase = forwardRef<LayoutShowcaseHandle>(function LayoutSh
   }, []);
 
   useEffect(() => {
-    pillRefs.current[displayIndex]?.scrollIntoView({ behavior: "smooth", inline: "center" });
+    pillRefs.current[activeIndex]?.scrollIntoView({ behavior: "smooth", inline: "center" });
+  }, [activeIndex]);
+
+  // 3D tilt on browser mockup: listener on tiltRef, transition none during move, 0.6s ease on leave
+  useEffect(() => {
+    const el = tiltRef.current;
+    if (!el) return;
+    let rafId: number;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        const rect = el.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width - 0.5;
+        const y = (e.clientY - rect.top) / rect.height - 0.5;
+        const rotateX = (-y * 10).toFixed(2);
+        const rotateY = (x * 10).toFixed(2);
+        el.style.transition = "none";
+        el.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+      });
+    };
+
+    const handleMouseLeave = () => {
+      cancelAnimationFrame(rafId);
+      el.style.transition = "transform 0.6s ease";
+      el.style.transform = "rotateX(0deg) rotateY(0deg)";
+    };
+
+    el.addEventListener("mousemove", handleMouseMove);
+    el.addEventListener("mouseleave", handleMouseLeave);
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      el.removeEventListener("mousemove", handleMouseMove);
+      el.removeEventListener("mouseleave", handleMouseLeave);
+    };
+  }, []);
+
+  // Pill, theme and bg all follow activeIndex (updated immediately on pill click at t=0)
+  const displayIndex = activeIndex;
+
+  // Sliding pill indicator: match active pill's exact position and size (left, top, width, height) for multi-row wrap
+  useEffect(() => {
+    const activePill = pillRefs.current[displayIndex];
+    const slider = sliderRef.current;
+    const container = pillsContainerRef.current;
+    if (!activePill || !slider || !container) return;
+    const theme = STYLES[displayIndex].theme;
+    const fillColor = theme === "dark" ? "#fff" : "#111";
+    const update = () => {
+      if (!activePill || !sliderRef.current || !pillsContainerRef.current) return;
+      const containerRect = pillsContainerRef.current.getBoundingClientRect();
+      const pillRect = activePill.getBoundingClientRect();
+      sliderRef.current.style.left = `${pillRect.left - containerRect.left}px`;
+      sliderRef.current.style.top = `${pillRect.top - containerRect.top}px`;
+      sliderRef.current.style.width = `${pillRect.width}px`;
+      sliderRef.current.style.height = `${pillRect.height}px`;
+      sliderRef.current.style.backgroundColor = fillColor;
+    };
+    requestAnimationFrame(() => {
+      update();
+    });
+    const ro = new ResizeObserver(() => {
+      requestAnimationFrame(update);
+    });
+    ro.observe(container);
+    return () => ro.disconnect();
   }, [displayIndex]);
 
   function goToIndex(index: number) {
     if (index < 0 || index >= STYLES.length || index === activeIndex) return;
     if (transitionState) return;
     const direction = index > activeIndex ? "left" : "right";
+    setActiveIndex(index);
     setTransitionState({ fromIndex: activeIndex, toIndex: index, direction });
   }
 
@@ -114,7 +180,7 @@ export const LayoutShowcase = forwardRef<LayoutShowcaseHandle>(function LayoutSh
     incomingPane.style.transform = "translateX(0)";
   }, [transitionState]);
 
-  // Clean up only after transitionend; update activeIndex only then (BUG 2: pill and content in sync)
+  // On transitionend only clear transitionState (activeIndex was already set on pill click at t=0)
   useEffect(() => {
     if (!transitionState) return;
     transitionEndHandled.current = false;
@@ -126,7 +192,6 @@ export const LayoutShowcase = forwardRef<LayoutShowcaseHandle>(function LayoutSh
       if (!(e.target as HTMLElement).classList.contains("styles-slide-pane")) return;
       if (transitionEndHandled.current) return;
       transitionEndHandled.current = true;
-      setActiveIndex(transitionState.toIndex);
       setTransitionState(null);
     };
 
@@ -139,8 +204,21 @@ export const LayoutShowcase = forwardRef<LayoutShowcaseHandle>(function LayoutSh
     goToIndex(index);
   };
 
+  // Applied at t=0 on pill click (activeIndex updates immediately); inner wrapper gets this backgroundColor
+  const bgColor = layouts[activeIndex].bg;
+  const currentTheme = STYLES[activeIndex].theme;
+  const themeForActivePill = STYLES[activeIndex].theme;
+
+  const wrapMockup = (content: ReactNode) => (
+    <div style={{ perspective: "1200px" }}>
+      <div ref={tiltRef} style={{ transformStyle: "preserve-3d" }}>
+        {content}
+      </div>
+    </div>
+  );
+
   return (
-    <div className="cards-section" data-theme={currentTheme}>
+    <div ref={sectionRef} className="cards-section" data-theme={currentTheme}>
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: isVisible ? 1 : 0 }}
@@ -148,27 +226,23 @@ export const LayoutShowcase = forwardRef<LayoutShowcaseHandle>(function LayoutSh
         style={{
           height: "100%",
           position: "relative",
-          display: "flex",
-          flexDirection: "column",
-          backgroundColor: sectionBg,
-          transition: "background-color 350ms cubic-bezier(0.4, 0, 0.2, 1)",
+          backgroundColor: bgColor,
+          transition: `background-color ${SLIDE_DURATION_MS}ms cubic-bezier(0.76, 0, 0.24, 1)`,
         }}
       >
-        {/* Content wrapper: fills section, vertically centered */}
+        {/* Content wrapper */}
         <div
           style={{
             position: "relative",
             zIndex: 1,
-            minHeight: 0,
-            flex: 1,
+            height: "100%",
             display: "flex",
             flexDirection: "column",
             alignItems: "stretch",
             justifyContent: "center",
-            paddingTop: 0,
-            paddingRight: 0,
-            paddingBottom: 0,
-            paddingLeft: 0,
+            padding: 0,
+            paddingTop: "40px",
+            paddingBottom: "40px",
           }}
         >
           <div
@@ -179,16 +253,45 @@ export const LayoutShowcase = forwardRef<LayoutShowcaseHandle>(function LayoutSh
               gap: "20px",
             }}
           >
+            {/* Heading block */}
+            <div className="layout-showcase-heading-block">
+              <p className="layout-showcase-eyebrow">OUR APPROACH</p>
+              <h2 className="layout-showcase-heading">Your brand has a voice. Here&apos;s what it could look like.</h2>
+            </div>
+
             {/* Pill nav */}
             <div
-              className="layout-showcase-pills flex flex-row flex-wrap justify-center gap-2 px-4 md:gap-3"
+              ref={pillsContainerRef}
+              className="layout-showcase-pills flex flex-row flex-wrap gap-2 px-4 md:gap-3 justify-center"
               style={{
+                position: "relative",
                 width: "100%",
                 alignSelf: "center",
               }}
             >
+              {/* Sliding background indicator */}
+              <div
+                ref={sliderRef}
+                aria-hidden
+                style={{
+                  position: "absolute",
+                  borderRadius: 9999,
+                  transition:
+                    "left 0.35s cubic-bezier(0.4, 0, 0.2, 1), width 0.35s cubic-bezier(0.4, 0, 0.2, 1), top 0.35s cubic-bezier(0.4, 0, 0.2, 1), height 0.35s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s ease",
+                  pointerEvents: "none",
+                  zIndex: 0,
+                  backgroundColor: STYLES[displayIndex].theme === "dark" ? "#fff" : "#111",
+                }}
+              />
               {layouts.map((layout, index) => {
                 const isActive = index === displayIndex;
+                const activeBg = themeForActivePill === "dark" ? "#fff" : "#111";
+                const activeColor = themeForActivePill === "dark" ? "#111" : "#fff";
+                const inactiveBorder =
+                  themeForActivePill === "dark"
+                    ? "1px solid rgba(255,255,255,0.15)"
+                    : "1px solid rgba(0,0,0,0.12)";
+                const inactiveColor = themeForActivePill === "dark" ? "rgba(255,255,255,0.65)" : "rgba(0,0,0,0.55)";
                 return (
                   <button
                     key={layout.id}
@@ -197,12 +300,15 @@ export const LayoutShowcase = forwardRef<LayoutShowcaseHandle>(function LayoutSh
                     }}
                     type="button"
                     onClick={() => handlePillClick(index)}
-                    className={`layout-showcase-pill rounded-full font-sans px-5 py-2 text-[11px] md:px-7 md:py-2.5 md:text-sm ${
-                      isActive
-                        ? "layout-showcase-pill-active font-medium"
-                        : "layout-showcase-pill-inactive border bg-transparent"
-                    }`}
-                    style={{ flexShrink: 0 }}
+                    className="layout-showcase-pill rounded-full font-sans px-4 py-1.5 text-[11px] md:px-7 md:py-2.5 md:text-sm"
+                    style={{
+                      flexShrink: 0,
+                      position: "relative",
+                      zIndex: 1,
+                      ...(isActive
+                        ? { backgroundColor: activeBg, color: activeColor, border: "none" }
+                        : { backgroundColor: "transparent", border: inactiveBorder, color: inactiveColor }),
+                    }}
                   >
                     {layout.name}
                   </button>
@@ -227,6 +333,7 @@ export const LayoutShowcase = forwardRef<LayoutShowcaseHandle>(function LayoutSh
                   position: "relative",
                   marginLeft: "auto",
                   marginRight: "auto",
+                  overflow: transitionState ? "hidden" : "visible",
                 }}
               >
                 {transitionState ? (
@@ -244,6 +351,7 @@ export const LayoutShowcase = forwardRef<LayoutShowcaseHandle>(function LayoutSh
                         description={STYLES[transitionState.fromIndex].description}
                         mediaType={STYLES[transitionState.fromIndex].mediaType}
                         mediaSrc={STYLES[transitionState.fromIndex].mediaSrc}
+                        wrapMockup={wrapMockup}
                       />
                     </div>
                     {/* Incoming: fixed next slide data; start off-screen, end position set in useEffect after forced reflow */}
@@ -264,6 +372,7 @@ export const LayoutShowcase = forwardRef<LayoutShowcaseHandle>(function LayoutSh
                         description={STYLES[transitionState.toIndex].description}
                         mediaType={STYLES[transitionState.toIndex].mediaType}
                         mediaSrc={STYLES[transitionState.toIndex].mediaSrc}
+                        wrapMockup={wrapMockup}
                       />
                     </div>
                   </>
@@ -276,6 +385,7 @@ export const LayoutShowcase = forwardRef<LayoutShowcaseHandle>(function LayoutSh
                       description={STYLES[activeIndex].description}
                       mediaType={STYLES[activeIndex].mediaType}
                       mediaSrc={STYLES[activeIndex].mediaSrc}
+                      wrapMockup={wrapMockup}
                     />
                   </div>
                 )}

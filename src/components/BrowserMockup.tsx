@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, type ReactNode } from "react";
 import "./browser-mockup.css";
 
 export interface BrowserMockupProps {
@@ -10,6 +10,9 @@ export interface BrowserMockupProps {
   description: string;
   mediaType: "image" | "video";
   mediaSrc: string;
+  objectPosition?: string;
+  /** Optional wrapper for the mockup div only (e.g. perspective + tilt); meta is rendered as sibling outside. */
+  wrapMockup?: (content: ReactNode) => ReactNode;
 }
 
 export function BrowserMockup({
@@ -19,6 +22,8 @@ export function BrowserMockup({
   description,
   mediaType,
   mediaSrc,
+  objectPosition = "center center",
+  wrapMockup,
 }: BrowserMockupProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -46,7 +51,7 @@ export function BrowserMockup({
         : `${typeof window !== "undefined" ? window.location.origin : ""}${url.startsWith("/") ? url : `/${url}`}`
       : "https://example.com";
 
-  return (
+  const mockupContent = (
     <div
       className="browser-mockup"
       role="button"
@@ -98,7 +103,7 @@ export function BrowserMockup({
                 preload="metadata"
               />
             ) : mediaType === "image" && mediaSrc ? (
-              <img src={mediaSrc} alt="" className="browser-mockup-img" />
+              <img src={mediaSrc} alt="" className="browser-mockup-img" style={{ objectPosition }} />
             ) : (
               <div className="browser-mockup-placeholder" />
             )}
@@ -108,6 +113,12 @@ export function BrowserMockup({
           </div>
         </div>
       </div>
+    </div>
+  );
+
+  return (
+    <>
+      {wrapMockup ? wrapMockup(mockupContent) : mockupContent}
       <div className="browser-mockup-meta">
         <div className="browser-mockup-meta-left">
           <h3 className="browser-mockup-label">{label}</h3>
@@ -116,6 +127,6 @@ export function BrowserMockup({
         <div className="browser-mockup-meta-divider" aria-hidden />
         <p className="browser-mockup-description">{description}</p>
       </div>
-    </div>
+    </>
   );
 }

@@ -1,0 +1,24 @@
+---
+description: Kontekst projekta Aurelius – Next.js portfolio za agenciju
+alwaysApply: true
+---
+
+# Aurelius Portfolio – kontekst projekta
+
+## Šta je ovo
+- **Projekat**: Next.js portfolio za agenciju **Aurelius**
+- **Produkcija**: https://aurelius-sigma.vercel.app
+- **Lokalno**: http://localhost:3000
+
+## Stack
+- **Framework**: Next.js (App Router)
+- **Styling**: Tailwind CSS + custom CSS fajlovi po sekcijama
+- **Ostalo**: React 19, TypeScript, Framer Motion, Lucide React, Recharts
+
+## Struktura i konvencije
+- App Router: rute u `src/app/`
+- Stranice/sekcije: npr. `classy`, `brutalist`, `flashy`, `editorial`, `elegant`, `midnight`, `organic`, `saas`, `scandi`
+- Work stranice: `.../work/[slug]/` za pojedinačne projekte
+- Custom CSS: po sekcijama (npr. mosaic, section-specifični fajlovi)
+
+Pri radu na ovom projektu koristi ovaj kontekst za deploy URL, lokalni dev i stack (App Router + Tailwind + custom CSS).
