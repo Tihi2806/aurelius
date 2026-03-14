@@ -409,6 +409,9 @@ export default function GatewayPage() {
 
     let touchStartY = 0;
     const onTouchStart = (e: TouchEvent) => { touchStartY = e.touches[0].clientY; };
+    const onTouchMove = (e: TouchEvent) => {
+      e.preventDefault();
+    };
     const onTouchEnd   = (e: TouchEvent) => {
       if (animating) return;
       const dy = touchStartY - e.changedTouches[0].clientY;
@@ -469,11 +472,13 @@ export default function GatewayPage() {
 
     window.addEventListener('wheel',      onWheel,      { passive: false });
     window.addEventListener('touchstart', onTouchStart, { passive: true });
+    window.addEventListener('touchmove', onTouchMove,   { passive: false });
     window.addEventListener('touchend',   onTouchEnd,   { passive: true });
 
     return () => {
       window.removeEventListener('wheel',      onWheel);
       window.removeEventListener('touchstart', onTouchStart);
+      window.removeEventListener('touchmove', onTouchMove);
       window.removeEventListener('touchend',   onTouchEnd);
       if (scrollHint) scrollHint.removeEventListener('click', onScrollHintClick);
       dots.forEach((dot, i) => dot.removeEventListener('click', dotHandlers[i]));

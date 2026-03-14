@@ -18,6 +18,11 @@
   --font-serif: var(--font-cormorant);
 }
 
+html,
+body {
+  overscroll-behavior: none;
+}
+
 html {
   overflow-x: hidden;
 }
