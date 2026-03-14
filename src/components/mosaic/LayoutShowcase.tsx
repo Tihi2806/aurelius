@@ -15,15 +15,15 @@ const layouts = [
   { id: 6, name: "Midnight Dark", bg: "#070714", textColor: "#e6e6e6" },
 ];
 
-// index 0–6: label, theme, mediaSrc and url must match tab order (Flashy → Midnight Dark)
+// index 0–6: label, theme, mediaSrc, url, bgImage must match tab order (Flashy → Midnight Dark)
 const STYLES = [
-  { label: "Flashy", theme: "dark" as const, tag: "Immersive & Bold", description: "High-energy layouts built for brands that want to captivate and convert.", url: "https://aurelius-sigma.vercel.app/flashy", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/flashy.png" },
-  { label: "Classy", theme: "dark" as const, tag: "Luxury & Refined", description: "Understated elegance for premium brands.", url: "https://aurelius-sigma.vercel.app/classy", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/classy.png" },
-  { label: "Brutalist", theme: "light" as const, tag: "Raw & Radical", description: "Grids broken, rules ignored.", url: "https://aurelius-sigma.vercel.app/brutalist", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/brutalist.png" },
-  { label: "Scandi Shop", theme: "light" as const, tag: "Clean & Minimal", description: "Warm minimalism meets mindful commerce.", url: "https://aurelius-sigma.vercel.app/scandi", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/scandi.png" },
-  { label: "Silicon Valley", theme: "light" as const, tag: "SaaS & Product", description: "Conversion-focused, trust-building.", url: "https://aurelius-sigma.vercel.app/saas", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/saas.png" },
-  { label: "Editorial", theme: "dark" as const, tag: "Culture & Design", description: "Type-forward, image-led.", url: "https://aurelius-sigma.vercel.app/editorial", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/editorial.png" },
-  { label: "Midnight Dark", theme: "dark" as const, tag: "Moody & Electric", description: "Deep blacks, electric accents.", url: "https://aurelius-sigma.vercel.app/midnight", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/midnight.png" },
+  { label: "Flashy", theme: "dark" as const, tag: "Immersive & Bold", description: "High-energy layouts built for brands that want to captivate and convert.", url: "https://aurelius-sigma.vercel.app/flashy", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/flashy.png", bgImage: "/previews/cards_bg/flashy_bg.jpg" as string | null },
+  { label: "Classy", theme: "dark" as const, tag: "Luxury & Refined", description: "Understated elegance for premium brands.", url: "https://aurelius-sigma.vercel.app/classy", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/classy.png", bgImage: "/previews/cards_bg/classy_bg.jpg" as string | null },
+  { label: "Brutalist", theme: "light" as const, tag: "Raw & Radical", description: "Grids broken, rules ignored.", url: "https://aurelius-sigma.vercel.app/brutalist", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/brutalist.png", bgImage: "/previews/cards_background/brutalist_background.png" as string | null },
+  { label: "Scandi Shop", theme: "light" as const, tag: "Clean & Minimal", description: "Warm minimalism meets mindful commerce.", url: "https://aurelius-sigma.vercel.app/scandi", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/scandi.png", bgImage: "/previews/cards_bg/scandi_bg.jpg" as string | null },
+  { label: "Silicon Valley", theme: "light" as const, tag: "SaaS & Product", description: "Conversion-focused, trust-building.", url: "https://aurelius-sigma.vercel.app/saas", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/saas.png", bgImage: "/previews/cards_bg/saas_bg.jpg" as string | null },
+  { label: "Editorial", theme: "dark" as const, tag: "Culture & Design", description: "Type-forward, image-led.", url: "https://aurelius-sigma.vercel.app/editorial", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/editorial.png", bgImage: null },
+  { label: "Midnight Dark", theme: "dark" as const, tag: "Moody & Electric", description: "Deep blacks, electric accents.", url: "https://aurelius-sigma.vercel.app/midnight", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/midnight.png", bgImage: "/previews/cards_bg/midnight_bg.jpg" as string | null },
 ];
 
 const COOLDOWN_MS = 700;
@@ -50,8 +50,10 @@ export const LayoutShowcase = forwardRef<LayoutShowcaseHandle>(function LayoutSh
   const lastScrollTime = useRef(0);
   const viewportRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
+  const bgImgRef = useRef<HTMLImageElement>(null);
   const transitionEndHandled = useRef(false);
   const arrivalCooldownUntilRef = useRef(0);
+  const prevBgActiveIndexRef = useRef<number | null>(null);
 
   useImperativeHandle(ref, () => ({
     onScrollDelta(dy: number): boolean {
@@ -83,6 +85,39 @@ export const LayoutShowcase = forwardRef<LayoutShowcaseHandle>(function LayoutSh
 
   useEffect(() => {
     pillRefs.current[activeIndex]?.scrollIntoView({ behavior: "smooth", inline: "center" });
+  }, [activeIndex]);
+
+  // Background image: fade out, update src, fade in when activeIndex changes (never set src to '' or null)
+  useEffect(() => {
+    if (!bgImgRef.current) return;
+    const newLayout = STYLES[activeIndex];
+    const newSrc = newLayout.bgImage ?? "";
+
+    if (prevBgActiveIndexRef.current === null) {
+      if (newSrc) {
+        bgImgRef.current.src = newSrc;
+        bgImgRef.current.style.opacity = "1";
+      } else {
+        bgImgRef.current.style.opacity = "0";
+      }
+      prevBgActiveIndexRef.current = activeIndex;
+      return;
+    }
+    if (prevBgActiveIndexRef.current === activeIndex) return;
+
+    prevBgActiveIndexRef.current = activeIndex;
+    bgImgRef.current.style.opacity = "0";
+    const t = setTimeout(() => {
+      if (bgImgRef.current) {
+        if (newSrc) {
+          bgImgRef.current.src = newSrc;
+          bgImgRef.current.style.opacity = "1";
+        } else {
+          bgImgRef.current.style.opacity = "0";
+        }
+      }
+    }, 300);
+    return () => clearTimeout(t);
   }, [activeIndex]);
 
   // 3D tilt on browser mockup: listener on tiltRef, transition none during move, 0.6s ease on leave
@@ -226,10 +261,30 @@ export const LayoutShowcase = forwardRef<LayoutShowcaseHandle>(function LayoutSh
         style={{
           height: "100%",
           position: "relative",
+          overflow: "hidden",
           backgroundColor: bgColor,
           transition: `background-color ${SLIDE_DURATION_MS}ms cubic-bezier(0.76, 0, 0.24, 1)`,
         }}
       >
+        {/* Background image — behind content, fades when layout changes; only render when bgImage is set */}
+        {STYLES[activeIndex].bgImage && (
+          <img
+            ref={bgImgRef}
+            src={STYLES[activeIndex].bgImage!}
+            alt=""
+            aria-hidden
+            style={{
+              position: "absolute",
+              inset: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              zIndex: 0,
+              opacity: 1,
+              transition: "opacity 0.6s ease",
+            }}
+          />
+        )}
         {/* Content wrapper */}
         <div
           style={{

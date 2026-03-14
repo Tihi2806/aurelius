@@ -1,74 +1,62 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { motion, useInView } from "framer-motion";
+import { useState } from "react";
+import "@/components/browser-mockup.css";
 
 const PROJECTS = [
   {
     name: "Meridian",
     category: "Brand & Digital",
     tint: "#0a0e14",
-    gradient: "linear-gradient(135deg, #0d1520 0%, #1a2744 100%)",
+    previewUrl: "https://rinel-testspot.lovable.app/",
+    image: "/previews/work/meridian.jpg",
+    video: undefined as string | undefined,
   },
   {
     name: "Atlas Ventures",
     category: "Identity & Web",
     tint: "#0a120f",
-    gradient: "linear-gradient(135deg, #0d1812 0%, #1a2e1f 100%)",
+    previewUrl: "https://pikamont.vercel.app/",
+    image: "/previews/work/atlas.jpg",
+    video: undefined as string | undefined,
   },
   {
     name: "Lumina",
     category: "Product & Motion",
     tint: "#120a14",
-    gradient: "linear-gradient(135deg, #1a0d20 0%, #2e1a35 100%)",
+    previewUrl: "https://rinel-testspot.lovable.app/",
+    image: "/previews/work/lumina.jpg",
+    video: undefined as string | undefined,
   },
   {
     name: "Northgate",
     category: "Brand Strategy",
     tint: "#0f0a0a",
-    gradient: "linear-gradient(135deg, #1a1414 0%, #2a2222 100%)",
+    previewUrl: "https://pikamont.vercel.app/",
+    image: "/previews/work/northgate.jpg",
+    video: undefined as string | undefined,
   },
   {
     name: "Echo Studio",
     category: "Identity & Film",
     tint: "#0a0a12",
-    gradient: "linear-gradient(135deg, #0d0d1a 0%, #1a1a2e 100%)",
+    previewUrl: "https://rinel-testspot.lovable.app/",
+    image: "/previews/work/echo-studio.jpg",
+    video: undefined as string | undefined,
   },
 ] as const;
 
 export function SelectedWorkSection() {
   const [activeIndex, setActiveIndex] = useState(0);
-  const sectionRef = useRef<HTMLElement>(null);
-  const inView = useInView(sectionRef, { amount: 0.2, once: true });
-
-  const listVariants = {
-    hidden: {},
-    visible: {},
-  };
-
-  const numberVariants = {
-    hidden: { opacity: 0, x: -20 },
-    visible: { opacity: 1, x: 0 },
-  };
-
-  const lineVariants = {
-    hidden: { scaleX: 0 },
-    visible: { scaleX: 1 },
-  };
-
-  const rowVariants = {
-    hidden: {},
-    visible: {},
-  };
+  const activeProject = PROJECTS[activeIndex];
 
   return (
     <section
-      ref={sectionRef}
       id="work"
       className="work-section"
       data-animated="false"
       style={{
-        backgroundColor: PROJECTS[activeIndex].tint,
+        backgroundColor: activeProject.tint,
         transition: "background-color 0.5s ease",
       }}
     >
@@ -76,70 +64,71 @@ export function SelectedWorkSection() {
         002
       </span>
 
-      <div className="work-inner work-inner-two-col">
-        <motion.div
-          className="work-list"
-          variants={listVariants}
-          initial="hidden"
-          animate={inView ? "visible" : "hidden"}
-          transition={{ staggerChildren: 0.1, delayChildren: 0 }}
-        >
-          {PROJECTS.map((project, i) => (
-            <motion.div
-              key={project.name}
-              className="work-row"
-              variants={rowVariants}
-              transition={{ staggerChildren: 0, delayChildren: 0 }}
-              onMouseEnter={() => setActiveIndex(i)}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  setActiveIndex(i);
-                }
-              }}
-              aria-label={`View ${project.name} preview`}
-            >
-              <motion.div
-                className="work-row-line"
-                variants={lineVariants}
-                transition={{
-                  duration: 0.8,
-                  ease: "easeOut",
-                  delay: i * 0.15,
-                }}
-                aria-hidden
-              />
-              <div className="work-row-overlay" aria-hidden />
-              <motion.span
-                className="work-row-num"
-                variants={numberVariants}
-                transition={{ duration: 0.4, ease: "easeOut" }}
-              >
-                {String(i + 1).padStart(2, "0")}
-              </motion.span>
-              <h2 className="work-row-name">{project.name}</h2>
-              <span className="work-row-cat">{project.category}</span>
-            </motion.div>
-          ))}
-        </motion.div>
+      <div className="work-section-inner">
+        {/* Eyebrow */}
+        <p className="work-eyebrow">OUR WORK</p>
 
-        <div className="work-preview-wrap">
-          {PROJECTS.map((project, i) => (
-            <div
-              key={project.name}
-              className={`work-preview-frame ${i === activeIndex ? "active" : ""}`}
-              aria-hidden={i !== activeIndex}
-            >
-              <div className="work-preview-chrome" />
-              <div
-                className="work-preview-content"
-                style={{ background: project.gradient }}
-              >
-                <span className="work-preview-name">{project.name}</span>
+        {/* Browser preview — single window, URL bar updates immediately; iframe cross-fades */}
+        <div className="work-preview-container">
+          <div className="work-preview-window">
+            <div className="browser-mockup-chrome">
+              <div className="browser-mockup-dots">
+                <span className="browser-mockup-dot browser-mockup-dot-red" />
+                <span className="browser-mockup-dot browser-mockup-dot-yellow" />
+                <span className="browser-mockup-dot browser-mockup-dot-green" />
+              </div>
+              <div className="browser-mockup-url-bar">
+                <svg className="browser-mockup-lock" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
+                  <path d="M3 5V4a3 3 0 016 0v1M2 5h8a1 1 0 011 1v4a1 1 0 01-1 1H2a1 1 0 01-1-1V6a1 1 0 011-1z" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                <span className="browser-mockup-url">{activeProject.previewUrl}</span>
               </div>
             </div>
+            <div
+              className="work-preview-iframe-wrap"
+              style={{
+                position: "relative",
+                width: "100%",
+                height: "100%",
+                overflow: "hidden",
+                background: "linear-gradient(135deg, #1a1a2e 0%, #0d0d1a 100%)",
+              }}
+            >
+              {activeProject.video ? (
+                <video
+                  src={activeProject.video}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                />
+              ) : (
+                <img
+                  src={activeProject.image}
+                  alt={activeProject.name}
+                  style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                />
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Project list — horizontal tabs */}
+        <div className="work-tabs">
+          {PROJECTS.map((project, i) => (
+            <button
+              key={project.name}
+              type="button"
+              className={`work-tab ${i === activeIndex ? "active" : ""}`}
+              onClick={() => setActiveIndex(i)}
+              aria-label={`View ${project.name} preview`}
+              aria-current={i === activeIndex ? "true" : undefined}
+            >
+              <span className="work-tab-num">{String(i + 1).padStart(2, "0")}</span>
+              <span className="work-tab-name">{project.name}</span>
+              <span className="work-tab-cat">{project.category}</span>
+            </button>
           ))}
         </div>
       </div>
