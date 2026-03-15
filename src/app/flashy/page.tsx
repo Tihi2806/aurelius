@@ -143,9 +143,9 @@ export default function FlashyPage() {
     };
 
     const elements = document.querySelectorAll("[data-cursor]");
-    const unsubs = Array.from(elements).map(bind);
+    const unsubs = Array.from(elements).map(bind).filter(Boolean) as (() => void)[];
     return () => {
-      unsubs.forEach((fn) => fn());
+      unsubs.forEach((fn) => fn && fn());
       restore();
     };
   }, []);
