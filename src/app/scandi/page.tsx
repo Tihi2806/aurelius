@@ -3,7 +3,7 @@ import "./scandi.css";
 
 export default function ScandiPage() {
   return (
-    <div className="scandi-page">
+    <div className="scandi-page overflow-x-hidden">
       {/* Grain overlay */}
       <div className="scandi-grain" aria-hidden />
 

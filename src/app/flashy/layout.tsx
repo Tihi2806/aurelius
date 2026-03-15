@@ -1,5 +1,8 @@
+"use client";
+
 import { Space_Grotesk, Inter } from "next/font/google";
 import { FlashyNavbar } from "./FlashyNavbar";
+import { FullPageScrollWrapper } from "@/components/FullPageScrollWrapper";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
@@ -20,15 +23,17 @@ export default function FlashyLayout({
 }) {
   return (
     <div
-      className={`${spaceGrotesk.variable} ${inter.variable} min-h-screen`}
+      className={`${spaceGrotesk.variable} ${inter.variable} min-h-screen overflow-x-hidden`}
       style={{
-        background: "#050505",
+        background: "#0a0a0f",
         color: "white",
         fontFamily: "var(--font-inter), sans-serif",
       }}
     >
       <FlashyNavbar />
-      {children}
+      <FullPageScrollWrapper sectionCount={8} dotActiveColor="#7c3aed">
+        {children}
+      </FullPageScrollWrapper>
       <footer
         className="px-6 py-8 lg:px-10"
         style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}

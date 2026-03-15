@@ -1,6 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@500;900&display=swap");
 
-/* Scroll lock for landing is applied in JS (page.tsx) so it doesn't persist on subpages. */
+/* Landing hero and cards: fixed full-viewport for section-by-section scroll. */
 
 #hero {
   position: fixed;

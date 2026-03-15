@@ -17,7 +17,7 @@
   color: var(--text);
   font-family: 'Jost', sans-serif;
   font-weight: 300;
-  overflow-x: hidden;
+  overflow-x: clip;
   min-height: 100vh;
   position: relative;
 }

@@ -1,9 +1,9 @@
 /* ═══════════════════════════════════════════════════
    sections.css — Work · Stats · Contact full-page sections
-   Uses the same position:fixed / translateY system as hero + cards
+   Fixed viewport for section-by-section scroll.
    ═══════════════════════════════════════════════════ */
 
-/* ── Shared base for all full-page sections (work, manifesto, services, contact, calculator, revenue-leak, speed-timeline, performance-grid) ── */
+/* ── Shared base for all full-page sections ── */
 .work-section,
 .manifesto-section,
 .services-section,
@@ -23,7 +23,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  /* JS sets the real transform on init; CSS keeps them off-screen as fallback */
   transform: translateY(100%);
 }
 

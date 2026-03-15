@@ -10,7 +10,7 @@ const PROJECTS = [
     tint: "#0a0e14",
     previewUrl: "https://rinel-testspot.lovable.app/",
     image: "/previews/work/meridian.jpg",
-    video: undefined as string | undefined,
+    video: "/previews/work/rinel_video.mp4",
   },
   {
     name: "Atlas Ventures",
@@ -18,7 +18,7 @@ const PROJECTS = [
     tint: "#0a120f",
     previewUrl: "https://pikamont.vercel.app/",
     image: "/previews/work/atlas.jpg",
-    video: undefined as string | undefined,
+    video: "/previews/work/pikamont_video.mp4",
   },
   {
     name: "Lumina",
@@ -26,7 +26,7 @@ const PROJECTS = [
     tint: "#120a14",
     previewUrl: "https://rinel-testspot.lovable.app/",
     image: "/previews/work/lumina.jpg",
-    video: undefined as string | undefined,
+    video: "/previews/work/rinel_video.mp4",
   },
   {
     name: "Northgate",
@@ -34,7 +34,7 @@ const PROJECTS = [
     tint: "#0f0a0a",
     previewUrl: "https://pikamont.vercel.app/",
     image: "/previews/work/northgate.jpg",
-    video: undefined as string | undefined,
+    video: "/previews/work/pikamont_video.mp4",
   },
   {
     name: "Echo Studio",
@@ -42,9 +42,9 @@ const PROJECTS = [
     tint: "#0a0a12",
     previewUrl: "https://rinel-testspot.lovable.app/",
     image: "/previews/work/echo-studio.jpg",
-    video: undefined as string | undefined,
+    video: "/previews/work/rinel_video.mp4",
   },
-] as const;
+];
 
 export function SelectedWorkSection() {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -96,6 +96,7 @@ export function SelectedWorkSection() {
             >
               {activeProject.video ? (
                 <video
+                  key={activeProject.video}
                   src={activeProject.video}
                   autoPlay
                   muted

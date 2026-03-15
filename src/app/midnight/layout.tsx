@@ -14,7 +14,7 @@ export default function MidnightLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className={`${interTight.variable} font-sans min-h-screen bg-[#08090A] text-[#E6E6E6] antialiased`}>
+    <div className={`${interTight.variable} font-sans min-h-screen overflow-x-hidden bg-[#08090A] text-[#E6E6E6] antialiased`}>
       <header className="fixed top-0 left-0 right-0 z-50">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
           <Link href="/midnight" className="text-lg font-bold tracking-wide text-[#00FF41]">

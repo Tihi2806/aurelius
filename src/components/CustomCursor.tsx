@@ -89,13 +89,11 @@ export function CustomCursor() {
       rafRef.current = requestAnimationFrame(animate);
     };
 
-    document.body.classList.add("cursor-none");
     document.addEventListener("mousemove", onMouseMove);
     document.addEventListener("mouseleave", onMouseLeave);
     rafRef.current = requestAnimationFrame(animate);
 
     return () => {
-      document.body.classList.remove("cursor-none");
       document.removeEventListener("mousemove", onMouseMove);
       document.removeEventListener("mouseleave", onMouseLeave);
       cancelAnimationFrame(rafRef.current);

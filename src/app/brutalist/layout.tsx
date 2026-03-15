@@ -31,7 +31,7 @@ export default function BrutalistLayout({
 }) {
   return (
     <div
-      className={`${bebasNeue.variable} ${courierPrime.variable} ${oswald.variable} brutalist-theme`}
+      className={`${bebasNeue.variable} ${courierPrime.variable} ${oswald.variable} brutalist-theme overflow-x-hidden`}
     >
       <header className="brutalist-nav">
         <div className="brutalist-nav-inner">

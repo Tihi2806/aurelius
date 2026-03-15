@@ -13,7 +13,7 @@ export default function SaasLayout({
 }) {
   return (
     <div
-        className={`${inter.variable} min-h-screen bg-[#F6F9FC] text-[#1A1F36] antialiased`}
+        className={`${inter.variable} min-h-screen overflow-x-hidden bg-[#F6F9FC] text-[#1A1F36] antialiased`}
         style={{ fontFamily: "var(--font-saas), sans-serif" }}
       >
       <header className="fixed top-0 left-0 right-0 z-50 border-b border-[#1A1F36]/10 bg-[#F6F9FC]/95 backdrop-blur-sm">
