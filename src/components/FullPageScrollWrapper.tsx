@@ -50,12 +50,15 @@ export function FullPageScrollWrapper({
             <button
               key={i}
               type="button"
-              className="section-dot"
               aria-label={`Go to section ${i + 1}`}
               aria-current={i === activeIndex ? "true" : undefined}
               onClick={() => scrollToSection(i)}
-              className={`section-dot ${i === activeIndex ? "active" : ""}`}
-            style={i === activeIndex ? { background: dotActiveColor } : undefined}
+              className="section-dot"
+              style={{
+                ...(i === activeIndex
+                  ? { background: dotActiveColor, opacity: 1 }
+                  : undefined),
+              }}
             />
           ))}
         </nav>
