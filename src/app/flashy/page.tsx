@@ -1,608 +1,347 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
-import { useRef, useEffect, useState } from "react";
-import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
-
-import { useSectionRef } from "@/components/FullPageScrollWrapper";
-
-const MotionLink = motion(Link);
-
-const RING_DEFAULT = {
-  size: 40,
-  border: "rgba(255,255,255,0.4)",
-  background: "transparent",
-};
-const DOT_DEFAULT = "rgb(255, 255, 255)";
-const PURPLE = "#7c3aed";
-const PURPLE_FILL = "rgba(124, 58, 237, 0.2)";
-
-const VIEWPORT = { once: true, margin: "-60px" };
-
-const LOGO_ITEMS = ["Company One", "Company Two", "Company Three", "Company Four", "Company Five"];
-
-const PROCESS_STEPS = [
-  { num: "001", title: "Discover & Define", desc: "We learn your goals, audience, and constraints to shape a clear direction." },
-  { num: "002", title: "Design & Build", desc: "We craft every pixel and interaction with precision and care." },
-  { num: "003", title: "Launch & Scale", desc: "We ship, measure, and grow with you." },
-];
-
-const TESTIMONIALS = [
-  { quote: "Aurelius transformed our digital presence. The team understood our vision from day one.", name: "Sarah Chen", role: "CEO, Lumina" },
-  { quote: "Exceptional craft and strategic thinking. They delivered beyond our expectations.", name: "James Holt", role: "Founder, Northgate" },
-  { quote: "Working with Aurelius felt like having an extension of our team. Highly recommend.", name: "Elena Rossi", role: "Marketing Director, Atlas" },
-];
-
-// Fixed grid lines (7 lines, ~200px apart)
-function GridLines() {
-  return (
-    <div className="flashy-grid-lines" aria-hidden>
-      {Array.from({ length: 7 }).map((_, i) => (
-        <div
-          key={i}
-          className="flashy-grid-line"
-          style={{ left: `${12 + i * 14.28}%` }}
-        />
-      ))}
-    </div>
-  );
-}
-
-// Particle dots for Process section (CSS-only)
-function ParticleField() {
-  const dots = Array.from({ length: 50 }, (_, i) => ({
-    id: i,
-    left: `${(i * 17 + 7) % 100}%`,
-    top: `${(i * 23 + 11) % 100}%`,
-    delay: `${(i % 5) * 2}s`,
-    duration: `${8 + (i % 4)}s`,
-  }));
-  return (
-    <div className="flashy-particles" aria-hidden>
-      {dots.map((d) => (
-        <div
-          key={d.id}
-          className="flashy-particle-dot"
-          style={{
-            left: d.left,
-            top: d.top,
-            animationDelay: d.delay,
-            animationDuration: d.duration,
-          }}
-        />
-      ))}
-    </div>
-  );
-}
 
 export default function FlashyPage() {
-  const section0Ref = useSectionRef(0);
-  const section1Ref = useSectionRef(1);
-  const section2Ref = useSectionRef(2);
-  const section3Ref = useSectionRef(3);
-  const section4Ref = useSectionRef(4);
-  const section5Ref = useSectionRef(5);
-  const section6Ref = useSectionRef(6);
-  const section7Ref = useSectionRef(7);
-
-  const integrationsRef = useRef<HTMLDivElement>(null);
-  const ctaBgRef = useRef<HTMLDivElement>(null);
-  const [testimonialIndex, setTestimonialIndex] = useState(0);
-
-  const { scrollYProgress: intScroll } = useScroll({ target: integrationsRef, offset: ["start end", "end start"] });
-  const intY = useTransform(intScroll, [0, 0.5], [0, -40]);
-
-  const { scrollYProgress: ctaScroll } = useScroll({ target: ctaBgRef, offset: ["start end", "end start"] });
-  const ctaBgY = useTransform(ctaScroll, [0, 0.3], [0, -80]);
-
-  useEffect(() => {
-    const ring = document.querySelector<HTMLElement>(".custom-cursor-ring");
-    const dot = document.querySelector<HTMLElement>(".custom-cursor-dot");
-    if (!ring || !dot) return;
-
-    const restore = () => {
-      ring.style.width = "";
-      ring.style.height = "";
-      ring.style.borderColor = "";
-      ring.style.background = "";
-      dot.style.background = "";
-    };
-
-    const bind = (el: Element) => {
-      const variant = el.getAttribute("data-cursor");
-      if (!variant) return;
-      const onEnter = () => {
-        if (variant === "card") {
-          ring.style.width = "80px";
-          ring.style.height = "80px";
-          ring.style.borderColor = PURPLE;
-          ring.style.background = RING_DEFAULT.background;
-          dot.style.background = DOT_DEFAULT;
-        } else if (variant === "cta") {
-          ring.style.width = `${RING_DEFAULT.size}px`;
-          ring.style.height = `${RING_DEFAULT.size}px`;
-          ring.style.borderColor = PURPLE;
-          ring.style.background = PURPLE_FILL;
-          dot.style.background = PURPLE;
-        }
-      };
-      const onLeave = () => {
-        ring.style.width = `${RING_DEFAULT.size}px`;
-        ring.style.height = `${RING_DEFAULT.size}px`;
-        ring.style.borderColor = RING_DEFAULT.border;
-        ring.style.background = RING_DEFAULT.background;
-        dot.style.background = DOT_DEFAULT;
-      };
-      el.addEventListener("mouseenter", onEnter);
-      el.addEventListener("mouseleave", onLeave);
-      return () => {
-        el.removeEventListener("mouseenter", onEnter);
-        el.removeEventListener("mouseleave", onLeave);
-      };
-    };
-
-    const elements = document.querySelectorAll("[data-cursor]");
-    const unsubs = Array.from(elements).map(bind).filter(Boolean) as (() => void)[];
-    return () => {
-      unsubs.forEach((fn) => fn && fn());
-      restore();
-    };
-  }, []);
-
-  const heroWords1 = ["Immersive", "storytelling"];
-  const heroWords2 = ["through", "motion."];
+  const [activeAccordion, setActiveAccordion] = useState<number | null>(0);
 
   return (
-    <>
-      <style>{`
-        .flashy-grid-lines {
-          position: fixed;
-          inset: 0;
-          pointer-events: none;
-          z-index: 0;
-        }
-        .flashy-grid-line {
-          position: absolute;
-          top: 0;
-          bottom: 0;
-          width: 1px;
-          background: rgba(255,255,255,0.04);
-        }
-        .flashy-scroll-section {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100vh;
-          overflow: hidden;
-          z-index: 1;
-        }
-        .flashy-scroll-section.scrollable {
-          overflow-y: auto;
-        }
-        @keyframes flashy-marquee {
-          from { transform: translateX(0); }
-          to { transform: translateX(-50%); }
-        }
-        .flashy-marquee-track {
-          display: flex;
-          width: max-content;
-          animation: flashy-marquee 25s linear infinite;
-        }
-        @keyframes flashy-particle {
-          0%, 100% { transform: translate(0,0) scale(1); opacity: 0.4; }
-          50% { transform: translate(10px,-15px) scale(1.2); opacity: 0.8; }
-        }
-        .flashy-particles {
-          position: absolute;
-          inset: 0;
-          pointer-events: none;
-          overflow: hidden;
-        }
-        .flashy-particle-dot {
-          position: absolute;
-          width: 3px;
-          height: 3px;
-          border-radius: 50%;
-          background: rgba(255,255,255,0.35);
-          animation: flashy-particle ease-in-out infinite;
-        }
-      `}</style>
+    <div className="min-h-screen bg-black text-white">
+      {/* Hero Section */}
+      <section className="relative min-h-screen pt-24 pb-12 flex flex-col items-center justify-center overflow-hidden">
+        {/* Animated background gradient */}
+        <div className="absolute inset-0 -z-10">
+          <div
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full opacity-30"
+            style={{
+              background: "radial-gradient(ellipse at center, rgba(168,85,247,0.3) 0%, transparent 70%)",
+            }}
+          />
+        </div>
 
-      {/* Section 1: Hero */}
-      <div ref={section0Ref as React.RefObject<HTMLDivElement>} className="flashy-scroll-section">
-        <div className="relative flex min-h-screen flex-col items-center justify-center px-6 pt-24 pb-16" style={{ background: "#0a0a0f" }}>
-          <GridLines />
-          <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 60% 50% at 50% 100%, rgba(124,58,237,0.25), transparent 70%)" }} />
-          <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(to bottom, rgba(0,0,0,0.3), transparent 30%)" }} />
+        <div className="max-w-4xl mx-auto px-6 text-center">
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
+            One platform, endless integrations
+          </h1>
+          <p className="text-lg md:text-xl text-white/70 mb-12 max-w-2xl mx-auto">
+            A web developer who's passionate about performance, security, and great user experience. From concept to clean code
+          </p>
 
-          <div className="relative z-10 mx-auto max-w-3xl text-center">
-            <motion.span
-              className="inline-block rounded-full border px-4 py-1.5 text-sm"
-              style={{ borderColor: "rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.05)" }}
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1, duration: 0.5 }}
-            >
-              Immersive Digital Experiences
-            </motion.span>
+          {/* Integration Hub - Central Orb with Connected Services */}
+          <div className="relative h-96 w-full flex items-center justify-center my-20">
+            {/* Connecting lines */}
+            <svg className="absolute inset-0 w-full h-full" viewBox="0 0 600 300">
+              <defs>
+                <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" style={{ stopColor: "rgba(168,85,247,0.5)" }} />
+                  <stop offset="50%" style={{ stopColor: "rgba(168,85,247,0.8)" }} />
+                  <stop offset="100%" style={{ stopColor: "rgba(168,85,247,0.5)" }} />
+                </linearGradient>
+              </defs>
+              {/* Left connections */}
+              <line x1="100" y1="80" x2="250" y2="150" stroke="url(#lineGrad)" strokeWidth="2" />
+              <line x1="100" y1="150" x2="250" y2="150" stroke="url(#lineGrad)" strokeWidth="2" />
+              <line x1="100" y1="220" x2="250" y2="150" stroke="url(#lineGrad)" strokeWidth="2" />
+              {/* Right connections */}
+              <line x1="500" y1="80" x2="350" y2="150" stroke="url(#lineGrad)" strokeWidth="2" />
+              <line x1="500" y1="150" x2="350" y2="150" stroke="url(#lineGrad)" strokeWidth="2" />
+              <line x1="500" y1="220" x2="350" y2="150" stroke="url(#lineGrad)" strokeWidth="2" />
+            </svg>
 
-            <div className="mt-8 overflow-hidden text-6xl font-bold leading-tight tracking-tight lg:text-7xl">
-              {heroWords1.map((word, i) => (
-                <motion.span
-                  key={i}
-                  className="block"
-                  initial={{ opacity: 0, y: 40, filter: "blur(8px)" }}
-                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                  transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.2 + i * 0.08 }}
-                >
-                  {word}{" "}
-                </motion.span>
+            {/* Left Integration Badges */}
+            <div className="absolute left-0 top-1/2 -translate-y-1/2 flex flex-col gap-8">
+              <div className="flex items-center gap-3 px-4 py-2 rounded-full bg-white/10 border border-white/20">
+                <span className="text-xl">◆</span>
+                <span className="text-sm font-medium">Overlay</span>
+              </div>
+              <div className="flex items-center gap-3 px-4 py-2 rounded-full bg-white/10 border border-white/20">
+                <span className="text-xl">▤</span>
+                <span className="text-sm font-medium">DataStack</span>
+              </div>
+              <div className="flex items-center gap-3 px-4 py-2 rounded-full bg-white/10 border border-white/20">
+                <span className="text-xl">◎</span>
+                <span className="text-sm font-medium">NeuroLink</span>
+              </div>
+            </div>
+
+            {/* Central Orb */}
+            <div className="absolute flex items-center justify-center">
+              <div className="relative w-24 h-24 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 shadow-2xl shadow-purple-500/50 flex items-center justify-center">
+                <span className="text-4xl">✨</span>
+              </div>
+            </div>
+
+            {/* Right Integration Badges */}
+            <div className="absolute right-0 top-1/2 -translate-y-1/2 flex flex-col gap-8">
+              <div className="flex items-center gap-3 px-4 py-2 rounded-full bg-white/10 border border-white/20">
+                <span className="text-xl">⚙</span>
+                <span className="text-sm font-medium">PixelGrid</span>
+              </div>
+              <div className="flex items-center gap-3 px-4 py-2 rounded-full bg-white/10 border border-white/20">
+                <span className="text-xl">☀</span>
+                <span className="text-sm font-medium">Brightly</span>
+              </div>
+              <div className="flex items-center gap-3 px-4 py-2 rounded-full bg-white/10 border border-white/20">
+                <span className="text-xl">◈</span>
+                <span className="text-sm font-medium">StratoLink</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Logo Section */}
+      <section className="py-12 px-6 border-t border-white/10">
+        <div className="max-w-7xl mx-auto text-center">
+          <p className="text-white/60 text-sm mb-8">Join product and engineering leaders on the cutting edge</p>
+          <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <div key={i} className="text-white/40 text-sm font-medium">
+                Logoipsum Brand {i}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-20 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">Where Innovation Meets the Written Word</h2>
+            <p className="text-white/60 text-lg max-w-2xl mx-auto">
+              Powerful tools designed to help you create, collaborate, and bring your ideas to life
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[
+              { title: "AI-Powered", desc: "Harness the power of artificial intelligence" },
+              { title: "Real-time Collab", desc: "Work together seamlessly in real-time" },
+              { title: "Analytics", desc: "Track performance with detailed insights" },
+            ].map((feature, i) => (
+              <div key={i} className="p-8 rounded-xl border border-white/10 hover:border-purple-500/50 transition bg-white/5 hover:bg-white/10">
+                <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
+                <p className="text-white/60">{feature.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Process Section */}
+      <section className="py-20 px-6 bg-white/5">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-16">How We Make It Happen</h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              { num: "01", title: "Discover & Define", desc: "We learn your goals and shape a clear direction" },
+              { num: "02", title: "Design & Build", desc: "We craft every pixel with precision" },
+              { num: "03", title: "Launch & Scale", desc: "We ship and grow with you" },
+            ].map((step, i) => (
+              <div key={i} className="text-center">
+                <div className="text-6xl font-bold text-purple-500 mb-4">{step.num}</div>
+                <h3 className="text-2xl font-bold mb-3">{step.title}</h3>
+                <p className="text-white/60">{step.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="py-20 px-6">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-4xl md:text-5xl font-bold text-center mb-16">Real Stories. Real Results.</h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              { quote: "Transformed our workflow completely.", author: "Sarah Chen", role: "CEO, Lumina" },
+              { quote: "Exceptional quality and service.", author: "James Holt", role: "Founder, Northgate" },
+              { quote: "Highly recommend to everyone.", author: "Elena Rossi", role: "Director, Atlas" },
+            ].map((testimonial, i) => (
+              <div key={i} className="p-8 rounded-xl border border-white/10 bg-white/5">
+                <p className="text-white/80 mb-6">"{testimonial.quote}"</p>
+                <div>
+                  <p className="font-semibold">{testimonial.author}</p>
+                  <p className="text-white/60 text-sm">{testimonial.role}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Stats */}
+          <div className="grid grid-cols-3 gap-8 mt-16 text-center">
+            <div>
+              <div className="text-4xl font-bold text-purple-400">40%</div>
+              <p className="text-white/60 mt-2">Performance Improvement</p>
+            </div>
+            <div>
+              <div className="text-4xl font-bold text-purple-400">10K+</div>
+              <p className="text-white/60 mt-2">Happy Users</p>
+            </div>
+            <div>
+              <div className="text-4xl font-bold text-purple-400">50+</div>
+              <p className="text-white/60 mt-2">Integrations</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing Section */}
+      <section className="py-20 px-6 bg-white/5">
+        <div className="max-w-7xl mx-auto text-center">
+          <h2 className="text-4xl md:text-5xl font-bold mb-16">Simple Pricing</h2>
+
+          <div className="max-w-md mx-auto p-8 rounded-xl border border-white/10 bg-white/5">
+            <h3 className="text-2xl font-bold mb-2">Pro Plan</h3>
+            <div className="text-5xl font-bold text-purple-400 mb-8">$299<span className="text-lg text-white/60">/mo</span></div>
+
+            <ul className="text-left space-y-4 mb-8">
+              {["Unlimited projects", "AI-powered tools", "Real-time collaboration", "Advanced analytics", "Priority support"].map((item, i) => (
+                <li key={i} className="flex items-center gap-3 text-white/80">
+                  <span className="text-purple-400">✓</span>
+                  {item}
+                </li>
               ))}
-              {heroWords2.map((word, i) => (
-                <motion.span
-                  key={`b-${i}`}
-                  className="block"
-                  style={i === 1 ? { color: "#7c3aed" } : undefined}
-                  initial={{ opacity: 0, y: 40, filter: "blur(8px)" }}
-                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                  transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.36 + i * 0.08 }}
+            </ul>
+
+            <button className="w-full py-3 rounded-lg bg-white text-black font-semibold hover:bg-white/90 transition">
+              Get Started
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-20 px-6">
+        <div className="max-w-2xl mx-auto">
+          <h2 className="text-4xl font-bold text-center mb-16">Frequently Asked Questions</h2>
+
+          <div className="space-y-4">
+            {[
+              { q: "How do I get started?", a: "Sign up for an account and start building right away." },
+              { q: "Is there a free trial?", a: "Yes, we offer a 14-day free trial for all plans." },
+              { q: "Can I cancel anytime?", a: "Of course, no contracts or hidden fees." },
+              { q: "What about support?", a: "We offer 24/7 support via email and live chat." },
+            ].map((faq, i) => (
+              <div key={i} className="border border-white/10 rounded-lg overflow-hidden bg-white/5">
+                <button
+                  onClick={() => setActiveAccordion(activeAccordion === i ? null : i)}
+                  className="w-full px-6 py-4 text-left font-semibold flex items-center justify-between hover:bg-white/10 transition"
                 >
-                  {word}{" "}
-                </motion.span>
-              ))}
-            </div>
-
-            <motion.p
-              className="mx-auto mt-6 max-w-xl text-white/50"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.7, duration: 0.5 }}
-            >
-              We craft digital worlds that move. Kinetic interfaces and fluid transitions that pull your audience in.
-            </motion.p>
-
-            <motion.div
-              className="mt-10 flex flex-wrap justify-center gap-4"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.9, duration: 0.5 }}
-            >
-              <MotionLink
-                href="#contact"
-                data-cursor="cta"
-                className="rounded-full bg-purple-600 px-6 py-3 text-sm font-medium text-white"
-                whileHover={{ scale: 1.02, boxShadow: "0 0 30px rgba(124,58,237,0.5)" }}
-                whileTap={{ scale: 1 }}
-              >
-                Start a project
-              </MotionLink>
-              <MotionLink
-                href="#work"
-                data-cursor="cta"
-                className="rounded-full border border-white/20 px-6 py-3 text-sm font-medium text-white"
-                whileHover={{ borderColor: "rgba(124,58,237,0.6)" }}
-              >
-                View our work
-              </MotionLink>
-            </motion.div>
-
-            <motion.div
-              className="mx-auto mt-12 max-w-4xl rounded-2xl border border-white/10 overflow-hidden"
-              style={{ boxShadow: "0 0 80px rgba(124,58,237,0.2)", background: "rgba(0,0,0,0.3)" }}
-              initial={{ opacity: 0, y: 60 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.1, duration: 1, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <div className="flex items-center gap-2 border-b border-white/10 px-4 py-3">
-                <span className="h-2.5 w-2.5 rounded-full bg-red-500/80" />
-                <span className="h-2.5 w-2.5 rounded-full bg-yellow-500/80" />
-                <span className="h-2.5 w-2.5 rounded-full bg-green-500/80" />
-                <span className="ml-4 flex-1 rounded bg-white/5 py-1.5 text-center text-xs text-white/40">aurelius-sigma.vercel.app</span>
-              </div>
-              <div className="relative aspect-video w-full">
-                <Image src="/images/hero_background.png" alt="" fill className="object-cover object-center" sizes="(max-width: 896px) 100vw, 896px" priority />
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </div>
-
-      {/* Section 2: Logos / Clients */}
-      <div ref={section1Ref as React.RefObject<HTMLDivElement>} className="flashy-scroll-section">
-        <div className="flex min-h-screen flex-col justify-center py-16" style={{ background: "#0a0a0f" }}>
-          <GridLines />
-          <p className="text-center text-sm text-white/40">Trusted by innovative teams</p>
-          <div className="relative mt-8 w-full overflow-hidden">
-            <div className="flashy-marquee-track gap-12 whitespace-nowrap py-4">
-              {[...LOGO_ITEMS, ...LOGO_ITEMS].map((name, i) => (
-                <span key={i} className="text-lg text-white/20" style={{ fontFamily: "var(--font-space-grotesk), sans-serif" }}>{name}</span>
-              ))}
-            </div>
-            <div className="pointer-events-none absolute left-0 top-0 bottom-0 w-24" style={{ background: "linear-gradient(to right, #0a0a0f, transparent)" }} />
-            <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-24" style={{ background: "linear-gradient(to left, #0a0a0f, transparent)" }} />
-          </div>
-        </div>
-      </div>
-
-      {/* Section 3: Feature Split */}
-      <div ref={section2Ref as React.RefObject<HTMLDivElement>} className="flashy-scroll-section scrollable">
-        <div className="min-h-screen py-24 px-6" style={{ background: "#0a0a0f" }}>
-          <GridLines />
-          <div className="relative z-10 mx-auto max-w-7xl">
-            <div className="grid gap-12 lg:grid-cols-2 lg:gap-16 mb-16">
-              <motion.h2
-                className="text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl"
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={VIEWPORT}
-                transition={{ duration: 0.6 }}
-              >
-                We craft experiences that convert.
-              </motion.h2>
-              <div className="flex flex-col justify-center gap-4">
-                <MotionLink href="#work" data-cursor="cta" className="inline-flex w-fit text-sm font-medium text-white/70 hover:text-white" whileHover={{ x: 4 }}>LEARN MORE →</MotionLink>
-                <p className="max-w-md text-white/50">Strategy, design, and development aligned to your goals. We deliver brands and digital products that perform.</p>
-              </div>
-            </div>
-
-            <div className="grid gap-6 sm:grid-cols-2">
-              <motion.div
-                data-cursor="card"
-                className="relative min-h-[320px] overflow-hidden rounded-2xl border border-white/10 p-6"
-                style={{ background: "rgba(255,255,255,0.03)" }}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={VIEWPORT}
-                transition={{ duration: 0.5, delay: 0.15 }}
-                whileHover={{ borderColor: "rgba(255,255,255,0.15)" }}
-              >
-                <div className="absolute inset-0 opacity-20">
-                  <div className="absolute left-4 top-4 h-2 w-2 rounded-full bg-white/30" style={{ left: "20%" }} />
-                  <div className="absolute left-4 top-4 h-2 w-2 rounded-full bg-white/20" style={{ left: "40%", top: "60%" }} />
-                  <div className="absolute left-4 top-4 h-2 w-2 rounded-full bg-white/25" style={{ left: "70%", top: "30%" }} />
-                </div>
-                <div className="relative h-32 w-32 overflow-hidden rounded-lg" style={{ objectPosition: "15% center" }}>
-                  <Image src="/images/3d_elements.png" alt="" width={320} height={320} className="object-cover" style={{ objectPosition: "15% center" }} />
-                </div>
-                <h3 className="mt-4 text-xl font-semibold text-white">Motion & Animation</h3>
-              </motion.div>
-              <motion.div
-                data-cursor="card"
-                className="relative min-h-[320px] overflow-hidden rounded-2xl border border-white/10 p-6"
-                style={{ background: "rgba(255,255,255,0.03)" }}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={VIEWPORT}
-                transition={{ duration: 0.5, delay: 0.3 }}
-                whileHover={{ borderColor: "rgba(255,255,255,0.15)" }}
-              >
-                <div className="grid grid-cols-6 grid-rows-2 gap-3">
-                  {Array.from({ length: 12 }).map((_, i) => (
-                    <div key={i} className="rounded-full border border-white/30 bg-white/5 h-10 w-10 flex items-center justify-center hover:border-white/50 transition-colors" />
-                  ))}
-                </div>
-                <h3 className="mt-4 text-xl font-semibold text-white">Brand & Digital Strategy</h3>
-              </motion.div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Section 4: Features Bento */}
-      <div ref={section3Ref as React.RefObject<HTMLDivElement>} className="flashy-scroll-section scrollable">
-        <div className="min-h-screen py-24 px-6" style={{ background: "#0a0a0f" }}>
-          <GridLines />
-          <div className="relative z-10 mx-auto max-w-7xl">
-            <motion.h2
-              className="text-center text-4xl font-bold tracking-tight text-white sm:text-5xl"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={VIEWPORT}
-            >
-              Services built to perform.
-            </motion.h2>
-            <motion.p className="mx-auto mt-4 max-w-xl text-center text-white/50" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={VIEWPORT}>
-              From strategy to launch, we deliver with precision.
-            </motion.p>
-
-            <div
-              className="mt-16 grid gap-4"
-              style={{ gridTemplateColumns: "repeat(12, 1fr)" }}
-            >
-              <motion.div
-                data-cursor="card"
-                className="relative overflow-hidden rounded-2xl border border-white/10 p-8"
-                style={{ gridColumn: "span 5", background: "linear-gradient(135deg, #7c3aed, #4c1d95)" }}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={VIEWPORT}
-                transition={{ duration: 0.5, delay: 0.1 }}
-              >
-                <div className="absolute right-4 top-4 h-24 w-24 overflow-hidden opacity-80">
-                  <Image src="/images/3d_elements.png" alt="" width={96} height={96} className="object-cover" style={{ objectPosition: "50% center" }} />
-                </div>
-                <h3 className="text-2xl font-bold text-white">Get started with Aurelius</h3>
-                <MotionLink
-                  href="#contact"
-                  data-cursor="cta"
-                  className="mt-6 inline-flex rounded-full border-2 border-white px-6 py-2.5 text-sm font-medium text-white"
-                  whileHover={{ background: "rgba(255,255,255,0.15)" }}
-                >
-                  Start a project →
-                </MotionLink>
-              </motion.div>
-              <div className="grid grid-cols-2 gap-4" style={{ gridColumn: "span 7" }}>
-                {["Motion & Film", "Performance Builds", "Brand Identity", "Design Systems"].map((title, i) => (
-                  <motion.div
-                    key={title}
-                    data-cursor="card"
-                    className="overflow-hidden rounded-2xl border border-white/10 p-6"
-                    style={{ background: "rgba(255,255,255,0.03)" }}
-                    initial={{ opacity: 0, y: 40 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={VIEWPORT}
-                    transition={{ duration: 0.5, delay: 0.15 + i * 0.05 }}
-                    whileHover={{ borderColor: "rgba(255,255,255,0.15)" }}
-                  >
-                    <div className="mb-3 h-10 w-10 rounded-lg bg-white/10" />
-                    <h3 className="text-lg font-semibold text-white">{title}</h3>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Section 5: Process */}
-      <div ref={section4Ref as React.RefObject<HTMLDivElement>} className="flashy-scroll-section scrollable">
-        <div className="relative min-h-screen py-24 px-6" style={{ background: "#0a0a0f" }}>
-          <GridLines />
-          <ParticleField />
-          <div className="relative z-10 mx-auto max-w-2xl">
-            <motion.h2
-              className="text-center text-4xl font-bold tracking-tight sm:text-5xl"
-              initial={{ color: "rgba(255,255,255,0.3)" }}
-              whileInView={{ color: "rgba(255,255,255,1)" }}
-              viewport={VIEWPORT}
-              transition={{ duration: 0.8 }}
-            >
-              How We Make It Happen
-            </motion.h2>
-            <div className="mt-16 space-y-4">
-              {PROCESS_STEPS.map((step, i) => (
-                <motion.div
-                  key={step.num}
-                  className="mx-auto max-w-md rounded-2xl border border-white/10 bg-white/[0.02] p-6"
-                  initial={{ opacity: 0, x: -30 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={VIEWPORT}
-                  transition={{ duration: 0.5, delay: i * 0.2 }}
-                >
-                  <div className="mb-4 flex items-center justify-between">
-                    <div className="h-10 w-10 rounded-full" style={{ background: "linear-gradient(135deg, #7c3aed, #6d28d9)" }} />
-                    <span className="rounded-full border border-white/20 px-3 py-1 text-xs text-white/60">Step {step.num}</span>
+                  {faq.q}
+                  <span>{activeAccordion === i ? "−" : "+"}</span>
+                </button>
+                {activeAccordion === i && (
+                  <div className="px-6 py-4 border-t border-white/10 text-white/60">
+                    {faq.a}
                   </div>
-                  <h3 className="text-lg font-semibold text-white">{step.title}</h3>
-                  <p className="mt-2 text-sm text-white/50">{step.desc}</p>
-                </motion.div>
-              ))}
-            </div>
+                )}
+              </div>
+            ))}
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Section 6: Integrations */}
-      <div id="work" ref={section5Ref as React.RefObject<HTMLDivElement>} className="flashy-scroll-section">
-        <div ref={integrationsRef} className="flex min-h-screen flex-col items-center justify-center py-24 px-6" style={{ background: "#0a0a0f" }}>
-          <GridLines />
-          <p className="text-center text-3xl font-bold tracking-tight text-white lg:text-4xl">One showcase, endless possibilities.</p>
-          <MotionLink
-            href="#work"
-            data-cursor="cta"
-            className="mt-8 rounded-full border border-white/20 px-8 py-3 text-sm font-medium text-white"
-            whileHover={{ borderColor: "rgba(124,58,237,0.6)" }}
-          >
-            View our work →
-          </MotionLink>
-          <motion.div className="relative mt-16 w-[80%] max-w-5xl overflow-hidden rounded-2xl" style={{ y: intY }}>
-            <div className="absolute inset-0 z-10 pointer-events-none" style={{ background: "linear-gradient(to bottom, #0a0a0f, transparent 20%)" }} />
-            <div className="relative aspect-[21/9] w-full">
-              <Image src="/images/bottom_visual.png" alt="" fill className="object-cover object-center" sizes="80vw" />
-            </div>
-          </motion.div>
-        </div>
-      </div>
+      {/* Blog Section */}
+      <section className="py-20 px-6 bg-white/5">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-4xl font-bold mb-16">Latest from our blog</h2>
 
-      {/* Section 7: Testimonials */}
-      <div ref={section6Ref as React.RefObject<HTMLDivElement>} className="flashy-scroll-section">
-        <div className="flex min-h-screen flex-col items-center justify-center py-24 px-6" style={{ background: "#0a0a0f" }}>
-          <GridLines />
-          <p className="text-sm text-white/40">What clients say</p>
-          <div className="relative mt-8 flex w-full max-w-2xl items-center justify-center">
-            <button
-              type="button"
-              className="absolute left-0 top-1/2 -translate-y-1/2 rounded-full border border-white/20 p-2 text-white/60 hover:bg-white/10 hover:text-white"
-              onClick={() => setTestimonialIndex((i) => (i - 1 + TESTIMONIALS.length) % TESTIMONIALS.length)}
-              aria-label="Previous testimonial"
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 18l-6-6 6-6" /></svg>
-            </button>
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={testimonialIndex}
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.3 }}
-                className="text-center"
-              >
-                <blockquote className="text-2xl italic text-white/70">&ldquo;{TESTIMONIALS[testimonialIndex].quote}&rdquo;</blockquote>
-                <div className="mt-6 flex flex-col items-center gap-2">
-                  <div className="h-12 w-12 rounded-full bg-white/20" />
-                  <p className="font-medium text-white">{TESTIMONIALS[testimonialIndex].name}</p>
-                  <p className="text-sm text-white/50">{TESTIMONIALS[testimonialIndex].role}</p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              { title: "The Future of Web Development", date: "March 15, 2025" },
+              { title: "Building Better User Experiences", date: "March 10, 2025" },
+              { title: "Performance Tips and Tricks", date: "March 5, 2025" },
+            ].map((post, i) => (
+              <Link key={i} href="#" className="group">
+                <div className="p-6 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition">
+                  <p className="text-white/60 text-sm mb-3">{post.date}</p>
+                  <h3 className="text-xl font-semibold group-hover:text-purple-400 transition">{post.title}</h3>
                 </div>
-              </motion.div>
-            </AnimatePresence>
-            <button
-              type="button"
-              className="absolute right-0 top-1/2 -translate-y-1/2 rounded-full border border-white/20 p-2 text-white/60 hover:bg-white/10 hover:text-white"
-              onClick={() => setTestimonialIndex((i) => (i + 1) % TESTIMONIALS.length)}
-              aria-label="Next testimonial"
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 18l6-6-6-6" /></svg>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 px-6 relative">
+        <div className="absolute inset-0 -z-10">
+          <div
+            className="absolute inset-0 opacity-20"
+            style={{
+              background: "radial-gradient(ellipse at center, rgba(168,85,247,0.3) 0%, transparent 70%)",
+            }}
+          />
+        </div>
+
+        <div className="max-w-3xl mx-auto text-center">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6">Boost creativity. Maximize efficiency.</h2>
+          <p className="text-xl text-white/60 mb-8">Join thousands of professionals building amazing things</p>
+
+          <div className="flex flex-col md:flex-row gap-4 justify-center">
+            <button className="px-8 py-3 rounded-lg bg-white text-black font-semibold hover:bg-white/90 transition">
+              Start for Free
+            </button>
+            <button className="px-8 py-3 rounded-lg border border-white/30 text-white font-semibold hover:border-white/60 transition">
+              Schedule Demo
             </button>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Section 8: CTA Final */}
-      <div id="contact" ref={section7Ref as React.RefObject<HTMLDivElement>} className="flashy-scroll-section">
-        <div ref={ctaBgRef} className="relative flex min-h-screen flex-col items-center justify-center px-6 py-24" style={{ background: "#0a0a0f" }}>
-          <GridLines />
-          <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 80% 60% at 50% 100%, rgba(124,58,237,0.35), transparent 60%)" }} />
-          <motion.div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ y: ctaBgY }}>
-            <div className="absolute inset-0 opacity-[0.15]">
-              <Image src="/images/bottom_visual.png" alt="" fill className="object-cover object-center" sizes="100vw" />
+      {/* Footer */}
+      <footer className="border-t border-white/10 py-12 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+            <div>
+              <h4 className="font-semibold mb-4">Product</h4>
+              <ul className="space-y-2 text-white/60 text-sm">
+                <li><Link href="#">Features</Link></li>
+                <li><Link href="#">Pricing</Link></li>
+                <li><Link href="#">Security</Link></li>
+              </ul>
             </div>
-          </motion.div>
-          <div className="relative z-10 text-center">
-            <motion.span
-              className="inline-block rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-sm text-white/70"
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={VIEWPORT}
-            >
-              Let&apos;s build
-            </motion.span>
-            <h2 className="mt-6 text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">
-              Ready to build something extraordinary?
-            </h2>
-            <div className="mt-10 flex flex-wrap justify-center gap-4">
-              <MotionLink
-                href="#contact"
-                data-cursor="cta"
-                className="rounded-full bg-purple-600 px-6 py-3 text-sm font-medium text-white"
-                whileHover={{ scale: 1.02, boxShadow: "0 0 30px rgba(124,58,237,0.5)" }}
-                whileTap={{ scale: 1 }}
-              >
-                Start a project
-              </MotionLink>
-              <MotionLink
-                href="#work"
-                data-cursor="cta"
-                className="rounded-full border border-white/20 px-6 py-3 text-sm font-medium text-white"
-                whileHover={{ borderColor: "rgba(124,58,237,0.6)" }}
-              >
-                View our work →
-              </MotionLink>
+            <div>
+              <h4 className="font-semibold mb-4">Company</h4>
+              <ul className="space-y-2 text-white/60 text-sm">
+                <li><Link href="#">About</Link></li>
+                <li><Link href="#">Blog</Link></li>
+                <li><Link href="#">Careers</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4">Resources</h4>
+              <ul className="space-y-2 text-white/60 text-sm">
+                <li><Link href="#">Docs</Link></li>
+                <li><Link href="#">API</Link></li>
+                <li><Link href="#">Support</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4">Legal</h4>
+              <ul className="space-y-2 text-white/60 text-sm">
+                <li><Link href="#">Privacy</Link></li>
+                <li><Link href="#">Terms</Link></li>
+                <li><Link href="#">Contact</Link></li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center text-white/60 text-sm">
+            <p>&copy; 2025 Gilberto. All rights reserved.</p>
+            <div className="flex gap-6 mt-4 md:mt-0">
+              <Link href="#">Twitter</Link>
+              <Link href="#">LinkedIn</Link>
+              <Link href="#">GitHub</Link>
             </div>
           </div>
         </div>
-      </div>
-    </>
+      </footer>
+    </div>
   );
 }
