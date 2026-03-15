@@ -31,24 +31,11 @@ export default function FlashyLayout({
       }}
     >
       <FlashyNavbar />
-      <FullPageScrollWrapper sectionCount={8} dotActiveColor="#7c3aed">
-        {children}
-      </FullPageScrollWrapper>
+      {children}
       <footer
         className="px-6 py-8 lg:px-10"
         style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}
       >
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
-          <span
-            className="text-sm font-semibold text-white/30"
-            style={{ fontFamily: "var(--font-space-grotesk), sans-serif" }}
-          >
-            Aurelius
-          </span>
-          <span className="text-xs text-white/15">
-            Strategic Brand &amp; Digital Agency
-          </span>
-        </div>
       </footer>
     </div>
   );
