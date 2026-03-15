@@ -226,7 +226,7 @@ export function ValueCalculator() {
                 Projected value (12 months)
               </p>
               <div className="h-[160px] w-full md:h-[200px]" style={{ minWidth: 200 }}>
-                <ResponsiveContainer width="100%" height="100%" minWidth={200}
+                <ResponsiveContainer width="100%" height="100%" minWidth={200}>
                   <AreaChart
                     data={chartData}
                     margin={{ top: 4, right: 4, left: 0, bottom: 0 }}
