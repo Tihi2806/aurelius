@@ -96,10 +96,10 @@ export default function MidnightPage() {
             Ready to push the boundaries? We&apos;re always open to wild ideas.
           </p>
           <Link
-            href="mailto:hello@midnight.studio"
+            href="mailto:aureliusweb.contact@gmail.com"
             className="midnight-glow-btn mt-8 inline-block rounded-lg border-2 border-[#00FF41] bg-[#00FF41]/10 px-8 py-4 text-base font-bold text-[#00FF41] transition-all hover:bg-[#00FF41]/20"
           >
-            hello@midnight.studio
+            aureliusweb.contact@gmail.com
           </Link>
         </div>
       </section>

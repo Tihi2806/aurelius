@@ -137,7 +137,7 @@ export function AIConcierge() {
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        placeholder="you@company.com"
+                        placeholder="aureliusweb.contact@gmail.com"
                         className="min-h-[44px] w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder-gray-600 focus:border-white/20 focus:outline-none"
                         required
                         autoComplete="email"

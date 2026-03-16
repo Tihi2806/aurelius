@@ -135,7 +135,7 @@ export default function ContactCTA() {
               required
               disabled={formState.status === "loading"}
               className="w-full rounded-sm border border-[var(--border)] bg-transparent px-4 py-3 text-[var(--foreground)] placeholder:text-[var(--muted)] focus:border-[var(--accent)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)] disabled:opacity-50"
-              placeholder="you@company.com"
+              placeholder="aureliusweb.contact@gmail.com"
             />
             {errors.email && (
               <p className="mt-1 text-sm text-red-400">{errors.email}</p>

@@ -33,7 +33,10 @@ function LiveClock() {
   }, []);
 
   return (
-    <span style={{ fontFamily: fontInter, fontSize: 12, color: "rgba(255,255,255,0.5)" }}>
+    <span
+      className="text-xs text-white/50"
+      style={{ fontFamily: fontInter }}
+    >
       Based in Toronto (CA) {time}
     </span>
   );
@@ -43,92 +46,22 @@ export function Footer() {
   return (
     <footer
       id="contact"
-      className="contact-section"
-      style={{
-        backgroundColor: "#000",
-        padding: "48px 60px 0",
-        fontFamily: fontInter,
-        overflow: "hidden",
-      }}
+      className="contact-section min-h-screen bg-black overflow-hidden flex flex-col px-6 md:px-10 lg:px-16"
+      style={{ fontFamily: fontInter }}
     >
+      <div className="w-full flex flex-col flex-1">
+      <div className="max-w-screen-2xl mx-auto w-full flex flex-col flex-1">
       {/* ── TOP ROW ─────────────────────────────────────────────── */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr 1fr",
-          gap: 40,
-          marginBottom: 64,
-        }}
-      >
+      <div className="grid grid-cols-1 gap-8 mt-[100px] mb-[80px] md:mt-[120px] md:mb-[100px] md:grid-cols-2 md:gap-6">
         {/* Left — logo + clock */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+        <div className="flex flex-col gap-2">
           <span
-            style={{
-              fontFamily: fontInter,
-              fontWeight: 700,
-              fontSize: 14,
-              color: "#fff",
-              textTransform: "uppercase",
-              letterSpacing: "0.1em",
-            }}
+            className="text-sm font-bold text-white uppercase tracking-[0.1em]"
+            style={{ fontFamily: fontInter }}
           >
             AURELIUS
           </span>
           <LiveClock />
-        </div>
-
-        {/* Center — newsletter */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-          <span
-            style={{
-              fontSize: 11,
-              textTransform: "uppercase",
-              letterSpacing: "0.1em",
-              color: "rgba(255,255,255,0.4)",
-            }}
-          >
-            Our Work [12]
-          </span>
-          <span style={{ fontSize: 13, color: "#fff" }}>
-            Subscribe to our newsletter.
-          </span>
-          <div style={{ display: "flex", gap: 0, marginTop: 4 }}>
-            <input
-              type="email"
-              placeholder="Email"
-              style={{
-                flex: 1,
-                background: "transparent",
-                border: "1px solid rgba(255,255,255,0.15)",
-                borderRight: "none",
-                color: "#fff",
-                padding: "10px 14px",
-                fontSize: 13,
-                fontFamily: fontInter,
-                borderRadius: "6px 0 0 6px",
-                outline: "none",
-              }}
-            />
-            <a
-              href="#"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                width: 42,
-                background: "transparent",
-                border: "1px solid #fff",
-                color: "#fff",
-                fontSize: 18,
-                fontWeight: 300,
-                borderRadius: "0 6px 6px 0",
-                textDecoration: "none",
-                flexShrink: 0,
-              }}
-            >
-              +
-            </a>
-          </div>
         </div>
 
         {/* Right — empty */}
@@ -136,85 +69,49 @@ export function Footer() {
       </div>
 
       {/* ── MIDDLE SECTION ──────────────────────────────────────── */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "55% 45%",
-          gap: 40,
-          marginBottom: 64,
-          alignItems: "start",
-        }}
-      >
+      <div className="grid grid-cols-1 gap-10 items-start mb-[60px] md:mb-[80px] md:grid-cols-2 lg:grid-cols-[55%_45%] lg:gap-10">
         {/* Left — email + quote */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 40 }}>
+        <div className="flex flex-col gap-10 pr-16 lg:pr-24">
           <a
-            href="mailto:contact@aurelius.design"
-            style={{
-              fontSize: 28,
-              fontWeight: 500,
-              color: "#fff",
-              textDecoration: "none",
-              fontFamily: fontInter,
-              lineHeight: 1.2,
-            }}
+            href="mailto:aureliusweb.contact@gmail.com"
+            className="text-[clamp(18px,5vw,28px)] font-medium text-white no-underline leading-tight lg:text-[28px]"
+            style={{ fontFamily: fontInter }}
           >
-            contact@aurelius.design{" "}
-            <sup style={{ fontSize: 18, fontWeight: 300 }}>+</sup>
+            aureliusweb.contact@gmail.com{" "}
+            <sup className="text-[18px] font-light">+</sup>
           </a>
 
           {/* Quote block */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+          <div className="flex flex-col gap-4">
             <span
-              style={{
-                fontSize: 32,
-                color: "#fff",
-                lineHeight: 1,
-                fontFamily: fontInter,
-              }}
+              className="text-[32px] text-white leading-none"
+              style={{ fontFamily: fontInter }}
             >
               ❝
             </span>
             <p
-              style={{
-                fontSize: 16,
-                color: "#fff",
-                lineHeight: 1.6,
-                margin: 0,
-                maxWidth: 480,
-              }}
+              className="text-base text-white leading-relaxed m-0 max-w-[480px]"
+              style={{ fontFamily: fontInter }}
             >
               Your next project deserves world-class design. Stop settling for
               mediocre and start working with designers who care as much as you
               do.
             </p>
             {/* Author */}
-            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <div className="flex items-center gap-3">
               <div
-                style={{
-                  width: 32,
-                  height: 32,
-                  borderRadius: "50%",
-                  background: "rgba(255,255,255,0.1)",
-                  flexShrink: 0,
-                }}
+                className="w-8 h-8 rounded-full bg-white/10 shrink-0"
               />
-              <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+              <div className="flex flex-col gap-0.5">
                 <span
-                  style={{
-                    fontSize: 13,
-                    color: "#fff",
-                    fontWeight: 600,
-                    fontFamily: fontInter,
-                  }}
+                  className="text-[13px] text-white font-semibold"
+                  style={{ fontFamily: fontInter }}
                 >
                   Alex West
                 </span>
                 <span
-                  style={{
-                    fontSize: 13,
-                    color: "rgba(255,255,255,0.5)",
-                    fontFamily: fontInter,
-                  }}
+                  className="text-[13px] text-white/50"
+                  style={{ fontFamily: fontInter }}
                 >
                   Creative Director
                 </span>
@@ -224,21 +121,13 @@ export function Footer() {
         </div>
 
         {/* Right — nav links */}
-        <nav style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+        <nav className="flex flex-col gap-2 lg:text-right lg:items-end">
           {NAV_LINKS.map(({ label, count, href }) => (
             <a
               key={label}
               href={href}
-              style={{
-                fontSize: 32,
-                fontWeight: 600,
-                color: "#fff",
-                textDecoration: "none",
-                fontFamily: fontInter,
-                lineHeight: 1.15,
-                display: "inline-block",
-                transition: "opacity 0.2s",
-              }}
+              className="text-[clamp(24px,6vw,32px)] font-semibold text-white no-underline inline-block leading-tight transition-opacity duration-200 hover:opacity-60 lg:text-[32px]"
+              style={{ fontFamily: fontInter }}
               onMouseEnter={(e) =>
                 ((e.currentTarget as HTMLAnchorElement).style.opacity = "0.6")
               }
@@ -248,13 +137,7 @@ export function Footer() {
             >
               {label}
               {count !== undefined && (
-                <span
-                  style={{
-                    color: "rgba(255,255,255,0.4)",
-                    fontWeight: 600,
-                    marginLeft: 6,
-                  }}
-                >
+                <span className="text-white/40 font-semibold ml-1.5">
                   [{count}]
                 </span>
               )}
@@ -263,29 +146,17 @@ export function Footer() {
         </nav>
       </div>
 
-      {/* ── BOTTOM BAR ──────────────────────────────────────────── */}
-      <div
-        style={{
-          borderTop: "1px solid rgba(255,255,255,0.08)",
-          padding: "20px 0",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
+      {/* ── BOTTOM BAR + GIANT TEXT (grouped at bottom) ──────────── */}
+      <div className="mt-auto mb-4">
+      <div className="border-t border-white/[0.08] py-5 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         {/* Legal links */}
-        <div style={{ display: "flex", gap: 24 }}>
+        <div className="flex gap-6">
           {["Terms of Service", "Privacy Policy"].map((label) => (
             <a
               key={label}
               href="#"
-              style={{
-                fontSize: 12,
-                color: "rgba(255,255,255,0.4)",
-                textDecoration: "none",
-                fontFamily: fontInter,
-                transition: "color 0.2s",
-              }}
+              className="text-xs text-white/40 no-underline transition-colors duration-200 hover:text-white/80"
+              style={{ fontFamily: fontInter }}
               onMouseEnter={(e) =>
                 ((e.currentTarget as HTMLAnchorElement).style.color = "rgba(255,255,255,0.8)")
               }
@@ -299,7 +170,7 @@ export function Footer() {
         </div>
 
         {/* Social icons */}
-        <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
+        <div className="flex gap-4 items-center">
           {[
             { Icon: Twitter, label: "Twitter" },
             { Icon: Instagram, label: "Instagram" },
@@ -310,11 +181,7 @@ export function Footer() {
               key={label}
               href="#"
               aria-label={label}
-              style={{
-                color: "rgba(255,255,255,0.4)",
-                transition: "color 0.2s",
-                display: "flex",
-              }}
+              className="text-white/40 transition-colors duration-200 flex hover:text-white"
               onMouseEnter={(e) =>
                 ((e.currentTarget as HTMLAnchorElement).style.color = "#fff")
               }
@@ -329,37 +196,22 @@ export function Footer() {
       </div>
 
       {/* ── GIANT TEXT ──────────────────────────────────────────── */}
-      <div
-        style={{
-          marginTop: 8,
-          overflow: "hidden",
-          lineHeight: 0.85,
-          userSelect: "none",
-          pointerEvents: "none",
-        }}
-      >
+      <div className="mb-[3%] overflow-hidden leading-[0.85] select-none pointer-events-none">
         <div
-          style={{
-            fontFamily: fontInter,
-            fontWeight: 700,
-            fontSize: "clamp(80px, 12vw, 180px)",
-            color: "#fff",
-            whiteSpace: "nowrap",
-          }}
+          className="font-bold text-white whitespace-nowrap text-[clamp(48px,14vw,180px)] md:text-[clamp(60px,10vw,180px)] lg:text-[clamp(80px,12vw,180px)]"
+          style={{ fontFamily: fontInter }}
         >
           AURELIUS
         </div>
         <div
-          style={{
-            fontFamily: fontInter,
-            fontWeight: 700,
-            fontSize: "clamp(80px, 12vw, 180px)",
-            color: "rgba(255,255,255,0.15)",
-            whiteSpace: "nowrap",
-          }}
+          className="font-bold whitespace-nowrap text-[clamp(48px,14vw,180px)] md:text-[clamp(60px,10vw,180px)] lg:text-[clamp(80px,12vw,180px)]"
+          style={{ fontFamily: fontInter, color: "rgba(255,255,255,0.15)" }}
         >
           WEB
         </div>
+      </div>
+      </div>
+      </div>
       </div>
     </footer>
   );
