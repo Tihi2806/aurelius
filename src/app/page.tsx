@@ -10,10 +10,9 @@ import { ValueCalculator } from "@/components/ValueCalculator";
 import { RevenueLeak } from "@/components/RevenueLeak";
 import SpeedTimeline from "@/components/SpeedTimeline";
 import { PerformanceGrid } from "@/components/PerformanceGrid";
+import { Footer } from "@/components/Footer";
 import "./hero.css";
 import "./sections.css";
-
-const HEADLINE_WORDS = ["Let's", "build", "something", "that", "lasts."];
 
 const HERO_BOTTOM_LINE1 = ["Strategic", "Brand", "Agency"];
 const HERO_BOTTOM_LINE2 = ["Identity", "&", "Digital"];
@@ -557,50 +556,9 @@ export default function GatewayPage() {
       <PerformanceGrid />
 
       {/* ══════════════════════════════════════
-          Section 9 — Contact / CTA
+          Section 9 — Contact / Footer (Mugen-style)
           ══════════════════════════════════════ */}
-      <section className="contact-section">
-        <div className="contact-inner">
-
-          {/* Clip-path word-reveal headline */}
-          <h2
-            className="contact-headline"
-            aria-label="Let's build something that lasts."
-          >
-            {HEADLINE_WORDS.map((word) => (
-              <span key={word} className="headline-word">
-                <span className="headline-word-inner">{word}</span>
-              </span>
-            ))}
-          </h2>
-
-          {/* Two-column: left copy · right CTA */}
-          <div className="contact-body">
-            <p className="contact-text">
-              We take on a limited number of projects each year. If you&apos;re
-              building something worth making, we&apos;d like to hear from you.
-            </p>
-            <div className="contact-action">
-              <a href="mailto:hello@aurelius.co" className="contact-btn contact-btn-outline">
-                → Start a Project
-              </a>
-            </div>
-          </div>
-
-        </div>
-
-        {/* Muted bottom bar */}
-        <div className="contact-footer-bar">
-          <span className="contact-footer-left">Aurelius © 2024</span>
-          <div className="contact-footer-right">
-            <a href="#">Instagram</a>
-            {' · '}
-            <a href="#">LinkedIn</a>
-            {' · '}
-            <a href="#">Dribbble</a>
-          </div>
-        </div>
-      </section>
+      <Footer />
 
     </div>
   );

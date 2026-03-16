@@ -1,7 +1,8 @@
 import type { Metadata, Viewport } from "next";
-import { Cormorant_Garamond, DM_Sans } from "next/font/google";
+import { Cormorant_Garamond, DM_Sans, Inter } from "next/font/google";
 import { AIConcierge } from "@/components/AIConcierge";
 import { CustomCursor } from "@/components/CustomCursor";
+import { GlobalNav } from "@/components/GlobalNav";
 import "./globals.css";
 
 export const viewport: Viewport = {
@@ -20,6 +21,12 @@ const dmSans = DM_Sans({
   variable: "--font-dm-sans",
   subsets: ["latin"],
   weight: ["300", "400", "500", "600"],
+});
+
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
 const SITE_URL = "https://aurelius-sigma.vercel.app";
@@ -69,10 +76,11 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark scroll-smooth">
       <body
-        className={`${cormorant.variable} ${dmSans.variable} font-sans antialiased bg-[var(--background)] text-[var(--foreground)] min-h-screen`}
+        className={`${cormorant.variable} ${dmSans.variable} ${inter.variable} font-sans antialiased bg-[var(--background)] text-[var(--foreground)] min-h-screen`}
       >
         <CustomCursor />
         <AIConcierge />
+        <GlobalNav />
         {children}
       </body>
     </html>
