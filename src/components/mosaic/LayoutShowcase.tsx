@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useImperativeHandle, forwardRef, type ReactNode } from "react";
+import { useState, useEffect, useRef, useImperativeHandle, forwardRef, useCallback, type ReactNode } from "react";
 import { motion } from "framer-motion";
 import { BrowserMockup } from "@/components/BrowserMockup";
 import "./mosaic.css";
@@ -47,6 +47,7 @@ export const LayoutShowcase = forwardRef<LayoutShowcaseHandle>(function LayoutSh
   const sliderRef = useRef<HTMLDivElement>(null);
   const pillsContainerRef = useRef<HTMLDivElement>(null);
   const tiltRef = useRef<HTMLDivElement>(null);
+  const activeIndexRef = useRef(activeIndex);
   const lastScrollTime = useRef(0);
   const viewportRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -120,12 +121,29 @@ export const LayoutShowcase = forwardRef<LayoutShowcaseHandle>(function LayoutSh
     return () => clearTimeout(t);
   }, [activeIndex]);
 
-  // 3D tilt on browser mockup: listener on tiltRef, transition none during move, 0.6s ease on leave
   useEffect(() => {
-    const el = tiltRef.current;
-    if (!el) return;
-    let rafId: number;
+    activeIndexRef.current = activeIndex;
+  }, [activeIndex]);
 
+  // 3D tilt: attach/detach via callback ref so we always listen on the currently mounted tilt container (fixes tilt stopping after tab switch)
+  const tiltListenersRef = useRef<{
+    el: HTMLDivElement;
+    move: (e: MouseEvent) => void;
+    leave: () => void;
+    rafId: number;
+  } | null>(null);
+
+  const setTiltRef = useCallback((el: HTMLDivElement | null) => {
+    if (tiltListenersRef.current) {
+      const { el: prevEl, move, leave, rafId } = tiltListenersRef.current;
+      cancelAnimationFrame(rafId);
+      prevEl.removeEventListener("mousemove", move);
+      prevEl.removeEventListener("mouseleave", leave);
+      tiltListenersRef.current = null;
+    }
+    tiltRef.current = el;
+    if (!el) return;
+    let rafId: number = 0;
     const handleMouseMove = (e: MouseEvent) => {
       cancelAnimationFrame(rafId);
       rafId = requestAnimationFrame(() => {
@@ -137,21 +155,28 @@ export const LayoutShowcase = forwardRef<LayoutShowcaseHandle>(function LayoutSh
         el.style.transition = "none";
         el.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
       });
+      if (tiltListenersRef.current) tiltListenersRef.current.rafId = rafId;
     };
-
     const handleMouseLeave = () => {
       cancelAnimationFrame(rafId);
       el.style.transition = "transform 0.6s ease";
       el.style.transform = "rotateX(0deg) rotateY(0deg)";
     };
-
     el.addEventListener("mousemove", handleMouseMove);
     el.addEventListener("mouseleave", handleMouseLeave);
+    tiltListenersRef.current = { el, move: handleMouseMove, leave: handleMouseLeave, rafId };
+  }, []);
 
+  // No-op effect so cleanup runs on unmount (removes listeners from current tilt element)
+  useEffect(() => {
     return () => {
-      cancelAnimationFrame(rafId);
-      el.removeEventListener("mousemove", handleMouseMove);
-      el.removeEventListener("mouseleave", handleMouseLeave);
+      if (tiltListenersRef.current) {
+        const { el, move, leave, rafId } = tiltListenersRef.current;
+        cancelAnimationFrame(rafId);
+        el.removeEventListener("mousemove", move);
+        el.removeEventListener("mouseleave", leave);
+        tiltListenersRef.current = null;
+      }
     };
   }, []);
 
@@ -246,7 +271,7 @@ export const LayoutShowcase = forwardRef<LayoutShowcaseHandle>(function LayoutSh
 
   const wrapMockup = (content: ReactNode) => (
     <div style={{ perspective: "1200px" }}>
-      <div ref={tiltRef} style={{ transformStyle: "preserve-3d" }}>
+      <div ref={setTiltRef} style={{ transformStyle: "preserve-3d" }}>
         {content}
       </div>
     </div>
