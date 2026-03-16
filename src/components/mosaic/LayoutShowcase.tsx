@@ -15,15 +15,15 @@ const layouts = [
   { id: 6, name: "Midnight Dark", bg: "#070714", textColor: "#e6e6e6" },
 ];
 
-// index 0–6: label, theme, mediaSrc, url, bgImage must match tab order (Flashy → Midnight Dark)
+// index 0–6: label, theme, mediaSrc, url, bgImage, bgOverlay must match tab order (Flashy → Midnight Dark). All cards theme "dark"; overlays dark.
 const STYLES = [
-  { label: "Flashy", theme: "dark" as const, tag: "Immersive & Bold", description: "High-energy layouts built for brands that want to captivate and convert.", url: "https://aurelius-sigma.vercel.app/flashy", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/flashy.png", bgImage: "/previews/cards_bg/flashy_bg.jpg" as string | null },
-  { label: "Classy", theme: "dark" as const, tag: "Luxury & Refined", description: "Understated elegance for premium brands.", url: "https://aurelius-sigma.vercel.app/classy", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/classy.png", bgImage: "/previews/cards_bg/classy_bg.jpg" as string | null },
-  { label: "Brutalist", theme: "light" as const, tag: "Raw & Radical", description: "Grids broken, rules ignored.", url: "https://aurelius-sigma.vercel.app/brutalist", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/brutalist.png", bgImage: "/previews/cards_background/brutalist_background.png" as string | null },
-  { label: "Scandi Shop", theme: "light" as const, tag: "Clean & Minimal", description: "Warm minimalism meets mindful commerce.", url: "https://aurelius-sigma.vercel.app/scandi", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/scandi.png", bgImage: "/previews/cards_bg/scandi_bg.jpg" as string | null },
-  { label: "Silicon Valley", theme: "light" as const, tag: "SaaS & Product", description: "Conversion-focused, trust-building.", url: "https://aurelius-sigma.vercel.app/saas", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/saas.png", bgImage: "/previews/cards_bg/saas_bg.jpg" as string | null },
-  { label: "Editorial", theme: "dark" as const, tag: "Culture & Design", description: "Type-forward, image-led.", url: "https://aurelius-sigma.vercel.app/editorial", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/editorial.png", bgImage: null },
-  { label: "Midnight Dark", theme: "dark" as const, tag: "Moody & Electric", description: "Deep blacks, electric accents.", url: "https://aurelius-sigma.vercel.app/midnight", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/midnight.png", bgImage: "/previews/cards_bg/midnight_bg.jpg" as string | null },
+  { label: "Flashy", theme: "dark" as const, tag: "Immersive & Bold", description: "High-energy layouts built for brands that want to captivate and convert.", url: "https://aurelius-sigma.vercel.app/flashy", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/flashy.png", bgImage: "/previews/cards_background/flashy_background.png" as string | null, bgOverlay: "rgba(0,0,0,0.50)" as string | null },
+  { label: "Classy", theme: "dark" as const, tag: "Luxury & Refined", description: "Understated elegance for premium brands.", url: "https://aurelius-sigma.vercel.app/classy", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/classy.png", bgImage: "/previews/cards_background/classy_background.png" as string | null, bgOverlay: "rgba(0,0,0,0.45)" as string | null },
+  { label: "Brutalist", theme: "dark" as const, tag: "Raw & Radical", description: "Grids broken, rules ignored.", url: "https://aurelius-sigma.vercel.app/brutalist", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/brutalist.png", bgImage: "/previews/cards_background/brutalist_background.png" as string | null, bgOverlay: "rgba(0,0,0,0.45)" as string | null },
+  { label: "Scandi Shop", theme: "dark" as const, tag: "Clean & Minimal", description: "Warm minimalism meets mindful commerce.", url: "https://aurelius-sigma.vercel.app/scandi", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/scandi.png", bgImage: "/previews/cards_background/scandi_background.png" as string | null, bgOverlay: "rgba(0,0,0,0.45)" as string | null },
+  { label: "Silicon Valley", theme: "dark" as const, tag: "SaaS & Product", description: "Conversion-focused, trust-building.", url: "https://aurelius-sigma.vercel.app/saas", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/saas.png", bgImage: "/previews/cards_background/saas_background.png" as string | null, bgOverlay: "rgba(0,0,0,0.45)" as string | null },
+  { label: "Editorial", theme: "dark" as const, tag: "Culture & Design", description: "Type-forward, image-led.", url: "https://aurelius-sigma.vercel.app/editorial", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/editorial.png", bgImage: null, bgOverlay: null },
+  { label: "Midnight Dark", theme: "dark" as const, tag: "Moody & Electric", description: "Deep blacks, electric accents.", url: "https://aurelius-sigma.vercel.app/midnight", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/midnight.png", bgImage: "/previews/cards_background/midnight_background.png" as string | null, bgOverlay: "rgba(0,0,0,0.45)" as string | null },
 ];
 
 const COOLDOWN_MS = 700;
@@ -277,6 +277,8 @@ export const LayoutShowcase = forwardRef<LayoutShowcaseHandle>(function LayoutSh
     </div>
   );
 
+  const activeCard = STYLES[activeIndex];
+
   return (
     <div ref={sectionRef} className="cards-section" data-theme={currentTheme}>
       <motion.div
@@ -291,30 +293,36 @@ export const LayoutShowcase = forwardRef<LayoutShowcaseHandle>(function LayoutSh
           transition: `background-color ${SLIDE_DURATION_MS}ms cubic-bezier(0.76, 0, 0.24, 1)`,
         }}
       >
-        {/* Background image — behind content, fades when layout changes; only render when bgImage is set */}
-        {STYLES[activeIndex].bgImage && (
-          <img
-            ref={bgImgRef}
-            src={STYLES[activeIndex].bgImage!}
-            alt=""
-            aria-hidden
-            style={{
-              position: "absolute",
-              inset: 0,
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              zIndex: 0,
-              opacity: 1,
-              transition: "opacity 0.6s ease",
-            }}
-          />
-        )}
+        {/* Background layer: img + overlay, clipped so they don't leak outside the card */}
+        <div style={{ position: "absolute", inset: 0, zIndex: 0, overflow: "hidden" }}>
+          {activeCard.bgImage != null && activeCard.bgImage !== "" && (
+            <img
+              key={activeIndex}
+              ref={bgImgRef}
+              src={activeCard.bgImage}
+              alt=""
+              aria-hidden
+              style={{
+                position: "absolute",
+                inset: 0,
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                zIndex: 0,
+                opacity: 1,
+                transition: "opacity 0.6s ease",
+              }}
+            />
+          )}
+          {activeCard.bgOverlay && (
+            <div style={{ position: "absolute", inset: 0, background: activeCard.bgOverlay, zIndex: 1, pointerEvents: "none" }} />
+          )}
+        </div>
         {/* Content wrapper */}
         <div
           style={{
             position: "relative",
-            zIndex: 1,
+            zIndex: 2,
             height: "100%",
             display: "flex",
             flexDirection: "column",
@@ -360,18 +368,15 @@ export const LayoutShowcase = forwardRef<LayoutShowcaseHandle>(function LayoutSh
                     "left 0.35s cubic-bezier(0.4, 0, 0.2, 1), width 0.35s cubic-bezier(0.4, 0, 0.2, 1), top 0.35s cubic-bezier(0.4, 0, 0.2, 1), height 0.35s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s ease",
                   pointerEvents: "none",
                   zIndex: 0,
-                  backgroundColor: STYLES[displayIndex].theme === "dark" ? "#fff" : "#111",
+                  backgroundColor: "#fff",
                 }}
               />
               {layouts.map((layout, index) => {
                 const isActive = index === displayIndex;
-                const activeBg = themeForActivePill === "dark" ? "#fff" : "#111";
-                const activeColor = themeForActivePill === "dark" ? "#111" : "#fff";
-                const inactiveBorder =
-                  themeForActivePill === "dark"
-                    ? "1px solid rgba(255,255,255,0.15)"
-                    : "1px solid rgba(0,0,0,0.12)";
-                const inactiveColor = themeForActivePill === "dark" ? "rgba(255,255,255,0.65)" : "rgba(0,0,0,0.55)";
+                const activeBg = "#fff";
+                const activeColor = "#111";
+                const inactiveBorder = "1px solid rgba(255,255,255,0.7)";
+                const inactiveColor = "#fff";
                 return (
                   <button
                     key={layout.id}
