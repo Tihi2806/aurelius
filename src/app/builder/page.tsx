@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -616,13 +616,21 @@ export default function BuilderPage() {
   const [perSS, setPerSS]           = useState<PerSectionStyles>({});
   const [selectedSection, setSelectedSection] = useState<SectionType | null>(null);
   const [tab, setTab]               = useState<SideTab>("sections");
-  const [isMobile, setIsMobile]     = useState(false);
+  const [isMobilePreview, setIsMobilePreview] = useState(false);
+  const [isMobileLayout, setIsMobileLayout]   = useState(false);
   const [modalOpen, setModalOpen]   = useState(false);
   const [clientEmail, setClientEmail] = useState("");
   const [clientName, setClientName]   = useState("");
   const [sending, setSending]       = useState(false);
   const [sent, setSent]             = useState(false);
   const [error, setError]           = useState("");
+
+  useEffect(() => {
+    function onResize() { setIsMobileLayout(window.innerWidth < 768); }
+    onResize();
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
 
   function update<K extends keyof BuilderState>(key: K, value: BuilderState[K]) {
     setState((prev) => ({ ...prev, [key]: value }));
@@ -767,11 +775,18 @@ Sent via Aurelius Website Builder`;
   return (
     <div style={{ display: "flex", height: "100vh", background: "#0a0a0a",
       color: "#f5f5f0", fontFamily: "var(--font-dm-sans), system-ui, sans-serif",
-      overflow: "hidden" }}>
+      overflow: "hidden",
+      flexDirection: isMobileLayout ? "column-reverse" : "row" }}>
 
       {/* ── Sidebar ──────────────────────────────────────────────────────── */}
-      <aside style={{ width: 280, minWidth: 280, height: "100vh", background: "#0d0d0d",
-        borderRight: "1px solid #2a2a2a", display: "flex", flexDirection: "column" }}>
+      <aside style={{
+        width: isMobileLayout ? "100%" : 280,
+        minWidth: isMobileLayout ? 0 : 280,
+        height: isMobileLayout ? "50vh" : "100vh",
+        background: "#0d0d0d",
+        borderRight: isMobileLayout ? "none" : "1px solid #2a2a2a",
+        borderTop: isMobileLayout ? "1px solid #2a2a2a" : "none",
+        display: "flex", flexDirection: "column" }}>
 
         {/* Logo */}
         <div style={{ padding: "18px 20px 16px", borderBottom: "1px solid #1e1e1e",
@@ -1229,15 +1244,32 @@ Sent via Aurelius Website Builder`;
             </div>
           )}
         </div>
+
+        {/* Mobile-only: Finish & Send at sidebar bottom */}
+        {isMobileLayout && (
+          <div style={{ padding: "12px 16px", borderTop: "1px solid #1e1e1e", flexShrink: 0 }}>
+            <button
+              onClick={() => { setModalOpen(true); setSent(false); setError(""); }}
+              style={{ width: "100%", background: state.accent, border: "none", borderRadius: 6,
+                padding: "11px 0", fontSize: 12, fontWeight: 600,
+                color: "#000", cursor: "pointer", letterSpacing: "0.02em" }}>
+              Finish &amp; Send →
+            </button>
+          </div>
+        )}
       </aside>
 
       {/* ── Main area ─────────────────────────────────────────────────────── */}
-      <main style={{ flex: 1, display: "flex", flexDirection: "column",
+      <main style={{
+        flex: isMobileLayout ? "none" : 1,
+        height: isMobileLayout ? "50vh" : undefined,
+        display: "flex", flexDirection: "column",
         overflow: "hidden", minWidth: 0 }}>
 
-        {/* Toolbar */}
+        {/* Toolbar — hidden on mobile layout */}
         <div style={{ height: 52, borderBottom: "1px solid #1e1e1e",
-          display: "flex", alignItems: "center", justifyContent: "space-between",
+          display: isMobileLayout ? "none" : "flex",
+          alignItems: "center", justifyContent: "space-between",
           padding: "0 20px", flexShrink: 0, background: "#0a0a0a" }}>
           <span style={{ fontSize: 10, letterSpacing: "0.14em",
             textTransform: "uppercase", color: "#444" }}>Preview</span>
@@ -1245,10 +1277,10 @@ Sent via Aurelius Website Builder`;
             {/* Desktop / Mobile toggle */}
             <div style={{ display: "flex", background: "#111",
               border: "1px solid #2a2a2a", borderRadius: 6, overflow: "hidden" }}>
-              <button onClick={() => setIsMobile(false)} title="Desktop" style={{
-                background: !isMobile ? "#1e1e1e" : "transparent",
+              <button onClick={() => setIsMobilePreview(false)} title="Desktop" style={{
+                background: !isMobilePreview ? "#1e1e1e" : "transparent",
                 border: "none", padding: "6px 10px", cursor: "pointer",
-                color: !isMobile ? "#e5e5e5" : "#555",
+                color: !isMobilePreview ? "#e5e5e5" : "#555",
                 display: "flex", alignItems: "center" }}>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
                   stroke="currentColor" strokeWidth="1.5">
@@ -1257,10 +1289,10 @@ Sent via Aurelius Website Builder`;
                   <line x1="12" y1="18" x2="12" y2="20"/>
                 </svg>
               </button>
-              <button onClick={() => setIsMobile(true)} title="Mobile" style={{
-                background: isMobile ? "#1e1e1e" : "transparent",
+              <button onClick={() => setIsMobilePreview(true)} title="Mobile" style={{
+                background: isMobilePreview ? "#1e1e1e" : "transparent",
                 border: "none", padding: "6px 10px", cursor: "pointer",
-                color: isMobile ? "#e5e5e5" : "#555",
+                color: isMobilePreview ? "#e5e5e5" : "#555",
                 display: "flex", alignItems: "center" }}>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
                   stroke="currentColor" strokeWidth="1.5">
@@ -1293,12 +1325,12 @@ Sent via Aurelius Website Builder`;
           onClick={() => setSelectedSection(null)}
         >
           <div style={{
-            width: isMobile ? 375 : "100%",
-            maxWidth: isMobile ? 375 : 960,
-            boxShadow: isMobile
+            width: (!isMobileLayout && isMobilePreview) ? 375 : "100%",
+            maxWidth: (!isMobileLayout && isMobilePreview) ? 375 : "100%",
+            boxShadow: (!isMobileLayout && isMobilePreview)
               ? "0 0 0 1px #2a2a2a, 0 20px 60px rgba(0,0,0,0.7)"
               : "none",
-            borderRadius: isMobile ? 16 : 0,
+            borderRadius: (!isMobileLayout && isMobilePreview) ? 16 : 0,
             overflow: "hidden",
             transition: "width 0.3s ease, max-width 0.3s ease",
           }}>
@@ -1331,10 +1363,11 @@ Sent via Aurelius Website Builder`;
                       }}
                       onClick={(e) => { e.stopPropagation(); selectSection(type); }}
                     >
-                      {/* Hover controls */}
+                      {/* Hover controls — always visible on touch/mobile layout */}
                       <div className="section-controls" style={{
                         position: "absolute", top: 8, right: 8, zIndex: 10,
-                        display: "flex", gap: 4, opacity: 0,
+                        display: "flex", gap: 4,
+                        opacity: isMobileLayout ? 1 : 0,
                         transition: "opacity 0.15s" }}>
                         <button onClick={(e) => { e.stopPropagation(); moveSection(i, -1); }}
                           disabled={i === 0} style={{
