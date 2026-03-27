@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, DM_Sans, Inter } from "next/font/google";
 import { AIConcierge } from "@/components/AIConcierge";
 import { CustomCursor } from "@/components/CustomCursor";
-import { GlobalNav } from "@/components/GlobalNav";
+import { Preloader } from "@/components/Preloader";
 import "./globals.css";
 
 export const viewport: Viewport = {
@@ -78,9 +78,9 @@ export default function RootLayout({
       <body
         className={`${cormorant.variable} ${dmSans.variable} ${inter.variable} font-sans antialiased bg-[var(--background)] text-[var(--foreground)] min-h-screen`}
       >
+        <Preloader />
         <CustomCursor />
         <AIConcierge />
-        <GlobalNav />
         {children}
       </body>
     </html>
