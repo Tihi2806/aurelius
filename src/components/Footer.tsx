@@ -5,8 +5,7 @@ import { Twitter, Instagram, Globe, Linkedin } from "lucide-react";
 const NAV_LINKS = [
   { label: "Home", href: "#" },
   { label: "Studio", href: "#" },
-  { label: "Work", count: 12, href: "#" },
-  { label: "Articles", count: 10, href: "#" },
+  { label: "Work", href: "#" },
   { label: "Pricing", href: "#" },
   { label: "Contact", href: "#" },
 ];
@@ -99,7 +98,7 @@ export function Footer() {
 
         {/* Right — nav links */}
         <nav className="flex flex-col gap-2 lg:text-right lg:items-end">
-          {NAV_LINKS.map(({ label, count, href }) => (
+          {NAV_LINKS.map(({ label, href }) => (
             <a
               key={label}
               href={href}
@@ -113,11 +112,6 @@ export function Footer() {
               }
             >
               {label}
-              {count !== undefined && (
-                <span className="text-white/40 font-semibold ml-1.5">
-                  [{count}]
-                </span>
-              )}
             </a>
           ))}
         </nav>
