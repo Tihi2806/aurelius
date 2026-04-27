@@ -311,10 +311,10 @@ export default function BrutalistPage() {
           <div className="brutalist-contact-email-wrap">
             <div className="brutalist-contact-email-label">EMAIL</div>
             <a
-              href="mailto:aureliusweb.contact@gmail.com"
+              href="mailto:hello@aureliusweb.com"
               className="brutalist-contact-email-value"
             >
-              aureliusweb.contact@gmail.com
+              hello@aureliusweb.com
             </a>
           </div>
         </motion.div>
@@ -347,7 +347,7 @@ export default function BrutalistPage() {
               <input
                 id="brutalist-email"
                 type="email"
-                placeholder="aureliusweb.contact@gmail.com"
+                placeholder="hello@aureliusweb.com"
                 className="brutalist-form-input"
               />
             </div>

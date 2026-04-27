@@ -49,11 +49,11 @@ export function Footer() {
         {/* Left — email + quote */}
         <div className="flex flex-col gap-10 pr-16 lg:pr-24">
           <a
-            href="mailto:aureliusweb.contact@gmail.com"
+            href="mailto:hello@aureliusweb.com"
             className="text-[clamp(18px,5vw,28px)] font-medium text-white no-underline leading-tight lg:text-[28px]"
             style={{ fontFamily: fontInter }}
           >
-            aureliusweb.contact@gmail.com{" "}
+            hello@aureliusweb.com{" "}
             <sup className="text-[18px] font-light">+</sup>
           </a>
 
