@@ -347,7 +347,7 @@ export default function BrutalistPage() {
               <input
                 id="brutalist-email"
                 type="email"
-                placeholder="hello@aureliusweb.com"
+                placeholder="you@yourcompany.com"
                 className="brutalist-form-input"
               />
             </div>
