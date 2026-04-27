@@ -15,16 +15,16 @@ import {
 
 const STANDARD_STEPS = [
   { icon: Clock, text: "Initial briefing & discovery (Week 1–2)" },
-  { icon: FileText, text: "Design iterations & revisions (Week 2–5)" },
-  { icon: Code, text: "Development & QA (Week 5–8)" },
-  { icon: Send, text: "Launch & handoff (Week 8–10)" },
+  { icon: FileText, text: "Design iterations & revisions (Week 2–6)" },
+  { icon: Code, text: "Development & QA (Week 6–10)" },
+  { icon: Send, text: "Launch & handoff (Week 10–12)" },
 ] as const;
 
 const AURELIUS_STEPS = [
-  { icon: Zap, text: "Strategy & brief alignment (Day 1)" },
-  { icon: LayoutTemplate, text: "Design system & build (Day 2–6)" },
-  { icon: CheckCircle, text: "Review & refinements (Day 7–8)" },
-  { icon: Rocket, text: "Deployment & launch (Day 9–10)" },
+  { icon: Zap, text: "Strategy & brief alignment (Week 1)" },
+  { icon: LayoutTemplate, text: "Design system & build (Week 1–3)" },
+  { icon: CheckCircle, text: "Review & refinements (Week 3)" },
+  { icon: Rocket, text: "Deployment & launch (Week 3–4)" },
 ] as const;
 
 export default function SpeedTimeline() {
@@ -76,7 +76,7 @@ export default function SpeedTimeline() {
                 fontFamily: "var(--font-cormorant), Cormorant Garamond, serif",
               }}
             >
-              6–10
+              8–12
             </p>
             <p
               className="mt-1 font-sans text-[13px] text-[#737373]"
@@ -133,13 +133,13 @@ export default function SpeedTimeline() {
               animate={isInView ? { scale: 1 } : { scale: 0.95 }}
               transition={{ duration: 0.8, ease: "easeOut" }}
             >
-              7–10
+              3–4
             </motion.p>
             <p
               className="mt-1 font-sans text-[13px] text-[#f5f5f0]"
               style={{ fontFamily: "var(--font-dm-sans), DM Sans, sans-serif" }}
             >
-              days
+              weeks
             </p>
             <div className="mt-8 flex flex-col gap-3">
               {AURELIUS_STEPS.map((step) => {
