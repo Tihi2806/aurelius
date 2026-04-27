@@ -13,6 +13,11 @@ const NAV_LINKS = [
 
 const fontInter = "var(--font-inter), sans-serif";
 
+// Testimonial block in the footer's middle-left column. Set to a real
+// quote when one is available — leave null to hide the block entirely
+// (no placeholder content).
+const TESTIMONIAL: { quote: string; author: string; role: string } | null = null;
+
 export function Footer() {
   return (
     <footer
@@ -57,43 +62,39 @@ export function Footer() {
             <sup className="text-[18px] font-light">+</sup>
           </a>
 
-          {/* Quote block */}
-          <div className="flex flex-col gap-4">
-            <span
-              className="text-[32px] text-white leading-none"
-              style={{ fontFamily: fontInter }}
-            >
-              ❝
-            </span>
-            <p
-              className="text-base text-white leading-relaxed m-0 max-w-[480px]"
-              style={{ fontFamily: fontInter }}
-            >
-              Your next project deserves world-class design. Stop settling for
-              mediocre and start working with designers who care as much as you
-              do.
-            </p>
-            {/* Author */}
-            <div className="flex items-center gap-3">
-              <div
-                className="w-8 h-8 rounded-full bg-white/10 shrink-0"
-              />
-              <div className="flex flex-col gap-0.5">
-                <span
-                  className="text-[13px] text-white font-semibold"
-                  style={{ fontFamily: fontInter }}
-                >
-                  Alex West
-                </span>
-                <span
-                  className="text-[13px] text-white/50"
-                  style={{ fontFamily: fontInter }}
-                >
-                  Creative Director
-                </span>
+          {TESTIMONIAL && (
+            <div className="flex flex-col gap-4">
+              <span
+                className="text-[32px] text-white leading-none"
+                style={{ fontFamily: fontInter }}
+              >
+                ❝
+              </span>
+              <p
+                className="text-base text-white leading-relaxed m-0 max-w-[480px]"
+                style={{ fontFamily: fontInter }}
+              >
+                {TESTIMONIAL.quote}
+              </p>
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-white/10 shrink-0" />
+                <div className="flex flex-col gap-0.5">
+                  <span
+                    className="text-[13px] text-white font-semibold"
+                    style={{ fontFamily: fontInter }}
+                  >
+                    {TESTIMONIAL.author}
+                  </span>
+                  <span
+                    className="text-[13px] text-white/50"
+                    style={{ fontFamily: fontInter }}
+                  >
+                    {TESTIMONIAL.role}
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
 
         {/* Right — nav links */}
