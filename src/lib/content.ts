@@ -90,7 +90,7 @@ export const work: WorkProject[] = [
     category: "Brand & Web",
     year: "2025",
     overview:
-      "A single-page site for Rinel, a Serbian electrician — establishing a credible online presence and a clear path from search to first contact.",
+      "A single-page concept build for Rinel, a Serbian electrician — designed to establish a credible online presence and a clear path from search to first contact, ready for launch when greenlit.",
     goals: [
       "Make local services easy to scan and understand",
       "Establish a credible, professional online presence",
@@ -99,7 +99,7 @@ export const work: WorkProject[] = [
     approach:
       "Single-page architecture grouping services by category, paired with a concise contact path and content tuned for the local search context.",
     results: [
-      "Live and serving clients at rinel-testspot.lovable.app",
+      "Concept build complete — ready for client launch",
       "Clear service categorisation and contact flow",
     ],
     stack: ["Lovable", "Brand"],

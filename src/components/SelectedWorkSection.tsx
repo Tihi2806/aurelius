@@ -20,24 +20,24 @@ const PROJECTS: WorkTab[] = [
   {
     name: "Rinel — Elektro Services",
     category: "Brand & Web",
-    status: "LAUNCHED",
+    status: "CONCEPT",
     tint: "#0a0e14",
-    previewUrl: "https://rinel-testspot.lovable.app/",
     video: "/previews/work/rinel_video.mp4",
+    description: "Single-page concept for a Serbian electrician. Ready for launch when greenlit.",
   },
   {
-    name: "Untitled — UK Dental",
-    category: "Healthcare",
+    name: "Carrigan & Walsh Solicitors",
+    category: "Family Law · Galway, IE",
     status: "CONCEPT",
     tint: "#0d0a0a",
-    description: "Identity and site for a UK dental practice. In development.",
+    description: "Identity and site for an Irish family-law practice. In development.",
   },
   {
-    name: "Untitled — Studio",
-    category: "Brand & Web",
+    name: "Crescent Dental Studio",
+    category: "Dental Practice · Birmingham, UK",
     status: "CONCEPT",
     tint: "#0a0d12",
-    description: "Brand identity and site. In development.",
+    description: "Identity and site for a Birmingham dental practice. In development.",
   },
 ];
 
