@@ -480,6 +480,37 @@
   color: rgba(255, 255, 255, 0.55);
 }
 
+/* ── Memento mori easter egg ──
+   Fades in slowly after the contact section's other elements settle.
+   Triggered by animateContact() in page.tsx adding `.visible`. */
+.footer-memento {
+  display: block;
+  text-align: center;
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(48px, 7vw, 64px);
+  line-height: 1;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+  opacity: 0;
+  margin-top: 24px;
+  user-select: none;
+  pointer-events: none;
+  transition: opacity 2s ease-in-out;
+}
+
+.footer-memento.visible {
+  opacity: 0.4;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .footer-memento {
+    transition: none;
+    opacity: 0.4;
+  }
+}
+
 /* ══════════════════════════════════════════
    Mobile ≤ 767px — same fixed full-page sections, responsive content only
    ══════════════════════════════════════════ */

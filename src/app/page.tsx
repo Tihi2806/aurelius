@@ -159,10 +159,15 @@ export default function GatewayPage() {
       contact!.dataset.animated = "true";
       const words = contact!.querySelectorAll<HTMLElement>(".headline-word");
       words.forEach((word, i) => setTimeout(() => word.classList.add("visible"), i * 80));
+      const bodyDelay = words.length * 80 + 150;
       setTimeout(() => {
         const cb = contact!.querySelector<HTMLElement>(".contact-body");
         if (cb) cb.classList.add("visible");
-      }, words.length * 80 + 150);
+      }, bodyDelay);
+      setTimeout(() => {
+        const memento = contact!.querySelector<HTMLElement>(".footer-memento");
+        if (memento) memento.classList.add("visible");
+      }, bodyDelay + 1500);
     }
 
     function showCards() {

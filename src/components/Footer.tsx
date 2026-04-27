@@ -181,6 +181,9 @@ export function Footer() {
           WEB
         </div>
       </div>
+
+      {/* ── MEMENTO MORI (easter egg — fades in via animateContact) ── */}
+      <div className="footer-memento" aria-hidden>Memento mori.</div>
       </div>
       </div>
       </div>
