@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Twitter, Instagram, Globe, Linkedin } from "lucide-react";
 
 const NAV_LINKS = [
@@ -14,34 +13,6 @@ const NAV_LINKS = [
 
 const fontInter = "var(--font-inter), sans-serif";
 
-function LiveClock() {
-  const [time, setTime] = useState("");
-
-  useEffect(() => {
-    function update() {
-      const formatted = new Date().toLocaleTimeString("en-US", {
-        timeZone: "America/Toronto",
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: true,
-      });
-      setTime(formatted);
-    }
-    update();
-    const id = setInterval(update, 1000);
-    return () => clearInterval(id);
-  }, []);
-
-  return (
-    <span
-      className="text-xs text-white/50"
-      style={{ fontFamily: fontInter }}
-    >
-      Based in Toronto (CA) {time}
-    </span>
-  );
-}
-
 export function Footer() {
   return (
     <footer
@@ -53,7 +24,7 @@ export function Footer() {
       <div className="max-w-screen-2xl mx-auto w-full flex flex-col flex-1">
       {/* ── TOP ROW ─────────────────────────────────────────────── */}
       <div className="grid grid-cols-1 gap-8 mt-[100px] mb-[80px] md:mt-[120px] md:mb-[100px] md:grid-cols-2 md:gap-6">
-        {/* Left — logo + clock */}
+        {/* Left — logo + location */}
         <div className="flex flex-col gap-2">
           <span
             className="text-sm font-bold text-white uppercase tracking-[0.1em]"
@@ -61,7 +32,12 @@ export function Footer() {
           >
             AURELIUS
           </span>
-          <LiveClock />
+          <span
+            className="text-xs text-white/50"
+            style={{ fontFamily: fontInter }}
+          >
+            Based in Europe — Serving globally
+          </span>
         </div>
 
         {/* Right — empty */}
