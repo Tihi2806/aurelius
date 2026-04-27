@@ -7,7 +7,6 @@ import { SelectedWorkSection } from "@/components/SelectedWorkSection";
 import { ManifestoSection } from "@/components/ManifestoSection";
 import { ServicesSection } from "@/components/ServicesSection";
 import { ValueCalculator } from "@/components/ValueCalculator";
-import { RevenueLeak } from "@/components/RevenueLeak";
 import SpeedTimeline from "@/components/SpeedTimeline";
 import { PerformanceGrid } from "@/components/PerformanceGrid";
 import { Footer } from "@/components/Footer";
@@ -106,14 +105,13 @@ export default function GatewayPage() {
     const manifesto = document.querySelector(".manifesto-section") as HTMLElement | null;
     const services = document.querySelector(".services-section") as HTMLElement | null;
     const calculator = document.querySelector(".value-calculator-section") as HTMLElement | null;
-    const revenueLeak = document.querySelector(".revenue-leak-section") as HTMLElement | null;
     const speedTimeline = document.querySelector(".speed-timeline-section") as HTMLElement | null;
     const performanceGrid = document.querySelector(".performance-grid-section") as HTMLElement | null;
     const contact = document.querySelector(".contact-section") as HTMLElement | null;
 
-    if (!hero || !cards || !work || !manifesto || !services || !calculator || !revenueLeak || !speedTimeline || !performanceGrid || !contact) return;
+    if (!hero || !cards || !work || !manifesto || !services || !calculator || !speedTimeline || !performanceGrid || !contact) return;
 
-    const allSections = [hero, cards, work, manifesto, services, calculator, revenueLeak, speedTimeline, performanceGrid, contact];
+    const allSections = [hero, cards, work, manifesto, services, calculator, speedTimeline, performanceGrid, contact];
     const heroBg = hero.querySelector(".hero-bg") as HTMLElement | null;
     const marqueeWrap = hero.querySelector(".hero-marquee-wrap") as HTMLElement | null;
 
@@ -133,7 +131,7 @@ export default function GatewayPage() {
       if (index === 2) animateWork();
       if (index === 3) animateManifesto();
       if (index === 4) animateServices();
-      if (index === 9) animateContact();
+      if (index === 8) animateContact();
     }
     function animateWork() {
       if (work!.dataset.animated === "true") return;
@@ -252,7 +250,7 @@ export default function GatewayPage() {
       hero!.style.opacity = target === 0 ? "1" : "0";
       if (heroBg) heroBg.style.transform = target === 0 ? "translateY(0px)" : "translateY(-50px)";
       if (marqueeWrap) marqueeWrap.style.transform = target === 0 ? "translateY(-50%)" : "translateY(calc(-50% + -25px))";
-      [cards, work, manifesto, services, calculator, revenueLeak, speedTimeline, performanceGrid, contact].forEach((el, i) => {
+      [cards, work, manifesto, services, calculator, speedTimeline, performanceGrid, contact].forEach((el, i) => {
         const idx = i + 1;
         el!.style.transform = idx < target ? "translateY(-100%)" : idx === target ? "translateY(0%)" : "translateY(100%)";
       });
@@ -278,8 +276,7 @@ export default function GatewayPage() {
       if (current === 5) { e.preventDefault(); if (dy > 0) slideTo(5, 6); else if (dy < 0) slideTo(5, 4); return; }
       if (current === 6) { e.preventDefault(); if (dy > 0) slideTo(6, 7); else if (dy < 0) slideTo(6, 5); return; }
       if (current === 7) { e.preventDefault(); if (dy > 0) slideTo(7, 8); else if (dy < 0) slideTo(7, 6); return; }
-      if (current === 8) { e.preventDefault(); if (dy > 0) slideTo(8, 9); else if (dy < 0) slideTo(8, 7); return; }
-      if (current === 9) { e.preventDefault(); if (dy < 0) slideTo(9, 8); }
+      if (current === 8) { e.preventDefault(); if (dy < 0) slideTo(8, 7); }
     }
     let touchStartY = 0;
     const onTouchStart = (e: TouchEvent) => { touchStartY = e.touches[0].clientY; };
@@ -304,9 +301,7 @@ export default function GatewayPage() {
       else if (current === 6 && dy < 0) slideTo(6, 5);
       else if (current === 7 && dy > 0) slideTo(7, 8);
       else if (current === 7 && dy < 0) slideTo(7, 6);
-      else if (current === 8 && dy > 0) slideTo(8, 9);
       else if (current === 8 && dy < 0) slideTo(8, 7);
-      else if (current === 9 && dy < 0) slideTo(9, 8);
     };
 
     hero!.style.opacity = "1";
@@ -315,7 +310,6 @@ export default function GatewayPage() {
     manifesto!.style.transform = "translateY(100%)";
     services!.style.transform = "translateY(100%)";
     calculator!.style.transform = "translateY(100%)";
-    revenueLeak!.style.transform = "translateY(100%)";
     speedTimeline!.style.transform = "translateY(100%)";
     performanceGrid!.style.transform = "translateY(100%)";
     contact!.style.transform = "translateY(100%)";
@@ -355,7 +349,7 @@ export default function GatewayPage() {
 
       {/* ── Section navigation dots (fixed, right edge) ── */}
       <nav className="section-dots" aria-label="Section navigation">
-        {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => (
+        {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
           <button
             key={i}
             className="section-dot"
@@ -541,22 +535,17 @@ export default function GatewayPage() {
       <ValueCalculator />
 
       {/* ══════════════════════════════════════
-          Section 6 — Revenue Leak
-          ══════════════════════════════════════ */}
-      <RevenueLeak />
-
-      {/* ══════════════════════════════════════
-          Section 7 — Speed Timeline
+          Section 6 — Speed Timeline
           ══════════════════════════════════════ */}
       <SpeedTimeline />
 
       {/* ══════════════════════════════════════
-          Section 8 — Performance Grid
+          Section 7 — Performance Grid
           ══════════════════════════════════════ */}
       <PerformanceGrid />
 
       {/* ══════════════════════════════════════
-          Section 9 — Contact / Footer (Mugen-style)
+          Section 8 — Contact / Footer (Mugen-style)
           ══════════════════════════════════════ */}
       <Footer />
 
