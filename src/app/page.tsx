@@ -151,12 +151,8 @@ export default function GatewayPage() {
     function animateServices() {
       if (services!.dataset.animated === "true") return;
       services!.dataset.animated = "true";
-      const circle = services!.querySelector<HTMLElement>(".services-circle");
-      const connectors = services!.querySelectorAll<HTMLElement>(".services-connector");
-      const blocks = services!.querySelectorAll<HTMLElement>(".services-block");
-      if (circle) circle.classList.add("visible");
-      connectors.forEach((line, i) => setTimeout(() => line.classList.add("visible"), 600 + i * 150));
-      blocks.forEach((block, i) => setTimeout(() => block.classList.add("visible"), 600 + i * 150));
+      const blocks = services!.querySelectorAll<HTMLElement>(".service-block");
+      blocks.forEach((block, i) => setTimeout(() => block.classList.add("visible"), i * 100));
     }
     function animateContact() {
       if (contact!.dataset.animated === "true") return;

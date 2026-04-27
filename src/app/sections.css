@@ -315,11 +315,33 @@
 }
 
 /* ══════════════════════════════════════════
-   Section 4 — Services (grid layout)
+   Section 4 — Services (editorial reveal)
+   Staggered fade + slide-up driven by animateServices() in page.tsx,
+   which adds `.visible` to each `.service-block` with a 100ms stagger.
    ══════════════════════════════════════════ */
+.service-block {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 800ms cubic-bezier(0.19, 1, 0.22, 1),
+    transform 800ms cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.service-block.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .service-block {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
 
 /* ══════════════════════════════════════════
-   Section 4 — Start a Project (Contact CTA)
+   Section 8 — Start a Project (Contact CTA)
    ══════════════════════════════════════════ */
 .contact-section {
   flex-direction: column;
