@@ -3,46 +3,41 @@
 import { useState } from "react";
 import "@/components/browser-mockup.css";
 
-const PROJECTS = [
+type WorkStatus = "LAUNCHED" | "CONCEPT";
+
+interface WorkTab {
+  name: string;
+  category: string;
+  status: WorkStatus;
+  tint: string;
+  previewUrl?: string;
+  video?: string;
+  image?: string;
+  description?: string;
+}
+
+const PROJECTS: WorkTab[] = [
   {
-    name: "Meridian",
-    category: "Brand & Digital",
+    name: "Rinel — Elektro Services",
+    category: "Brand & Web",
+    status: "LAUNCHED",
     tint: "#0a0e14",
     previewUrl: "https://rinel-testspot.lovable.app/",
-    image: "/previews/work/meridian.jpg",
     video: "/previews/work/rinel_video.mp4",
   },
   {
-    name: "Atlas Ventures",
-    category: "Identity & Web",
-    tint: "#0a120f",
-    previewUrl: "https://pikamont.vercel.app/",
-    image: "/previews/work/atlas.jpg",
-    video: "/previews/work/pikamont_video.mp4",
+    name: "Untitled — UK Dental",
+    category: "Healthcare",
+    status: "CONCEPT",
+    tint: "#0d0a0a",
+    description: "Identity and site for a UK dental practice. In development.",
   },
   {
-    name: "Lumina",
-    category: "Product & Motion",
-    tint: "#120a14",
-    previewUrl: "https://rinel-testspot.lovable.app/",
-    image: "/previews/work/lumina.jpg",
-    video: "/previews/work/rinel_video.mp4",
-  },
-  {
-    name: "Northgate",
-    category: "Brand Strategy",
-    tint: "#0f0a0a",
-    previewUrl: "https://pikamont.vercel.app/",
-    image: "/previews/work/northgate.jpg",
-    video: "/previews/work/pikamont_video.mp4",
-  },
-  {
-    name: "Echo Studio",
-    category: "Identity & Film",
-    tint: "#0a0a12",
-    previewUrl: "https://rinel-testspot.lovable.app/",
-    image: "/previews/work/echo-studio.jpg",
-    video: "/previews/work/rinel_video.mp4",
+    name: "Untitled — Studio",
+    category: "Brand & Web",
+    status: "CONCEPT",
+    tint: "#0a0d12",
+    description: "Brand identity and site. In development.",
   },
 ];
 
@@ -65,10 +60,8 @@ export function SelectedWorkSection() {
       </span>
 
       <div className="work-section-inner">
-        {/* Eyebrow */}
         <p className="work-eyebrow">OUR WORK</p>
 
-        {/* Browser preview — single window, URL bar updates immediately; iframe cross-fades */}
         <div className="work-preview-container">
           <div className="work-preview-window">
             <div className="browser-mockup-chrome">
@@ -81,7 +74,9 @@ export function SelectedWorkSection() {
                 <svg className="browser-mockup-lock" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden>
                   <path d="M3 5V4a3 3 0 016 0v1M2 5h8a1 1 0 011 1v4a1 1 0 01-1 1H2a1 1 0 01-1-1V6a1 1 0 011-1z" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
-                <span className="browser-mockup-url">{activeProject.previewUrl}</span>
+                <span className="browser-mockup-url">
+                  {activeProject.previewUrl ?? "—"}
+                </span>
               </div>
             </div>
             <div
@@ -104,18 +99,55 @@ export function SelectedWorkSection() {
                   playsInline
                   style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
                 />
-              ) : (
+              ) : activeProject.image ? (
                 <img
                   src={activeProject.image}
                   alt={activeProject.name}
                   style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
                 />
+              ) : (
+                <div
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    display: "grid",
+                    placeItems: "center",
+                    padding: "0 32px",
+                    textAlign: "center",
+                  }}
+                >
+                  <div>
+                    <span
+                      className="font-mono"
+                      style={{
+                        display: "block",
+                        fontSize: "11px",
+                        letterSpacing: "0.25em",
+                        color: "#B8935A",
+                        marginBottom: "16px",
+                      }}
+                    >
+                      {activeProject.status}
+                    </span>
+                    <span
+                      style={{
+                        display: "block",
+                        fontFamily: "var(--font-cormorant), Cormorant Garamond, serif",
+                        fontSize: "clamp(20px, 2.4vw, 28px)",
+                        lineHeight: 1.3,
+                        color: "rgba(255,255,255,0.78)",
+                        maxWidth: "420px",
+                      }}
+                    >
+                      {activeProject.description}
+                    </span>
+                  </div>
+                </div>
               )}
             </div>
           </div>
         </div>
 
-        {/* Project list — horizontal tabs */}
         <div className="work-tabs">
           {PROJECTS.map((project, i) => (
             <button
@@ -128,7 +160,9 @@ export function SelectedWorkSection() {
             >
               <span className="work-tab-num">{String(i + 1).padStart(2, "0")}</span>
               <span className="work-tab-name">{project.name}</span>
-              <span className="work-tab-cat">{project.category}</span>
+              <span className="work-tab-cat">
+                {project.category} · {project.status}
+              </span>
             </button>
           ))}
         </div>

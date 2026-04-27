@@ -85,109 +85,24 @@ export interface WorkProject {
 
 export const work: WorkProject[] = [
   {
-    name: "Meridian",
-    slug: "meridian",
-    category: "Brand & Digital",
-    year: "2024",
+    name: "Rinel — Elektro Services",
+    slug: "rinel",
+    category: "Brand & Web",
+    year: "2025",
     overview:
-      "A full brand and digital transformation for Meridian, establishing a distinctive market position and a cohesive digital experience.",
+      "A single-page site for Rinel, a Serbian electrician — establishing a credible online presence and a clear path from search to first contact.",
     goals: [
-      "Define a clear brand strategy and visual identity",
-      "Design and deliver a scalable digital product",
-      "Align internal teams around the new brand narrative",
+      "Make local services easy to scan and understand",
+      "Establish a credible, professional online presence",
+      "Provide a direct path from visitor to enquiry",
     ],
     approach:
-      "We led discovery workshops, defined positioning and messaging, then designed the identity system and digital experience in close collaboration with the Meridian team.",
+      "Single-page architecture grouping services by category, paired with a concise contact path and content tuned for the local search context.",
     results: [
-      "Unified brand identity across all touchpoints",
-      "40% increase in engagement on the new digital platform",
-      "Clear brand guidelines adopted across the organisation",
+      "Live and serving clients at rinel-testspot.lovable.app",
+      "Clear service categorisation and contact flow",
     ],
-    stack: ["Strategy", "Identity", "Next.js", "Tailwind", "CMS"],
-  },
-  {
-    name: "Atlas Ventures",
-    slug: "atlas-ventures",
-    category: "Identity & Web",
-    year: "2024",
-    overview:
-      "Identity refresh and website redesign for Atlas Ventures, reflecting their ambition and investment philosophy.",
-    goals: [
-      "Refresh the brand to attract top-tier founders",
-      "Create a fast, credible, and memorable web presence",
-      "Ensure the site works across devices and contexts",
-    ],
-    approach:
-      "We audited the existing brand and site, proposed a refined identity and information architecture, then designed and built the new site with a focus on clarity and performance.",
-    results: [
-      "Stronger first impression and credibility",
-      "Faster load times and improved accessibility",
-      "Easier for the team to update content",
-    ],
-    stack: ["Identity", "Web Design", "Next.js", "Vercel"],
-  },
-  {
-    name: "Lumina",
-    slug: "lumina",
-    category: "Product & Motion",
-    year: "2023",
-    overview:
-      "Product design and motion system for Lumina’s flagship app, creating a cohesive and delightful user experience.",
-    goals: [
-      "Establish a consistent design and motion language",
-      "Improve key flows and reduce friction",
-      "Build a component library for future development",
-    ],
-    approach:
-      "We mapped core journeys, defined the design system and motion principles, then designed and documented components and key screens with the engineering team.",
-    results: [
-      "Unified product experience with clear motion guidelines",
-      "Faster design and development cycles",
-      "Higher user satisfaction scores on core flows",
-    ],
-    stack: ["Figma", "React", "Framer Motion", "Design Systems"],
-  },
-  {
-    name: "Northgate",
-    slug: "northgate",
-    category: "Brand Strategy",
-    year: "2023",
-    overview:
-      "Brand strategy and positioning for Northgate, clarifying their offer and narrative in a crowded market.",
-    goals: [
-      "Articulate a differentiated positioning",
-      "Align leadership and teams on the brand story",
-      "Create a foundation for future identity and marketing",
-    ],
-    approach:
-      "We ran stakeholder interviews and market analysis, then developed positioning, messaging architecture, and brand narrative in workshops with the leadership team.",
-    results: [
-      "Clear, agreed positioning and messaging framework",
-      "Internal alignment on brand story and tone",
-      "Strategy document used for subsequent identity work",
-    ],
-    stack: ["Strategy", "Messaging", "Workshops"],
-  },
-  {
-    name: "Echo Studio",
-    slug: "echo-studio",
-    category: "Identity & Film",
-    year: "2023",
-    overview:
-      "Visual identity and brand film for Echo Studio, capturing their creative ethos and attracting the right clients.",
-    goals: [
-      "Create an identity that reflects their craft and ambition",
-      "Produce a short film that communicates the studio’s spirit",
-      "Ensure consistency across print and digital",
-    ],
-    approach:
-      "We developed the identity from concept through to final assets, then scripted and produced the brand film with the Echo team, ensuring the film and identity worked together.",
-    results: [
-      "Distinctive identity that stands out in the industry",
-      "Brand film used on site and in pitches",
-      "Consistent application across all touchpoints",
-    ],
-    stack: ["Identity", "Film", "Art Direction", "Motion"],
+    stack: ["Lovable", "Brand"],
   },
 ];
 
