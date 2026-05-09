@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { motion, useMotionValue, useTransform } from "framer-motion";
 
 const MANIFESTO_TEXT =
-  "We don't take briefs. We interrogate them. Every brand we touch is built to endure — not just to impress. We work with the few who understand that design is not decoration. It is strategy made visible.";
+  "We don't take briefs. We interrogate them. Every project starts with the same question — what is this website supposed to achieve? More leads? Higher rankings? Better conversion? Then we build it to deliver. No filler. No decoration. No template.";
 
 const WORDS = MANIFESTO_TEXT.split(/\s+/);
 
@@ -93,7 +93,7 @@ export function ManifestoSection() {
         aria-hidden="true"
         style={{ y: watermarkY }}
       >
-        004
+        001
       </motion.span>
 
       <div className="manifesto-inner">

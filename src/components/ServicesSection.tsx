@@ -3,21 +3,25 @@ const SERVICES = [
     num: "01",
     name: "Counsel",
     description: "Strategy, audit, positioning. Before we design, we understand.",
+    duration: "1 week",
   },
   {
     num: "02",
     name: "Form",
     description: "Wireframes → Figma mockups. Two rounds. No surprises.",
+    duration: "2 weeks",
   },
   {
     num: "03",
     name: "Craft",
     description: "Development. Next.js or Webflow. Tested. Fast. Accessible.",
+    duration: "2–3 weeks",
   },
   {
     num: "04",
     name: "Care",
     description: "Post-launch stewardship. Monthly. Cancelable.",
+    duration: "From £150/mo",
   },
 ];
 
@@ -66,12 +70,20 @@ export function ServicesSection() {
               >
                 {service.name}
               </h3>
-              <p
-                className="max-w-md text-[15px] leading-relaxed text-[#a3a3a3] md:col-span-5 md:pt-4"
-                style={{ fontFamily: "var(--font-dm-sans), DM Sans, sans-serif" }}
-              >
-                {service.description}
-              </p>
+              <div className="md:col-span-5 md:pt-4">
+                <p
+                  className="max-w-md text-[15px] leading-relaxed text-[#a3a3a3]"
+                  style={{ fontFamily: "var(--font-dm-sans), DM Sans, sans-serif" }}
+                >
+                  {service.description}
+                </p>
+                <p
+                  className="mt-3 text-[11px] font-medium uppercase tracking-[0.2em] text-[#737373]"
+                  style={{ fontFamily: "var(--font-dm-sans), DM Sans, sans-serif" }}
+                >
+                  {service.duration}
+                </p>
+              </div>
             </article>
           ))}
         </div>

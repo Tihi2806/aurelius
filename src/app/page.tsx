@@ -15,18 +15,15 @@ import { scrollToTarget } from "@/components/LenisProvider";
 import "./hero.css";
 import "./sections.css";
 
-const HERO_BOTTOM_LINE1 = ["Strategic", "Brand", "Agency"];
-const HERO_BOTTOM_LINE2 = ["Identity", "&", "Digital"];
-
 const HERO_PARALLAX_LERP = 0.08;
 const HERO_PARALLAX_CAP_X = 20;
 const HERO_PARALLAX_CAP_Y = 12;
 
 const SECTION_SELECTORS = [
   "#hero",
+  ".manifesto-section",
   ".cards-section",
   ".work-section",
-  ".manifesto-section",
   ".services-section",
   ".speed-timeline-section",
   ".performance-grid-section",
@@ -145,9 +142,9 @@ export default function GatewayPage() {
     );
     triggers.push(
       ScrollTrigger.create({
-        trigger: els[8]!,
+        trigger: els[7]!,
         start: "top 70%",
-        onEnter: () => animateOnce(els[8]!, () => animateContact(els[8]!)),
+        onEnter: () => animateOnce(els[7]!, () => animateContact(els[7]!)),
       })
     );
 
@@ -202,7 +199,7 @@ export default function GatewayPage() {
         const points: number[] = [];
         els.forEach((el, idx) => {
           if (!el) return;
-          if (idx === 1) {
+          if (idx === 2) {
             const baseTop = el.getBoundingClientRect().top + window.scrollY;
             for (let c = 0; c < cards; c++) {
               points.push((baseTop + c * window.innerHeight) / totalScroll);
@@ -307,84 +304,124 @@ export default function GatewayPage() {
         {/* Layer 1: full opacity outside the head zone */}
         <div className="hero-marquee-wrap hero-marquee-outer">
           <div className="hero-marquee-track">
-            <span>· Aurelius · Brand &amp; Digital ·</span>
-            <span>· Aurelius · Brand &amp; Digital ·</span>
+            <span>· Aurelius ·</span>
+            <span>· Aurelius ·</span>
           </div>
         </div>
 
         {/* Layer 2: semi-transparent inside the head zone */}
         <div className="hero-marquee-wrap hero-marquee-inner">
           <div className="hero-marquee-track">
-            <span>· Aurelius · Brand &amp; Digital ·</span>
-            <span>· Aurelius · Brand &amp; Digital ·</span>
+            <span>· Aurelius ·</span>
+            <span>· Aurelius ·</span>
           </div>
         </div>
 
         <div className="hero-bottom-content">
           <div className="hero-bottom-rule" aria-hidden />
 
-          <div className="hero-bottom-right">
-            <motion.p
-              className="hero-bottom-right-line"
-              initial="hidden"
-              animate="visible"
+          <motion.div
+            className="hero-bottom-right"
+            initial="hidden"
+            animate="visible"
+            variants={{
+              hidden: {},
+              visible: {
+                transition: {
+                  delayChildren: 0.3,
+                  staggerChildren: prefersReducedMotion ? 0 : 0.12,
+                },
+              },
+            }}
+          >
+            <motion.h1
               variants={{
-                hidden: {},
+                hidden: prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 },
                 visible: {
-                  transition: {
-                    delayChildren: 0.3,
-                    staggerChildren: prefersReducedMotion ? 0 : 0.08,
-                  },
+                  opacity: 1,
+                  y: 0,
+                  transition: prefersReducedMotion ? { duration: 0 } : { duration: 0.6, ease: "easeOut" },
+                },
+              }}
+              style={{
+                fontFamily: "var(--font-cormorant), 'Cormorant Garamond', serif",
+                fontSize: "clamp(40px, 5vw, 64px)",
+                fontWeight: 400,
+                lineHeight: 1.05,
+                letterSpacing: "-0.5px",
+                color: "#ffffff",
+                margin: 0,
+              }}
+            >
+              Built with intent.
+            </motion.h1>
+
+            <motion.p
+              variants={{
+                hidden: prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 },
+                visible: {
+                  opacity: 1,
+                  y: 0,
+                  transition: prefersReducedMotion ? { duration: 0 } : { duration: 0.6, ease: "easeOut" },
+                },
+              }}
+              style={{
+                fontFamily: "var(--font-inter), Inter, sans-serif",
+                fontSize: "15px",
+                fontWeight: 400,
+                lineHeight: 1.5,
+                letterSpacing: 0,
+                color: "#a3a3a3",
+                maxWidth: "36ch",
+                margin: "16px 0 0 0",
+              }}
+            >
+              Websites that rank, convert, and bring you clients — engineered with the craft your brand deserves.
+            </motion.p>
+
+            <motion.div
+              className="mt-7 flex flex-wrap items-center justify-center gap-6 md:justify-start"
+              variants={{
+                hidden: prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 },
+                visible: {
+                  opacity: 1,
+                  y: 0,
+                  transition: prefersReducedMotion ? { duration: 0 } : { duration: 0.6, ease: "easeOut" },
                 },
               }}
             >
-              {HERO_BOTTOM_LINE1.map((word, i) => (
-                <motion.span
-                  key={`l1-${i}`}
-                  variants={{
-                    hidden: prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 },
-                    visible: {
-                      opacity: 1,
-                      y: 0,
-                      transition: prefersReducedMotion ? { duration: 0 } : { duration: 0.5, ease: "easeOut" },
-                    },
-                  }}
+              <a
+                href="#contact"
+                className="inline-flex items-center justify-center bg-[#B8935A] px-7 py-3.5 text-[13px] tracking-[0.05em] text-[#f5f5f0] no-underline transition-colors duration-200 hover:bg-[#a07f4d]"
+                style={{ fontFamily: "var(--font-inter), Inter, sans-serif" }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  const target = document.querySelector(".contact-section");
+                  if (target) scrollToTarget(target as HTMLElement, { duration: 0.7 });
+                }}
+              >
+                Start a project
+              </a>
+              <a
+                href="#work"
+                className="group inline-flex items-center gap-2 text-[13px] tracking-[0.05em] text-[#f5f5f0] no-underline transition-colors duration-200 hover:text-white"
+                style={{ fontFamily: "var(--font-inter), Inter, sans-serif" }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  const target = document.querySelector(".work-section");
+                  if (target) scrollToTarget(target as HTMLElement, { duration: 0.7 });
+                }}
+              >
+                See the work
+                <span
+                  aria-hidden
+                  className="inline-block transition-transform duration-200 group-hover:translate-x-[3px]"
                 >
-                  {word}{" "}
-                </motion.span>
-              ))}
-            </motion.p>
-            <motion.p
-              className="hero-bottom-right-line"
-              initial="hidden"
-              animate="visible"
-              variants={{
-                hidden: {},
-                visible: {
-                  transition: {
-                    delayChildren: 0.3 + (prefersReducedMotion ? 0 : HERO_BOTTOM_LINE1.length * 0.08),
-                    staggerChildren: prefersReducedMotion ? 0 : 0.08,
-                  },
-                },
-              }}
-            >
-              {HERO_BOTTOM_LINE2.map((word, i) => (
-                <motion.span
-                  key={`l2-${i}`}
-                  variants={{
-                    hidden: prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 },
-                    visible: {
-                      opacity: 1,
-                      y: 0,
-                      transition: prefersReducedMotion ? { duration: 0 } : { duration: 0.5, ease: "easeOut" },
-                    },
-                  }}
-                >
-                  {word}{" "}
-                </motion.span>
-              ))}
-            </motion.p>
-          </div>
+                  →
+                </span>
+              </a>
+            </motion.div>
+          </motion.div>
 
           <motion.div
             data-scroll-hint
@@ -434,9 +471,9 @@ export default function GatewayPage() {
         </div>
       </section>
 
+      <ManifestoSection />
       <LayoutShowcase />
       <SelectedWorkSection />
-      <ManifestoSection />
       <ServicesSection />
       <SpeedTimeline />
       <PerformanceGrid />

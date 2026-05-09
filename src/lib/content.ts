@@ -1,10 +1,10 @@
 export const hero = {
-  eyebrow: "Strategic Brand & Digital",
-  headline: "We craft brands and experiences that endure.",
+  eyebrow: "Built with intent.",
+  headline: "Built with intent.",
   subtext:
-    "Aurelius partners with ambitious companies to build distinctive identities, digital products, and narratives that stand the test of time.",
+    "Websites that rank, convert, and bring you clients — engineered with the craft your brand deserves.",
   ctaPrimary: "Start a project",
-  ctaSecondary: "View our work",
+  ctaSecondary: "See the work",
 } as const;
 
 export const heroClassy = {
