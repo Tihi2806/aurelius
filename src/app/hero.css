@@ -1,16 +1,12 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@500;900&display=swap");
 
-/* Landing hero and cards: fixed full-viewport for section-by-section scroll. */
+/* Landing hero and cards: flow layout, ScrollTrigger handles snap + Range pin. */
 
 #hero {
-  position: fixed;
-  top: 0;
-  left: 0;
+  position: relative;
   width: 100%;
   height: 100vh;
   min-height: 600px;
-  z-index: 0;
-  opacity: 1;
   background: #0a0a0a;
   overflow: hidden;
   display: flex;
@@ -19,14 +15,10 @@
 }
 
 .cards-section {
-  position: fixed;
-  top: 0;
-  left: 0;
+  position: relative;
   width: 100%;
   height: 100vh;
-  overflow-y: auto;
-  z-index: 1;
-  transform: translateY(100%);
+  overflow: hidden;
 }
 
 .hero-bg {
@@ -307,10 +299,8 @@
     line-height: 1.25;
   }
 
-  /* Cards section: scroll snapping for Choose Your Experience on mobile */
   .cards-section {
-    scroll-snap-type: y mandatory;
-    scroll-padding-top: 56px;
-    -webkit-overflow-scrolling: touch;
+    height: auto;
+    min-height: 100vh;
   }
 }

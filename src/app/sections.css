@@ -3,7 +3,7 @@
    Fixed viewport for section-by-section scroll.
    ═══════════════════════════════════════════════════ */
 
-/* ── Shared base for all full-page sections ── */
+/* ── Shared base for all full-page sections (flow layout, ScrollTrigger snaps between them) ── */
 .work-section,
 .manifesto-section,
 .services-section,
@@ -11,18 +11,14 @@
 .value-calculator-section,
 .speed-timeline-section,
 .performance-grid-section {
-  position: fixed;
-  top: 0;
-  left: 0;
+  position: relative;
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
   background: #0a0a0a;
-  z-index: 2;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  transform: translateY(100%);
 }
 
 /* ══════════════════════════════════════════

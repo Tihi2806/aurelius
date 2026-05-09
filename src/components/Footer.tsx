@@ -1,13 +1,12 @@
 "use client";
 
 import { Twitter, Instagram, Globe, Linkedin } from "lucide-react";
+import { scrollToTarget } from "@/components/LenisProvider";
 
 const NAV_LINKS = [
-  { label: "Home", href: "#" },
-  { label: "Studio", href: "#" },
-  { label: "Work", href: "#" },
-  { label: "Pricing", href: "#" },
-  { label: "Contact", href: "#" },
+  { label: "Home", href: "#hero" },
+  { label: "Work", href: "#work" },
+  { label: "Contact", href: "#contact" },
 ];
 
 const fontInter = "var(--font-inter), sans-serif";
@@ -102,6 +101,11 @@ export function Footer() {
             <a
               key={label}
               href={href}
+              onClick={(e) => {
+                e.preventDefault();
+                const target = document.querySelector(href);
+                if (target) scrollToTarget(target as HTMLElement, { duration: 0.7 });
+              }}
               className="text-[clamp(24px,6vw,32px)] font-semibold text-white no-underline inline-block leading-tight transition-opacity duration-200 hover:opacity-60 lg:text-[32px]"
               style={{ fontFamily: fontInter }}
               onMouseEnter={(e) =>

@@ -663,7 +663,6 @@
   align-items: center;
   gap: 24px;
   will-change: transform;
-  transition: transform 0.7s cubic-bezier(0.76, 0, 0.24, 1);
 }
 
 .layout-showcase-cinematic-card {

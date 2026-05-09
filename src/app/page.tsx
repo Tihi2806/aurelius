@@ -2,7 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { LayoutShowcase, type LayoutShowcaseHandle } from "@/components/mosaic/LayoutShowcase";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { LayoutShowcase } from "@/components/mosaic/LayoutShowcase";
 import { SelectedWorkSection } from "@/components/SelectedWorkSection";
 import { ManifestoSection } from "@/components/ManifestoSection";
 import { ServicesSection } from "@/components/ServicesSection";
@@ -10,6 +12,7 @@ import { ValueCalculator } from "@/components/ValueCalculator";
 import SpeedTimeline from "@/components/SpeedTimeline";
 import { PerformanceGrid } from "@/components/PerformanceGrid";
 import { Footer } from "@/components/Footer";
+import { scrollToTarget } from "@/components/LenisProvider";
 import "./hero.css";
 import "./sections.css";
 
@@ -19,6 +22,18 @@ const HERO_BOTTOM_LINE2 = ["Identity", "&", "Digital"];
 const HERO_PARALLAX_LERP = 0.08;
 const HERO_PARALLAX_CAP_X = 20;
 const HERO_PARALLAX_CAP_Y = 12;
+
+const SECTION_SELECTORS = [
+  "#hero",
+  ".cards-section",
+  ".work-section",
+  ".manifesto-section",
+  ".services-section",
+  ".value-calculator-section",
+  ".speed-timeline-section",
+  ".performance-grid-section",
+  ".contact-section",
+] as const;
 
 function usePrefersReducedMotion(): boolean {
   const [prefers, setPrefers] = useState(false);
@@ -37,15 +52,14 @@ export default function GatewayPage() {
   const parallaxTarget = useRef({ x: 0, y: 0 });
   const parallaxCurrent = useRef({ x: 0, y: 0 });
   const prefersReducedMotion = usePrefersReducedMotion();
-  const cardsScrollRef = useRef<LayoutShowcaseHandle>(null);
 
   /* ── Hero statue parallax (desktop, fine pointer, no reduced motion) ── */
   useEffect(() => {
     const img = heroBgImgRef.current;
     if (!img) return;
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const isFinePointer = window.matchMedia("(pointer: fine)").matches;
-    if (prefersReducedMotion || !isFinePointer) return;
+    if (reduce || !isFinePointer) return;
 
     const hero = document.getElementById("hero");
     if (!hero) return;
@@ -76,299 +90,212 @@ export default function GatewayPage() {
     };
   }, []);
 
-  /* ── Marquee init (unchanged from original) ── */
+  /* ── Marquee init ── */
   useEffect(() => {
     const initMarquee = () => {
-      document.querySelectorAll<HTMLElement>('.hero-marquee-track').forEach(track => {
-        const span = track.querySelector('span');
+      document.querySelectorAll<HTMLElement>(".hero-marquee-track").forEach((track) => {
+        const span = track.querySelector("span");
         if (!span) return;
-        // Clone until track content fills 3× viewport so the loop never shows a gap
         while (track.scrollWidth < window.innerWidth * 3) {
           track.appendChild(span.cloneNode(true));
         }
         const spanW = span.getBoundingClientRect().width;
         if (spanW <= 0) return;
-        // Pixel-accurate offset: animate exactly one span width, then loop invisibly
-        track.style.setProperty('--marquee-offset', `-${spanW}px`);
-        // 100px/s → slow, readable luxury pace
+        track.style.setProperty("--marquee-offset", `-${spanW}px`);
         track.style.animationDuration = `${spanW / 100}s`;
       });
     };
     document.fonts.ready.then(initMarquee);
   }, []);
 
-  /* ── Full-page scroll: wheel/touch hijack, section snap (wrapper is fixed viewport — no body lock) ── */
+  /* ── ScrollTrigger snap + per-section enter animations + dot active state ── */
   useEffect(() => {
-    const hero = document.getElementById("hero") as HTMLElement | null;
-    const cards = document.querySelector(".cards-section") as HTMLElement | null;
-    const work = document.querySelector(".work-section") as HTMLElement | null;
-    const manifesto = document.querySelector(".manifesto-section") as HTMLElement | null;
-    const services = document.querySelector(".services-section") as HTMLElement | null;
-    const calculator = document.querySelector(".value-calculator-section") as HTMLElement | null;
-    const speedTimeline = document.querySelector(".speed-timeline-section") as HTMLElement | null;
-    const performanceGrid = document.querySelector(".performance-grid-section") as HTMLElement | null;
-    const contact = document.querySelector(".contact-section") as HTMLElement | null;
+    const els = SECTION_SELECTORS.map(
+      (s) => document.querySelector(s) as HTMLElement | null
+    );
+    if (els.some((el) => !el)) return;
 
-    if (!hero || !cards || !work || !manifesto || !services || !calculator || !speedTimeline || !performanceGrid || !contact) return;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    const allSections = [hero, cards, work, manifesto, services, calculator, speedTimeline, performanceGrid, contact];
-    const heroBg = hero.querySelector(".hero-bg") as HTMLElement | null;
-    const marqueeWrap = hero.querySelector(".hero-marquee-wrap") as HTMLElement | null;
+    const triggers: ScrollTrigger[] = [];
 
-    let current = 0;
-    let animating = false;
-    const DURATION = 750;
-    function ease(p: number): number {
-      return p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
+    /* Per-section enter animations (animate once, then disable) */
+    function animateOnce(el: HTMLElement, fn: () => void) {
+      if (el.dataset.animated === "true") return;
+      el.dataset.animated = "true";
+      fn();
     }
 
+    function animateServices(el: HTMLElement) {
+      const blocks = el.querySelectorAll<HTMLElement>(".service-block");
+      blocks.forEach((block, i) =>
+        setTimeout(() => block.classList.add("visible"), i * 100)
+      );
+    }
+
+    function animateContact(el: HTMLElement) {
+      const memento = el.querySelector<HTMLElement>(".footer-memento");
+      if (memento) setTimeout(() => memento.classList.add("visible"), 200);
+    }
+
+    triggers.push(
+      ScrollTrigger.create({
+        trigger: els[4]!,
+        start: "top 70%",
+        onEnter: () => animateOnce(els[4]!, () => animateServices(els[4]!)),
+      })
+    );
+    triggers.push(
+      ScrollTrigger.create({
+        trigger: els[8]!,
+        start: "top 70%",
+        onEnter: () => animateOnce(els[8]!, () => animateContact(els[8]!)),
+      })
+    );
+
+    /* Active dot tracking */
     const dots = document.querySelectorAll<HTMLElement>(".section-dot");
-    function updateDots(index: number) {
-      dots.forEach((dot, i) => dot.classList.toggle("active", i === index));
+    function setActiveDot(idx: number) {
+      dots.forEach((dot, i) => dot.classList.toggle("active", i === idx));
     }
-
-    function triggerEnterAnimation(index: number) {
-      if (index === 2) animateWork();
-      if (index === 3) animateManifesto();
-      if (index === 4) animateServices();
-      if (index === 8) animateContact();
-    }
-    function animateWork() {
-      if (work!.dataset.animated === "true") return;
-      work!.dataset.animated = "true";
-      work!.querySelectorAll<HTMLElement>(".work-row").forEach((row, i) => setTimeout(() => row.classList.add("visible"), i * 100));
-      const previewWrap = work!.querySelector<HTMLElement>(".work-preview-wrap");
-      if (previewWrap) setTimeout(() => previewWrap.classList.add("visible"), 100);
-    }
-    function animateManifesto() {
-      if (manifesto!.dataset.animated === "true") return;
-      manifesto!.dataset.animated = "true";
-      manifesto!.querySelectorAll<HTMLElement>(".manifesto-word").forEach((word, i) => setTimeout(() => word.classList.add("visible"), i * 60));
-      const wordCount = manifesto!.querySelectorAll(".manifesto-word").length;
-      const link = manifesto!.querySelector<HTMLElement>(".manifesto-link");
-      if (link) setTimeout(() => link.classList.add("visible"), wordCount * 60 + 200);
-    }
-    function animateServices() {
-      if (services!.dataset.animated === "true") return;
-      services!.dataset.animated = "true";
-      const blocks = services!.querySelectorAll<HTMLElement>(".service-block");
-      blocks.forEach((block, i) => setTimeout(() => block.classList.add("visible"), i * 100));
-    }
-    function animateContact() {
-      if (contact!.dataset.animated === "true") return;
-      contact!.dataset.animated = "true";
-      const words = contact!.querySelectorAll<HTMLElement>(".headline-word");
-      words.forEach((word, i) => setTimeout(() => word.classList.add("visible"), i * 80));
-      const bodyDelay = words.length * 80 + 150;
-      setTimeout(() => {
-        const cb = contact!.querySelector<HTMLElement>(".contact-body");
-        if (cb) cb.classList.add("visible");
-      }, bodyDelay);
-      setTimeout(() => {
-        const memento = contact!.querySelector<HTMLElement>(".footer-memento");
-        if (memento) memento.classList.add("visible");
-      }, bodyDelay + 1500);
-    }
-
-    function showCards() {
-      if (animating || current !== 0) return;
-      animating = true;
-      current = 1;
-      const start = performance.now();
-      function tick(now: number) {
-        const p = ease(Math.min((now - start) / DURATION, 1));
-        hero!.style.opacity = String(1 - p);
-        if (heroBg) heroBg.style.transform = `translateY(${-p * 50}px)`;
-        if (marqueeWrap) marqueeWrap.style.transform = `translateY(calc(-50% + ${-p * 25}px))`;
-        cards!.style.transform = `translateY(${(1 - p) * 100}%)`;
-        if (p < 1) requestAnimationFrame(tick);
-        else {
-          hero!.style.opacity = "0";
-          if (heroBg) heroBg.style.transform = "translateY(-50px)";
-          cards!.style.transform = "translateY(0%)";
-          animating = false;
-          updateDots(1);
-          cardsScrollRef.current?.startArrivalCooldown?.();
-        }
-      }
-      requestAnimationFrame(tick);
-    }
-    function showHero() {
-      if (animating || current !== 1) return;
-      animating = true;
-      current = 0;
-      const start = performance.now();
-      hero!.style.opacity = "0";
-      if (heroBg) heroBg.style.transform = "translateY(-50px)";
-      if (marqueeWrap) marqueeWrap.style.transform = "translateY(calc(-50% + -25px))";
-      function tick(now: number) {
-        const p = ease(Math.min((now - start) / DURATION, 1));
-        hero!.style.opacity = String(p);
-        if (heroBg) heroBg.style.transform = `translateY(${-50 * (1 - p)}px)`;
-        if (marqueeWrap) marqueeWrap.style.transform = `translateY(calc(-50% + ${-25 * (1 - p)}px))`;
-        cards!.style.transform = `translateY(${p * 100}%)`;
-        if (p < 1) requestAnimationFrame(tick);
-        else {
-          hero!.style.opacity = "1";
-          if (heroBg) heroBg.style.transform = "translateY(0px)";
-          if (marqueeWrap) marqueeWrap.style.transform = "translateY(-50%)";
-          cards!.style.transform = "translateY(100%)";
-          animating = false;
-          updateDots(0);
-        }
-      }
-      requestAnimationFrame(tick);
-    }
-    function slideTo(from: number, to: number) {
-      if (animating || from === to) return;
-      if (from === 0) { showCards(); return; }
-      if (to === 0) { showHero(); return; }
-      animating = true;
-      current = to;
-      const dir = to > from ? 1 : -1;
-      const fromEl = allSections[from];
-      const toEl = allSections[to];
-      toEl.style.transform = `translateY(${dir * 100}%)`;
-      const start = performance.now();
-      function tick(now: number) {
-        const p = ease(Math.min((now - start) / DURATION, 1));
-        fromEl.style.transform = `translateY(${dir * -p * 100}%)`;
-        toEl.style.transform = `translateY(${dir * (1 - p) * 100}%)`;
-        if (p < 1) requestAnimationFrame(tick);
-        else {
-          fromEl.style.transform = `translateY(${dir * -100}%)`;
-          toEl.style.transform = "translateY(0%)";
-          animating = false;
-          updateDots(to);
-          triggerEnterAnimation(to);
-          if (to === 1) cardsScrollRef.current?.startArrivalCooldown?.();
-        }
-      }
-      requestAnimationFrame(tick);
-    }
-    function jumpTo(target: number) {
-      if (animating || target === current) return;
-      hero!.style.opacity = target === 0 ? "1" : "0";
-      if (heroBg) heroBg.style.transform = target === 0 ? "translateY(0px)" : "translateY(-50px)";
-      if (marqueeWrap) marqueeWrap.style.transform = target === 0 ? "translateY(-50%)" : "translateY(calc(-50% + -25px))";
-      [cards, work, manifesto, services, calculator, speedTimeline, performanceGrid, contact].forEach((el, i) => {
-        const idx = i + 1;
-        el!.style.transform = idx < target ? "translateY(-100%)" : idx === target ? "translateY(0%)" : "translateY(100%)";
-      });
-      current = target;
-      updateDots(target);
-      triggerEnterAnimation(target);
-      if (target === 1) cardsScrollRef.current?.startArrivalCooldown?.();
-    }
-
-    function onWheel(e: WheelEvent) {
-      if (animating) { e.preventDefault(); return; }
-      const dy = e.deltaY;
-      if (current === 0) { if (dy > 0) { e.preventDefault(); slideTo(0, 1); } return; }
-      if (current === 1) {
-        e.preventDefault();
-        const handled = cardsScrollRef.current?.onScrollDelta(dy);
-        if (!handled) { if (dy < 0) slideTo(1, 0); else slideTo(1, 2); }
-        return;
-      }
-      if (current === 2) { e.preventDefault(); if (dy > 0) slideTo(2, 3); else if (dy < 0) slideTo(2, 1); return; }
-      if (current === 3) { e.preventDefault(); if (dy > 0) slideTo(3, 4); else if (dy < 0) slideTo(3, 2); return; }
-      if (current === 4) { e.preventDefault(); if (dy > 0) slideTo(4, 5); else if (dy < 0) slideTo(4, 3); return; }
-      if (current === 5) { e.preventDefault(); if (dy > 0) slideTo(5, 6); else if (dy < 0) slideTo(5, 4); return; }
-      if (current === 6) { e.preventDefault(); if (dy > 0) slideTo(6, 7); else if (dy < 0) slideTo(6, 5); return; }
-      if (current === 7) { e.preventDefault(); if (dy > 0) slideTo(7, 8); else if (dy < 0) slideTo(7, 6); return; }
-      if (current === 8) { e.preventDefault(); if (dy < 0) slideTo(8, 7); }
-    }
-    let touchStartY = 0;
-    const onTouchStart = (e: TouchEvent) => { touchStartY = e.touches[0].clientY; };
-    const onTouchMove = (e: TouchEvent) => { e.preventDefault(); };
-    const onTouchEnd = (e: TouchEvent) => {
-      if (animating) return;
-      const dy = touchStartY - e.changedTouches[0].clientY;
-      if (Math.abs(dy) < 40) return;
-      if (current === 0 && dy > 0) slideTo(0, 1);
-      else if (current === 1) {
-        const handled = cardsScrollRef.current?.onScrollDelta(dy);
-        if (!handled) { if (dy < 0) slideTo(1, 0); else slideTo(1, 2); }
-      } else if (current === 2 && dy > 0) slideTo(2, 3);
-      else if (current === 2 && dy < 0) slideTo(2, 1);
-      else if (current === 3 && dy > 0) slideTo(3, 4);
-      else if (current === 3 && dy < 0) slideTo(3, 2);
-      else if (current === 4 && dy > 0) slideTo(4, 5);
-      else if (current === 4 && dy < 0) slideTo(4, 3);
-      else if (current === 5 && dy > 0) slideTo(5, 6);
-      else if (current === 5 && dy < 0) slideTo(5, 4);
-      else if (current === 6 && dy > 0) slideTo(6, 7);
-      else if (current === 6 && dy < 0) slideTo(6, 5);
-      else if (current === 7 && dy > 0) slideTo(7, 8);
-      else if (current === 7 && dy < 0) slideTo(7, 6);
-      else if (current === 8 && dy < 0) slideTo(8, 7);
-    };
-
-    hero!.style.opacity = "1";
-    cards!.style.transform = "translateY(100%)";
-    work!.style.transform = "translateY(100%)";
-    manifesto!.style.transform = "translateY(100%)";
-    services!.style.transform = "translateY(100%)";
-    calculator!.style.transform = "translateY(100%)";
-    speedTimeline!.style.transform = "translateY(100%)";
-    performanceGrid!.style.transform = "translateY(100%)";
-    contact!.style.transform = "translateY(100%)";
-    if (heroBg) heroBg.style.transform = "translateY(0px)";
-    if (marqueeWrap) marqueeWrap.style.transform = "translateY(-50%)";
-    updateDots(0);
-
-    const scrollHint = hero.querySelector<HTMLElement>("[data-scroll-hint]");
-    const onScrollHintClick = () => { if (!animating && current === 0) slideTo(0, 1); };
-    if (scrollHint) scrollHint.addEventListener("click", onScrollHintClick);
-    const dotHandlers: (() => void)[] = [];
-    dots.forEach((dot, i) => {
-      const fn = () => jumpTo(i);
-      dotHandlers.push(fn);
-      dot.addEventListener("click", fn);
+    setActiveDot(0);
+    els.forEach((el, i) => {
+      if (!el) return;
+      triggers.push(
+        ScrollTrigger.create({
+          trigger: el,
+          start: "top 50%",
+          end: "bottom 50%",
+          onToggle: (self) => {
+            if (self.isActive) setActiveDot(i);
+          },
+        })
+      );
     });
 
-    window.addEventListener("wheel", onWheel, { passive: false });
-    window.addEventListener("touchstart", onTouchStart, { passive: true });
-    window.addEventListener("touchmove", onTouchMove, { passive: false });
-    window.addEventListener("touchend", onTouchEnd, { passive: true });
+    /* Dot click handlers */
+    const dotHandlers: (() => void)[] = [];
+    dots.forEach((dot, i) => {
+      const handler = () => {
+        const target = els[i];
+        if (target) scrollToTarget(target, { duration: 0.7 });
+      };
+      dotHandlers.push(handler);
+      dot.addEventListener("click", handler);
+    });
+
+    /* Scroll-hint click → first card section */
+    const scrollHint = document.querySelector<HTMLElement>("[data-scroll-hint]");
+    const onHintClick = () => {
+      if (els[1]) scrollToTarget(els[1], { duration: 0.7 });
+    };
+    if (scrollHint) scrollHint.addEventListener("click", onHintClick);
+
+    /* Master snap — lets each section + each Range card have its own snap target */
+    let snapTrigger: ScrollTrigger | null = null;
+    if (!reduceMotion) {
+      const buildPoints = (): number[] => {
+        const totalScroll =
+          document.documentElement.scrollHeight - window.innerHeight;
+        if (totalScroll <= 0) return [0];
+        const cards = document.querySelectorAll(
+          ".layout-showcase-cinematic-card"
+        ).length || 1;
+        const points: number[] = [];
+        els.forEach((el, idx) => {
+          if (!el) return;
+          if (idx === 1) {
+            const baseTop = el.getBoundingClientRect().top + window.scrollY;
+            for (let c = 0; c < cards; c++) {
+              points.push((baseTop + c * window.innerHeight) / totalScroll);
+            }
+          } else {
+            const top = el.getBoundingClientRect().top + window.scrollY;
+            points.push(top / totalScroll);
+          }
+        });
+        return points.map((p) => Math.max(0, Math.min(1, p)));
+      };
+
+      snapTrigger = ScrollTrigger.create({
+        snap: {
+          snapTo: (progress) => {
+            const points = buildPoints();
+            return points.reduce(
+              (best, p) =>
+                Math.abs(p - progress) < Math.abs(best - progress) ? p : best,
+              points[0] ?? 0
+            );
+          },
+          duration: { min: 0.25, max: 0.6 },
+          delay: 0.1,
+          ease: "power2.out",
+        },
+      });
+      triggers.push(snapTrigger);
+    }
+
+    /* Refresh once layouts settle, in case fonts/images shift offsets */
+    const refreshTimer = setTimeout(() => ScrollTrigger.refresh(), 300);
+
     return () => {
-      window.removeEventListener("wheel", onWheel);
-      window.removeEventListener("touchstart", onTouchStart);
-      window.removeEventListener("touchmove", onTouchMove);
-      window.removeEventListener("touchend", onTouchEnd);
-      if (scrollHint) scrollHint.removeEventListener("click", onScrollHintClick);
+      clearTimeout(refreshTimer);
+      triggers.forEach((t) => t.kill());
       dots.forEach((dot, i) => dot.removeEventListener("click", dotHandlers[i]));
+      if (scrollHint) scrollHint.removeEventListener("click", onHintClick);
     };
   }, []);
 
-  /* ════════════════════════════════════════════
-     JSX
-     ════════════════════════════════════════════ */
   return (
-    <div className="w-full min-w-0 overflow-x-hidden bg-[#0a0a0a]" style={{ position: "fixed", inset: 0, overflow: "hidden" }}>
-
+    <div className="w-full min-w-0 overflow-x-hidden bg-[#0a0a0a]">
       {/* ── Section navigation dots (fixed, right edge) ── */}
       <nav className="section-dots" aria-label="Section navigation">
         {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
           <button
             key={i}
-            className="section-dot"
+            className={`section-dot${i === 0 ? " active" : ""}`}
             aria-label={`Go to section ${i + 1}`}
           />
         ))}
       </nav>
 
       {/* ══════════════════════════════════════
-          Hero  (section 0 — unchanged on desktop)
+          Hero (section 0)
           ══════════════════════════════════════ */}
       <section id="hero" className="pb-24 md:pb-0">
         <nav className="hero-nav">
-          <a href="#" className="hero-nav-wordmark">Aurelius</a>
+          <a
+            href="#hero"
+            className="hero-nav-wordmark"
+            onClick={(e) => {
+              e.preventDefault();
+              const target = document.querySelector("#hero");
+              if (target) scrollToTarget(target as HTMLElement, { duration: 0.7 });
+            }}
+          >
+            Aurelius
+          </a>
           <div className="hero-nav-links">
-            <a href="#">Work</a>
-            <a href="#">Studio</a>
-            <a href="#">Contact</a>
+            <a
+              href="#work"
+              onClick={(e) => {
+                e.preventDefault();
+                const target = document.querySelector("#work");
+                if (target) scrollToTarget(target as HTMLElement, { duration: 0.7 });
+              }}
+            >
+              Work
+            </a>
+            <a
+              href="#contact"
+              onClick={(e) => {
+                e.preventDefault();
+                const target = document.querySelector("#contact");
+                if (target) scrollToTarget(target as HTMLElement, { duration: 0.7 });
+              }}
+            >
+              Contact
+            </a>
           </div>
         </nav>
 
@@ -395,7 +322,6 @@ export default function GatewayPage() {
           </div>
         </div>
 
-        {/* Bottom content: stacked on mobile (flex-col gap-4), absolute on desktop */}
         <div className="hero-bottom-content">
           <div className="hero-bottom-rule" aria-hidden />
 
@@ -465,17 +391,17 @@ export default function GatewayPage() {
           <motion.div
             data-scroll-hint
             style={{
-              position: 'absolute',
-              bottom: '2rem',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: '6px',
-              color: 'white',
-              cursor: 'default',
-              userSelect: 'none',
+              position: "absolute",
+              bottom: "2rem",
+              left: "50%",
+              transform: "translateX(-50%)",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "6px",
+              color: "white",
+              cursor: "pointer",
+              userSelect: "none",
             }}
             animate={{ opacity: prefersReducedMotion ? 1 : [0.4, 1] }}
             transition={
@@ -486,9 +412,9 @@ export default function GatewayPage() {
           >
             <span
               style={{
-                fontSize: '10px',
-                letterSpacing: '3px',
-                textTransform: 'uppercase',
+                fontSize: "10px",
+                letterSpacing: "3px",
+                textTransform: "uppercase",
                 fontWeight: 400,
               }}
             >
@@ -510,46 +436,14 @@ export default function GatewayPage() {
         </div>
       </section>
 
-      {/* ══════════════════════════════════════
-          Cards selector  (section 1)
-          ══════════════════════════════════════ */}
-      <LayoutShowcase ref={cardsScrollRef} />
-
-      {/* ══════════════════════════════════════
-          Section 2 — Selected Work
-          ══════════════════════════════════════ */}
+      <LayoutShowcase />
       <SelectedWorkSection />
-
-      {/* ══════════════════════════════════════
-          Section 3 — Manifesto
-          ══════════════════════════════════════ */}
       <ManifestoSection />
-
-      {/* ══════════════════════════════════════
-          Section 4 — Services
-          ══════════════════════════════════════ */}
       <ServicesSection />
-
-      {/* ══════════════════════════════════════
-          Section 5 — Value Calculator
-          ══════════════════════════════════════ */}
       <ValueCalculator />
-
-      {/* ══════════════════════════════════════
-          Section 6 — Speed Timeline
-          ══════════════════════════════════════ */}
       <SpeedTimeline />
-
-      {/* ══════════════════════════════════════
-          Section 7 — Performance Grid
-          ══════════════════════════════════════ */}
       <PerformanceGrid />
-
-      {/* ══════════════════════════════════════
-          Section 8 — Contact / Footer (Mugen-style)
-          ══════════════════════════════════════ */}
       <Footer />
-
     </div>
   );
 }

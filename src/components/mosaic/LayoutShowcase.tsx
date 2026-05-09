@@ -1,7 +1,9 @@
 "use client";
 
-import { useState, useEffect, useRef, useImperativeHandle, forwardRef, useCallback, type ReactNode } from "react";
+import { useState, useEffect, useRef, useCallback, type ReactNode } from "react";
 import { motion } from "framer-motion";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { BrowserMockup } from "@/components/BrowserMockup";
 import "./mosaic.css";
 
@@ -25,46 +27,69 @@ const STYLES = [
   { label: "Midnight Dark", theme: "dark" as const, tag: "Moody & Electric", description: "Deep blacks, electric accents.", url: "https://aurelius-sigma.vercel.app/midnight", mediaType: "image" as const, mediaSrc: "/previews/cards_preview/midnight.png", bgImage: "/previews/cards_background/midnight_background.png" as string | null, bgOverlay: "rgba(0,0,0,0.45)" as string | null },
 ];
 
-const COOLDOWN_MS = 700;
-const ARRIVAL_COOLDOWN_MS = 800;
-
-export interface LayoutShowcaseHandle {
-  onScrollDelta: (dy: number) => boolean;
-  startArrivalCooldown: () => void;
-}
-
-export const LayoutShowcase = forwardRef<LayoutShowcaseHandle>(function LayoutShowcase(_, ref) {
+export function LayoutShowcase() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
-  const lastScrollTime = useRef(0);
   const sectionRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
   const bgImgRef = useRef<HTMLImageElement>(null);
-  const arrivalCooldownUntilRef = useRef(0);
   const prevBgActiveIndexRef = useRef<number | null>(null);
   const tiltRef = useRef<HTMLDivElement>(null);
-
-  useImperativeHandle(ref, () => ({
-    onScrollDelta(dy: number): boolean {
-      const now = Date.now();
-      if (now < arrivalCooldownUntilRef.current) return true;
-      if (now - lastScrollTime.current < COOLDOWN_MS) return true;
-      if (activeIndex === 0 && dy < 0) return false;
-      if (activeIndex === STYLES.length - 1 && dy > 0) return false;
-      lastScrollTime.current = now;
-      if (dy > 0) setActiveIndex((i) => Math.min(i + 1, STYLES.length - 1));
-      else setActiveIndex((i) => Math.max(i - 1, 0));
-      return true;
-    },
-    startArrivalCooldown() {
-      arrivalCooldownUntilRef.current = Date.now() + ARRIVAL_COOLDOWN_MS;
-    },
-  }), [activeIndex]);
 
   useEffect(() => {
     const t = setTimeout(() => setIsVisible(true), 100);
     return () => clearTimeout(t);
   }, []);
 
+  // ── ScrollTrigger pin: vertical scroll → horizontal translate, with active-card snap ──
+  useEffect(() => {
+    const section = sectionRef.current;
+    const track = trackRef.current;
+    if (!section || !track) return;
+
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion) return;
+
+    const N = STYLES.length;
+    const computeOffsets = () => {
+      const vw = window.innerWidth / 100;
+      const cardWidth = Math.min(78 * vw, 1100);
+      const gap = 24;
+      const initialX = 11 * vw;
+      const finalX = initialX - (N - 1) * (cardWidth + gap);
+      return { initialX, finalX };
+    };
+
+    const { initialX } = computeOffsets();
+    gsap.set(track, { x: initialX });
+
+    const trigger = ScrollTrigger.create({
+      trigger: section,
+      start: "top top",
+      end: () => `+=${(N - 1) * window.innerHeight}`,
+      pin: true,
+      pinSpacing: true,
+      scrub: 0.5,
+      invalidateOnRefresh: true,
+      onRefresh: () => {
+        const { initialX: ix } = computeOffsets();
+        gsap.set(track, { x: ix });
+      },
+      onUpdate: (self) => {
+        const { initialX: ix, finalX: fx } = computeOffsets();
+        const x = ix + (fx - ix) * self.progress;
+        gsap.set(track, { x });
+        const idx = Math.round(self.progress * (N - 1));
+        setActiveIndex((prev) => (prev === idx ? prev : idx));
+      },
+    });
+
+    return () => {
+      trigger.kill();
+    };
+  }, []);
+
+  // ── Background image cross-fade per active card ──
   useEffect(() => {
     if (!bgImgRef.current) return;
     const newLayout = STYLES[activeIndex];
@@ -95,6 +120,7 @@ export const LayoutShowcase = forwardRef<LayoutShowcaseHandle>(function LayoutSh
     return () => clearTimeout(t);
   }, [activeIndex]);
 
+  // ── 3D tilt on active card hover ──
   const tiltListenersRef = useRef<{
     el: HTMLDivElement;
     move: (e: MouseEvent) => void;
@@ -158,7 +184,6 @@ export const LayoutShowcase = forwardRef<LayoutShowcaseHandle>(function LayoutSh
   );
 
   const totalCards = STYLES.length;
-  const translateX = `calc(11vw - ${activeIndex} * (78vw + 24px))`;
 
   return (
     <div ref={sectionRef} id="layouts" className="cards-section layout-showcase-cinematic" data-theme={currentTheme}>
@@ -209,10 +234,7 @@ export const LayoutShowcase = forwardRef<LayoutShowcaseHandle>(function LayoutSh
 
         <div style={{ position: "relative", zIndex: 2, height: "100%", display: "flex", flexDirection: "column", justifyContent: "center" }}>
           <div className="layout-showcase-cinematic-viewport">
-            <div
-              className="layout-showcase-cinematic-track"
-              style={{ transform: `translateX(${translateX})` }}
-            >
+            <div ref={trackRef} className="layout-showcase-cinematic-track">
               {STYLES.map((style, index) => (
                 <div key={index} className="layout-showcase-cinematic-card">
                   <div style={{ position: "relative" }}>
@@ -251,4 +273,4 @@ export const LayoutShowcase = forwardRef<LayoutShowcaseHandle>(function LayoutSh
       </motion.div>
     </div>
   );
-});
+}

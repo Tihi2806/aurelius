@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, DM_Sans, Inter } from "next/font/google";
 import { AIConcierge } from "@/components/AIConcierge";
 import { CustomCursor } from "@/components/CustomCursor";
+import { LenisProvider } from "@/components/LenisProvider";
 import { Preloader } from "@/components/Preloader";
 import "./globals.css";
 
@@ -74,14 +75,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark scroll-smooth">
+    <html lang="en" className="dark">
       <body
         className={`${cormorant.variable} ${dmSans.variable} ${inter.variable} font-sans antialiased bg-[var(--background)] text-[var(--foreground)] min-h-screen`}
       >
-        <Preloader />
-        <CustomCursor />
-        <AIConcierge />
-        {children}
+        <LenisProvider>
+          <Preloader />
+          <CustomCursor />
+          <AIConcierge />
+          {children}
+        </LenisProvider>
       </body>
     </html>
   );
