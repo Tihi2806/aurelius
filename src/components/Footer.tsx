@@ -11,11 +11,6 @@ const NAV_LINKS = [
 
 const fontInter = "var(--font-inter), sans-serif";
 
-// Testimonial block in the footer's middle-left column. Set to a real
-// quote when one is available — leave null to hide the block entirely
-// (no placeholder content).
-const TESTIMONIAL: { quote: string; author: string; role: string } | null = null;
-
 export function Footer() {
   return (
     <footer
@@ -59,40 +54,6 @@ export function Footer() {
             hello@aureliusweb.com{" "}
             <sup className="text-[18px] font-light">+</sup>
           </a>
-
-          {TESTIMONIAL && (
-            <div className="flex flex-col gap-4">
-              <span
-                className="text-[32px] text-white leading-none"
-                style={{ fontFamily: fontInter }}
-              >
-                ❝
-              </span>
-              <p
-                className="text-base text-white leading-relaxed m-0 max-w-[480px]"
-                style={{ fontFamily: fontInter }}
-              >
-                {TESTIMONIAL.quote}
-              </p>
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-white/10 shrink-0" />
-                <div className="flex flex-col gap-0.5">
-                  <span
-                    className="text-[13px] text-white font-semibold"
-                    style={{ fontFamily: fontInter }}
-                  >
-                    {TESTIMONIAL.author}
-                  </span>
-                  <span
-                    className="text-[13px] text-white/50"
-                    style={{ fontFamily: fontInter }}
-                  >
-                    {TESTIMONIAL.role}
-                  </span>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
 
         {/* Right — nav links */}
@@ -123,27 +84,7 @@ export function Footer() {
 
       {/* ── BOTTOM BAR + GIANT TEXT (grouped at bottom) ──────────── */}
       <div className="mt-auto mb-4">
-      <div className="border-t border-white/[0.08] py-5 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-        {/* Legal links */}
-        <div className="flex gap-6">
-          {["Terms of Service", "Privacy Policy"].map((label) => (
-            <a
-              key={label}
-              href="#"
-              className="text-xs text-white/40 no-underline transition-colors duration-200 hover:text-white/80"
-              style={{ fontFamily: fontInter }}
-              onMouseEnter={(e) =>
-                ((e.currentTarget as HTMLAnchorElement).style.color = "rgba(255,255,255,0.8)")
-              }
-              onMouseLeave={(e) =>
-                ((e.currentTarget as HTMLAnchorElement).style.color = "rgba(255,255,255,0.4)")
-              }
-            >
-              {label} ↗
-            </a>
-          ))}
-        </div>
-
+      <div className="border-t border-white/[0.08] py-5 flex flex-col gap-3 md:flex-row md:items-center md:justify-end">
         {/* Social icons */}
         <div className="flex gap-4 items-center">
           {[

@@ -8,7 +8,6 @@ import { LayoutShowcase } from "@/components/mosaic/LayoutShowcase";
 import { SelectedWorkSection } from "@/components/SelectedWorkSection";
 import { ManifestoSection } from "@/components/ManifestoSection";
 import { ServicesSection } from "@/components/ServicesSection";
-import { ValueCalculator } from "@/components/ValueCalculator";
 import SpeedTimeline from "@/components/SpeedTimeline";
 import { PerformanceGrid } from "@/components/PerformanceGrid";
 import { Footer } from "@/components/Footer";
@@ -29,7 +28,6 @@ const SECTION_SELECTORS = [
   ".work-section",
   ".manifesto-section",
   ".services-section",
-  ".value-calculator-section",
   ".speed-timeline-section",
   ".performance-grid-section",
   ".contact-section",
@@ -250,7 +248,7 @@ export default function GatewayPage() {
     <div className="w-full min-w-0 overflow-x-hidden bg-[#0a0a0a]">
       {/* ── Section navigation dots (fixed, right edge) ── */}
       <nav className="section-dots" aria-label="Section navigation">
-        {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+        {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
           <button
             key={i}
             className={`section-dot${i === 0 ? " active" : ""}`}
@@ -440,7 +438,6 @@ export default function GatewayPage() {
       <SelectedWorkSection />
       <ManifestoSection />
       <ServicesSection />
-      <ValueCalculator />
       <SpeedTimeline />
       <PerformanceGrid />
       <Footer />
