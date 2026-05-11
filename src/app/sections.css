@@ -9,7 +9,8 @@
 .services-section,
 .contact-section,
 .speed-timeline-section,
-.performance-grid-section {
+.performance-grid-section,
+.pricing-section {
   position: relative;
   width: 100%;
   min-height: 100vh;

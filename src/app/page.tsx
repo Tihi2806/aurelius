@@ -10,6 +10,7 @@ import { ManifestoSection } from "@/components/ManifestoSection";
 import { ServicesSection } from "@/components/ServicesSection";
 import SpeedTimeline from "@/components/SpeedTimeline";
 import { PerformanceGrid } from "@/components/PerformanceGrid";
+import { PricingSection } from "@/components/PricingSection";
 import { Footer } from "@/components/Footer";
 import { scrollToTarget } from "@/components/LenisProvider";
 import "./hero.css";
@@ -27,6 +28,7 @@ const SECTION_SELECTORS = [
   ".services-section",
   ".speed-timeline-section",
   ".performance-grid-section",
+  ".pricing-section",
   ".contact-section",
 ] as const;
 
@@ -142,9 +144,9 @@ export default function GatewayPage() {
     );
     triggers.push(
       ScrollTrigger.create({
-        trigger: els[7]!,
+        trigger: els[8]!,
         start: "top 70%",
-        onEnter: () => animateOnce(els[7]!, () => animateContact(els[7]!)),
+        onEnter: () => animateOnce(els[8]!, () => animateContact(els[8]!)),
       })
     );
 
@@ -245,7 +247,7 @@ export default function GatewayPage() {
     <div className="w-full min-w-0 overflow-x-hidden bg-[#0a0a0a]">
       {/* ── Section navigation dots (fixed, right edge) ── */}
       <nav className="section-dots" aria-label="Section navigation">
-        {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
+        {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
           <button
             key={i}
             className={`section-dot${i === 0 ? " active" : ""}`}
@@ -477,6 +479,7 @@ export default function GatewayPage() {
       <ServicesSection />
       <SpeedTimeline />
       <PerformanceGrid />
+      <PricingSection />
       <Footer />
     </div>
   );
